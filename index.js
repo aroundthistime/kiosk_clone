@@ -9,7 +9,7 @@ const handleListening = () =>
 
 let db = [];
 let number = 1;
-
+let a = [2, 3];
 app.listen(PORT, handleListening);
 app.set('view engine', 'pug');
 app.set("views", path.join(__dirname, "views"));
