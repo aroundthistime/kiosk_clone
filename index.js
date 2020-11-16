@@ -17,6 +17,7 @@ app.use('/build', express.static(path.join(__dirname, 'build')));
 app.get('/', (req, res) => res.render('index'));
 app.get('/order', (req, res) => res.render('order'));
 app.get('/alert', (req, res) => res.render('alert'));
+app.get('/salesControll', (req, res) => res.render('salesControll'));
 app.post('/api', (req, res) => {
   db.push(number);
   res.json(number);

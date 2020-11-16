@@ -1,8 +1,184 @@
+// 기본 웹뷰 공간 초기화
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+// 웹 뷰 컨테이너 영역 설정
+.container {
+  position: relative;
+  width: 85%;
+  height: 100%;
+  margin: auto;
+}
+
+// 구분선 적용 클래스
+.divider {
+  width: 100%;
+  border: 1px solid rgb(65, 65, 65);
+  margin: 2rem 0 2rem 0;
+}
+
 a {
   color: red;
 }
 
-.order-list {
+// -----------------------------------------------------------
+// 믹스인 사용 예제 설명
+// 검은고딕 글씨체 관련 믹스인
+@mixin setBlackHans($color: #000, $size: 1rem) {
   font-family: 'Black Han Sans', sans-serif;
-  font-size: 30px;
+  font-size: $size;
+  color: $color;
+}
+
+.test1 {
+  // 인자 명시하지 않을 경우 순서대로 모든 인자 입력해야 함
+  @include setBlackHans(blue, 5rem);
+}
+.test2 {
+  // 인자를 명시하는 경우 순서대로 입력할 필요 없음
+  @include setBlackHans($size: 5rem);
+}
+.test3 {
+  @include setBlackHans($color: red);
+}
+// -----------------------------------------------------------
+
+// 버튼 생성 관련 믹스인
+@mixin setButton($color: #000, $width: 100px, $bgColor: #fff, $radius: 10px) {
+  color: $color;
+  background-color: $bgColor;
+  border-radius: $radius;
+  padding: 1rem;
+  width: $width;
+  text-align: center;
+}
+
+// salesControll 페이지 관련 scss 설정
+#salesControll {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .topArea {
+    height: 200px;
+    background-color: #185494;
+    margin-bottom: 4rem;
+
+    .logo {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    span {
+      position: absolute;
+      top: 50%;
+      left: calc(1rem + 150px);
+      transform: translateY(-50%);
+      @include setBlackHans(#fff, 5rem);
+    }
+  }
+
+  .middleArea {
+    span.title {
+      @include setBlackHans($size: 3rem);
+    }
+    .table {
+      width: 90%;
+      margin: auto;
+      margin-bottom: 4rem;
+
+      .input-area {
+        margin: 2rem 0 2rem 0;
+        position: relative;
+
+        input {
+          height: 30px;
+          width: 150px;
+        }
+        input + input {
+          margin-left: 1rem;
+        }
+
+        .font-icon {
+          font-size: 30px;
+          position: absolute;
+          right: 0;
+
+          &:hover {
+            opacity: 0.65;
+            cursor: pointer;
+          }
+        }
+      }
+
+      table {
+        width: 100%;
+        border: 2px solid #dedede;
+        border-collapse: collapse;
+        text-align: center;
+        margin-bottom: 1.5rem;
+
+        tr {
+          border-bottom: 2px solid #dedede;
+        }
+        tr.first {
+          background-color: #b2b2b2;
+          color: #fff;
+        }
+        tr:nth-child(9) {
+          border-bottom: 2px solid #000 !important;
+        }
+      }
+
+      .button-area {
+        display: flex;
+        float: right;
+
+        .button {
+          @include setButton($bgColor: #595959);
+          @include setBlackHans($color: #fff, $size: 1rem);
+
+          &:hover {
+            opacity: 0.65;
+            cursor: pointer;
+          }
+        }
+        .button + .button {
+          margin-left: 1rem;
+        }
+      }
+    }
+  }
+
+  .bottomArea {
+    span.title {
+      @include setBlackHans($size: 3rem);
+    }
+
+    .record {
+      width: 90%;
+      margin: auto;
+      margin-bottom: 4rem;
+      display: flex;
+      justify-content: space-between;
+      text-align: center;
+
+      .calendar-area {
+        border: 1px solid #000;
+        width: 50%;
+        height: 300px;
+      }
+
+      .write-area {
+        border: 1px solid #000;
+        width: 50%;
+        height: 300px;
+      }
+    }
+  }
 }

@@ -1,0 +1,51 @@
+extends layouts/main.pug
+
+block content
+    #salesControll
+        .topArea 
+            .container
+                img.logo(src='build/img/logo.png' alt="버거킹 로고이미지")
+                span.title 매출분석
+
+        .middleArea 
+            .container 
+                span.title 매출조회
+                .divider
+                .table
+                    .input-area 
+                        input(type='date').startDate
+                        input(type='date').endDate
+                        i.font-icon.fas.fa-search
+                    table
+                        tr.first
+                            th 일자
+                            th 품명
+                            th 비고
+                            th 수량
+                            th 단가
+                        - for (var i = 0; i < 8; i++)
+                            tr
+                                td 2020-11-02 11:00:25
+                                td 와퍼
+                                td 단품
+                                td 1
+                                td 3,000    
+                        tr.last
+                            td 합계
+                            td
+                            td
+                            td 50
+                            td 300,000    
+                    
+                    .button-area
+                        .button CSV추출
+                        .button 그래프전환
+                      
+                
+        .bottomArea 
+            .container 
+                span.title 매출기록
+                .divider
+                .record
+                    .calendar-area 달력
+                    .write-area 작성
