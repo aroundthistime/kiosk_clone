@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import moment from 'moment';
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.listen(PORT, handleListening);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use('/build', express.static(path.join(__dirname, 'build')));
+app.locals.moment = moment;
 app.get('/', (req, res) => res.render('index'));
 app.get('/order', (req, res) => res.render('order'));
 app.get('/alert', (req, res) => res.render('alert'));

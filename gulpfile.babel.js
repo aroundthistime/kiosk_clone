@@ -11,7 +11,7 @@ sass.compiler = require("node-sass");
 
 const routes = {
     img : {
-        watch : "src/img/*",
+        //watch : "src/img/*",
         src : "src/img/*",
         dest : "build/img"
     },
@@ -50,7 +50,7 @@ const assets = gulp.series([styles, js]);
 
 
 const watch = () => {
-    gulp.watch(routes.img.watch, img);
+    //gulp.watch(routes.img.watch, img);
     gulp.watch(routes.scss.watch, styles);
     gulp.watch(routes.js.watch, js);
 };

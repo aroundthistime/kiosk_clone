@@ -1,4 +1,7 @@
 extends layouts/main.pug
+block title
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.css", integrity="sha256-uq9PNlMzB+1h01Ij9cx7zeE2OR2pLAfRw3uUUOOPKdA=", crossorigin="anonymous")
+
 
 block content
     #salesControll
@@ -23,7 +26,7 @@ block content
                             th 비고
                             th 수량
                             th 단가
-                        - for (var i = 0; i < 8; i++)
+                        - for (let i = 0; i < 8; i++)
                             tr
                                 td 2020-11-02 11:00:25
                                 td 와퍼
@@ -47,5 +50,43 @@ block content
                 span.title 매출기록
                 .divider
                 .record
-                    .calendar-area 달력
-                    .write-area 작성
+                    .calendar-area 
+                        #calendar
+                    .write-area
+                        .title-area
+                            - let today = moment().format('YYYY-MM-DD')
+                            span.record-title#record-date #{today} 
+                            span.record-title 특이사항
+                            i.font-icon.far.fa-edit(onclick="setEditable()")
+
+                        .body-area
+                            p.alert-msg 기록된 사항이 없습니다.
+
+                            .editable-area
+                                textarea#input-record
+                                .button-area
+                                    .button(onclick="setEditable()") 취소
+                                    .button 완료
+                            script. 
+                                let editStatus = false;
+                                const editButton = document.querySelector('.far.fa-edit');
+                                const textarea = document.querySelector('.editable-area');
+                                const alertMsg = document.querySelector('.alert-msg');
+
+                                const setEditable = () => {
+                                    editStatus = !editStatus;
+                                 
+                                    if(editStatus) {
+                                        alertMsg.style.display = 'none';
+                                        editButton.style.display = 'none';
+                                        textarea.style.display = 'flex';
+                                    } else {
+                                        textarea.style.display = 'none';
+                                        alertMsg.style.display = 'block';
+                                        editButton.style.display = 'inline';
+                                    }
+                                }
+        
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.js" integrity="sha256-oenhI3DRqaPoTMAVBBzQUjOKPEdbdFFtTCNIosGwro0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+    
