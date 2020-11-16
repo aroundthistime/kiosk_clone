@@ -8,6 +8,6 @@
  3. vscode 등 개발환경 터미널에서 npm install 명령어 입력 (적용된 패키지 다운로드)
  4. install 완료 후 터미널에서 npm start 명령어 (서버 구동) 및 npm run dev (gulp 실행) 입력
  
- gulp까지 실행시켜야 변경 사항 자동으로 적용되어 배포됩니다.
-     
+        gulp까지 실행시켜야 변경 사항 자동으로 적용되어 배포됩니다.
+        
  5. localhost:5000 으로 접속하여 결과 확인
