@@ -1,7 +1,8 @@
 # kiosk_clone
  cloning a kiosk system for a fastfood shop
 
-# 실행
+
+# 실행방법
  1. 깃으로 해당 프로젝트 pull
  2. node.js 설치되어 있어야 합니다. 설치법은 구글링 검색 추천드려요.
  3. vscode 등 개발환경 터미널에서 npm install 명령어 입력 (적용된 패키지 다운로드)
