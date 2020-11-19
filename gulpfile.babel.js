@@ -1,6 +1,6 @@
 import gulp from "gulp";
 import del from "del";
-import gulpImg from "gulp-image";
+import gulpImg from "gulp-imagemin";
 import sass from "gulp-sass";
 import autoprefixer from "gulp-autoprefixer";
 import csso from "gulp-csso"; //minify css
