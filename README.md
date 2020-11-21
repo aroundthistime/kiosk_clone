@@ -1,8 +1,8 @@
 # kiosk_clone
  cloning a kiosk system for a fastfood shop
 
-[ ] index의 18번쨰 줄 menu-list--selected나 그 위의 category--selected는 자바스크립트상으로 추천메뉴에 부여
-[x] 메뉴디테일팝업하기
+- [ ] index의 18번쨰 줄 menu-list--selected나 그 위의 category--selected는 자바스크립트상으로 추천메뉴에 부여
+- [x] 메뉴디테일팝업하기
 [ ] 버튼따로 scss 뽑아내기
 [ ] 메뉴수정페이지 분류해서 if문으로 나누기
 [x] 메뉴디테일팝업에서 원화기호랑 Kcal 기호상수로 해서 만들기(&#8361;) ₩ 필요없을듯?
