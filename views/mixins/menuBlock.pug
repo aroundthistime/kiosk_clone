@@ -1,0 +1,47 @@
+mixin menuBlock(menu = {})
+    if menu.isSoldout
+        .menuBlock.menuBlock--sold-out
+            .menu-id.hidden #{menu.id}
+            img.menuBlock__img(src=menu.image)
+            .menuBlock__info
+                .menuBlock__content
+                    .menuBlock__name.language-convertable.language-convertable--kr #{menu.name_kor}
+                    .menuBlock__name.language-convertable.language-convertable--eng.hidden #{menu.name_eng}
+                    if menu.isDiscounted === 0
+                        .menuBlock__price #{menu.price}
+                    else
+                        .menuBlock__price
+                            .menuBlock__price--before #{menu.price}
+                            <i class="fas fa-long-arrow-alt-right"></i>
+                            .menuBlock__price--after #{menu.isDiscounted}
+                if menu.isSoldout
+                    .menuBlock__badge--sold-out.menuBlock__badge
+                        .menuBlock__name.language-convertable.language-convertable--kr 품절
+                        .menuBlock__name.language-convertable.language-convertable--eng SOLD OUT
+                else if menu.isDiscounted !== 0
+                    .menuBlock__badge--discounted.menuBlock__badge
+                        .menuBlock__name.language-convertable.language-convertable--kr 할인
+                        .menuBlock__name.language-convertable.language-convertable--eng SALE
+    else
+        .menuBlock.menuBlock--available
+            .menu-id.hidden #{menu.id}
+            img.menuBlock__img(src=menu.image)
+            .menuBlock__info
+                .menuBlock__content
+                    .menuBlock__name.language-convertable.language-convertable--kr #{menu.name_kor}
+                    .menuBlock__name.language-convertable.language-convertable--eng.hidden #{menu.name_eng}
+                    if menu.isDiscounted === 0
+                        .menuBlock__price #{menu.price}
+                    else
+                        .menuBlock__price
+                            .menuBlock__price--before #{menu.price}
+                            <i class="fas fa-long-arrow-alt-right"></i>
+                            .menuBlock__price--after #{menu.isDiscounted}
+                if menu.isSoldout
+                    .menuBlock__badge--sold-out.menuBlock__badge
+                        .menuBlock__name.language-convertable.language-convertable--kr 품절
+                        .menuBlock__name.language-convertable.language-convertable--eng SOLD OUT
+                else if menu.isDiscounted !== 0
+                    .menuBlock__badge--discounted.menuBlock__badge
+                        .menuBlock__name.language-convertable.language-convertable--kr 할인
+                        .menuBlock__name.language-convertable.language-convertable--eng SALE
