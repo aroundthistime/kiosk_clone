@@ -23,6 +23,21 @@ body {
   }
 }
 
+// 스크롤바 관련 설정
+::-webkit-scrollbar {
+  width: 15px;
+}
+::-webkit-scrollbar-track {
+  background: #dedede;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 15px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 // 구분선 적용 클래스
 .divider {
   width: 100%;
@@ -80,12 +95,23 @@ body {
       top: 50%;
       transform: translateY(-50%);
     }
-    span {
+    span.title {
       position: absolute;
       top: 50%;
       left: calc(1rem + 150px);
       transform: translateY(-50%);
       @include setBlackHans(#fff, 5rem);
+    }
+
+    @media screen and (max-width: 500px) {
+      .logo {
+        width: 100px;
+        height: 100px;
+      }
+      span.title {
+        font-size: 4rem;
+        margin-left: -2rem;
+      }
     }
   }
 
@@ -97,30 +123,6 @@ body {
       width: 90%;
       margin: auto;
       margin-bottom: 4rem;
-
-      .input-area {
-        margin: 2rem 0 2rem 0;
-        position: relative;
-
-        input {
-          height: 30px;
-          width: 150px;
-        }
-        input + input {
-          margin-left: 1rem;
-        }
-
-        .font-icon {
-          font-size: 30px;
-          position: absolute;
-          right: 0;
-
-          &:hover {
-            opacity: 0.65;
-            cursor: pointer;
-          }
-        }
-      }
 
       table {
         width: 100%;
@@ -140,23 +142,97 @@ body {
           border-bottom: 2px solid #000 !important;
         }
       }
+    }
 
-      .button-area {
-        display: flex;
+    .button-area {
+      display: flex;
+      float: right;
+      margin-bottom: 2rem;
+
+      .button {
+        @include setButton($bgColor: #595959, $width: 125px);
+        @include setBlackHans($color: #fff, $size: 1.25rem);
+
+        &:hover {
+          opacity: 0.65;
+          cursor: pointer;
+        }
+      }
+      .button + .button {
+        margin-left: 1rem;
+      }
+    }
+
+    .input-area {
+      margin: 2rem 0 2rem 0;
+      position: relative;
+
+      input {
+        height: 30px;
+        width: 150px;
+      }
+      input + input {
+        margin-left: 1rem;
+      }
+
+      select {
+        margin-right: 5rem;
+        height: 34px;
+        padding: 5px;
         float: right;
+      }
+      select + select {
+        margin-right: 2.5rem;
+      }
+      .font-icon {
+        font-size: 30px;
+        position: absolute;
+        right: 0;
 
-        .button {
-          @include setButton($bgColor: #595959, $width: 125px);
-          @include setBlackHans($color: #fff, $size: 1.25rem);
+        &:hover {
+          opacity: 0.65;
+          cursor: pointer;
+        }
+      }
+    }
+    @media screen and (max-width: 815px) {
+      .input-area {
+        input {
+          width: 130px;
+        }
+        input + input {
+          margin-right: 0;
+        }
+        select + select {
+          margin-top: 0.35rem;
+          margin-right: 5rem;
+        }
+      }
+    }
+    @media screen and (max-width: 660px) {
+      .input-area {
+        input + input {
+          margin-right: 5rem;
+        }
+        select {
+          float: left;
+          //margin: 0;
+          margin-top: 0.35rem;
+          margin-bottom: 0.5rem;
+        }
+        select + select {
+          margin-left: calc(-2rem - 2px);
+        }
+      }
+    }
 
-          &:hover {
-            opacity: 0.65;
-            cursor: pointer;
-          }
-        }
-        .button + .button {
-          margin-left: 1rem;
-        }
+    .chart {
+      width: 90%;
+      margin: auto;
+      display: none;
+
+      #myChart {
+        margin-bottom: 1.5rem;
       }
     }
   }
@@ -176,12 +252,39 @@ body {
       .calendar-area {
         padding: 10px;
         width: 50%;
+        min-height: 450px;
 
+        #calendar {
+          width: 100%;
+          height: 100%;
+        }
         .fc-day-sat {
           color: #0000ff;
         }
         .fc-day-sun {
           color: #ff0000;
+        }
+        .fc-daygrid-body,
+        .fc-scrollgrid-sync-table,
+        .fc-col-header {
+          width: 100% !important;
+        }
+        .fc-head .fc-widget-header {
+          margin-right: 0 !important;
+        }
+        .fc-scroller {
+          overflow: visible !important;
+        }
+
+        @media screen and (max-width: 1000px) {
+          .fc-toolbar-title {
+            font-size: 1.35rem;
+          }
+        }
+        @media screen and (max-width: 870px) {
+          .fc-toolbar-title {
+            font-size: 1rem;
+          }
         }
       }
 
@@ -191,6 +294,7 @@ body {
         padding: 15px;
         border: 1px solid #000;
         width: 45%;
+        min-height: 435px;
 
         .title-area {
           margin-bottom: 1rem;
@@ -209,6 +313,18 @@ body {
             margin-left: 1rem;
             font-size: 25px;
             font-weight: bold;
+          }
+
+          @media screen and (max-width: 1000px) {
+            .record-title {
+              font-size: 1.35rem;
+              margin-left: 0.65rem;
+            }
+          }
+          @media screen and (max-width: 870px) {
+            .record-title#record-special {
+              display: none;
+            }
           }
         }
 
@@ -255,7 +371,43 @@ body {
               .button + .button {
                 background-color: #185494;
               }
+
+              @media screen and (max-width: 1024px) {
+                .button {
+                  width: 30%;
+                }
+              }
             }
+          }
+        }
+      }
+    }
+
+    @media screen and (max-width: 710px) {
+      .record {
+        display: flex;
+        flex-direction: column;
+
+        .calendar-area {
+          width: 100%;
+          padding: 0;
+
+          .fc-toolbar-title {
+            font-size: 1.75rem;
+          }
+        }
+
+        .write-area {
+          margin: 2.5rem 0 0 0;
+          width: 100%;
+          box-sizing: border-box;
+
+          .record-title#record-special {
+            display: inline !important;
+          }
+
+          .body-area {
+            height: 400px;
           }
         }
       }

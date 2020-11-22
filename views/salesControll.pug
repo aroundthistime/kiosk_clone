@@ -5,6 +5,7 @@ block title
 
 block content
     #salesControll
+        - let today = moment().format('YYYY-MM-DD')
         .topArea 
             .container
                 img.logo(src='build/img/logo.png' alt="버거킹 로고이미지")
@@ -16,8 +17,8 @@ block content
                 .divider
                 .table
                     .input-area 
-                        input(type='date').startDate
-                        input(type='date').endDate
+                        input(type='date' value=today).startDate
+                        input(type='date' value=today).endDate
                         i.font-icon.fas.fa-search
                     table
                         tr.first
@@ -28,7 +29,7 @@ block content
                             th 단가
                         - for (let i = 0; i < 8; i++)
                             tr
-                                td 2020-11-02 11:00:25
+                                td #{today} 11:00:25
                                 td 와퍼
                                 td 단품
                                 td 1
@@ -42,7 +43,42 @@ block content
                     
                     .button-area
                         .button CSV추출
-                        .button 그래프전환
+                        .button(onClick='convertPage()') 그래프전환
+
+                .chart
+                    .input-area 
+                        input(type='date' value=today).startDate
+                        input(type='date' value=today).endDate
+                        select
+                            option(value='sum') 매출액 통계
+                            option(value='menu') 메뉴별 통계
+                        select
+                            option(value="month") 월별 
+                            option(value="day") 일별
+                        i.font-icon.fas.fa-search
+
+                    canvas#myChart
+
+                    .button-area
+                        .button(onClick='convertPage()') 테이블전환
+
+                        script. 
+                            let toggleBtn = false;
+                            const tableArea = document.querySelector('.table');
+                            const chartArea = document.querySelector('.chart');
+
+                            const convertPage = () => {
+                                toggleBtn = !toggleBtn;
+
+                                if(toggleBtn) {
+                                    tableArea.style.display = 'none';
+                                    chartArea.style.display = 'block';                    
+                                } else {
+                                    tableArea.style.display = 'block';
+                                    chartArea.style.display = 'none';
+                                }
+                            }
+
                       
                 
         .bottomArea 
@@ -54,9 +90,8 @@ block content
                         #calendar
                     .write-area
                         .title-area
-                            - let today = moment().format('YYYY-MM-DD')
                             span.record-title#record-date #{today} 
-                            span.record-title 특이사항
+                            span.record-title#record-special 특이사항
                             i.font-icon.far.fa-edit(onclick="setEditable()")
 
                         .body-area
