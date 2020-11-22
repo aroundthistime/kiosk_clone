@@ -22,7 +22,9 @@
 - [ ] db완성되면 주문전송마저하기
 - [ ] language settings frontjavascript (selectLanguage함수) 다시 한 번 확인
 - [ ] menu 가짜로 넣어서 grid 손보기
-- [ ] 세트추가비용관련해서 연산수정
+- [X] 세트추가비용관련해서 연산수정
+- [ ] order만드는 곳에서 defaultMenu.sideMnu === sideId이부분되나 확인
+- [ ] customerPageFooter에서 orderBar css작업끝나면 주석처리(혹은 지우기)
 
 * 스키마 프로퍼티명 변경사항(기존과 내용 같은데 이름만 변경된 경우)
 

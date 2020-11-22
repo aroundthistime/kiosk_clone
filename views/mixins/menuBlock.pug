@@ -5,8 +5,8 @@ mixin menuBlock(menu = {})
             img.menuBlock__img(src=menu.image)
             .menuBlock__info
                 .menuBlock__content
-                    .menuBlock__name.language-convertable.language-convertable--kr #{menu.name_kor}
-                    .menuBlock__name.language-convertable.language-convertable--eng.hidden #{menu.name_eng}
+                    .menuBlock__name.language-convertable.language-convertable--kr #{menu.nameKr}
+                    .menuBlock__name.language-convertable.language-convertable--eng.hidden #{menu.nameEng}
                     if menu.isDiscounted === 0
                         .menuBlock__price #{menu.price}
                     else
@@ -28,8 +28,8 @@ mixin menuBlock(menu = {})
             img.menuBlock__img(src=menu.image)
             .menuBlock__info
                 .menuBlock__content
-                    .menuBlock__name.language-convertable.language-convertable--kr #{menu.name_kor}
-                    .menuBlock__name.language-convertable.language-convertable--eng.hidden #{menu.name_eng}
+                    .menuBlock__name.language-convertable.language-convertable--kr #{menu.nameKor}
+                    .menuBlock__name.language-convertable.language-convertable--eng.hidden #{menu.nameEng}
                     if menu.isDiscounted === 0
                         .menuBlock__price #{menu.price}
                     else

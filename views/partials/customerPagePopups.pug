@@ -40,14 +40,14 @@
                     span.language-convertable.language-convertable--eng.hidden Select your Drink
                 .option-list.option-list--side
                     each drink in drinks
-                        +optionBlock(drink, drinkDefaultPrice)
+                        +optionBlock(drink, defaultDrink)
             .menuDetails__option.menuDetails__option--drink.hidden#menuDetailsSide
                 .menu-info__title
                     span.language-convertable.language-convertable--kr 사이드 선택
                     span.language-convertable.language-convertable--eng.hidden Select your Side dish
                 .option-list.option-list--side
                     each side in sides
-                        +optionBlock(side, SideDefaultPrice)
+                        +optionBlock(side, defaultSide)
         .menuDetails__btns
             .menuDetails__btn.btn--cancel.no-drag#menuDetailsCancelBtn
                 span.language-convertable.language-convertable--kr 취소

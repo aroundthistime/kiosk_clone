@@ -2,32 +2,21 @@ mixin optionBlock(menu = {}, defaultOption = {})
     if menu === defaultOption
         .optionBlock.optionBlock--default.optionBlock--selected
             .optionBlock__id.hidden #{menu.id}
-            img.optionImg(menu.image)
+            img.optionImg(src=menu.image)
             img.optionBlock__check(src="https://e7.pngegg.com/pngimages/541/1022/png-clipart-check-mark-computer-icons-others-miscellaneous-angle-thumbnail.png")
             .optionBlock__menu-name
-                span.language-convertable.language-convertable--kr #{menu.name_kor}
-                span.language-convertable.language-convertable--eng.hidden #{menu.name_eng}
-            if menu.price <= defaultOption.price
-                .optionBlock__extra-price
-                    span.language-convertable.language-convertable--kr + 0원
-                    span.language-convertable.language-convertable--eng.hidden + 0Won
-            else
-                .optionBlock__extra-price
-                    span.language-convertable.language-convertable--kr + #{menu.price - defaultOption.price}원
-                    span.language-convertable.language-convertable--eng.hidden + #{menu.price - defaultOption.price}Won
+                span.language-convertable.language-convertable--kr #{menu.nameKr}
+                span.language-convertable.language-convertable--eng.hidden #{menu.nameEng}
+            .optionBlock__extra-price
+                span.language-convertable.language-convertable--kr + #{menu.extraPrice}원
+                span.language-convertable.language-convertable--eng.hidden + #{menu.extraPrice}Won
     else
         .optionBlock
-            img.optionImg(menu.image)
+            img.optionImg(src=menu.image)
             img.optionBlock__check(src="https://e7.pngegg.com/pngimages/541/1022/png-clipart-check-mark-computer-icons-others-miscellaneous-angle-thumbnail.png")
             .optionBlock__menu-name
-                span.language-convertable.language-convertable--kr #{menu.name_kor}
-                span.language-convertable.language-convertable--eng.hidden #{menu.name_eng}
-            if menu.price <= defaultOption.price
-                .optionBlock__extra-price
-                    span.language-convertable.language-convertable--kr + 0원
-                    span.language-convertable.language-convertable--eng.hidden + 0Won
-            else
-                .optionBlock__extra-price
-                    span.language-convertable.language-convertable--kr + #{menu.price - defaultOption.price}원
-                    span.language-convertable.language-convertable--eng.hidden + #{menu.price - defaultOption.price}Won
-            
+                span.language-convertable.language-convertable--kr #{menu.nameKr}
+                span.language-convertable.language-convertable--eng.hidden #{menu.nameEng}
+            .optionBlock__extra-price
+                span.language-convertable.language-convertable--kr + #{menu.extraPrice}원
+                span.language-convertable.language-convertable--eng.hidden + #{menu.extraPrice}Won

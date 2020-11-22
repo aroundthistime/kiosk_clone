@@ -1,10 +1,10 @@
-// import Menu from '../models/Menu';
-// import Order from '../models/Order';
+import Menu from '../models/Menu';
+import Order from '../models/Order';
 
-// const DRINKS = '음료';
-// const SIDES = '사이드';
-// const DEFAULT_DRINK = '코카콜라 (M)'; // 세트 선택시 기본으로 선택되는 음료 이름
-// const DEFAULT_SIDE = '감자튀김 (M)'; // 세트 선택시 기본으로 선택되는 사이드 이름
+const DRINKS = '음료';
+const SIDES = '사이드';
+const DEFAULT_DRINK = '코카콜라 (M)'; // 세트 선택시 기본으로 선택되는 음료 이름
+const DEFAULT_SIDE = '감자튀김 (M)'; // 세트 선택시 기본으로 선택되는 사이드 이름
 const COMPANY_NAME = 'BURGERKING';
 
 const categories = [
@@ -69,7 +69,7 @@ export const getCustomerPage = async (req, res) => {
   });
   categories.forEach(async (category) => {
     const menus = await Menu.find({
-      menuType : category.nameKr, // 해당 카테고리에 속하며
+      menuType: category.nameKr, // 해당 카테고리에 속하며
       isDiscontinued: false, // 판매중단되지 않은 메뉴
     });
     categoriesWithMenu.push({
@@ -79,7 +79,7 @@ export const getCustomerPage = async (req, res) => {
     });
   });
   const drinks = await Menu.find({
-    menuType : DRINKS, // 음료이면서
+    menuType: DRINKS, // 음료이면서
     isDiscontinued: false, // 판매중이고
     isSoldOut: false, // 품절되지 않은 메뉴
   });
@@ -106,7 +106,7 @@ export const getMenuDetails = async (req, res) => {
     params: { id },
   } = req; // get menu id from params
   try {
-    const menu = await Menu.findById(id);
+    const menu = await Menu.findById(id).populate('defaultCombo');
     res.json(menu);
   } catch (error) {
     console.log(error);
@@ -124,7 +124,7 @@ export const postSendOrder = async (req, res) => {
     const orderNum = 1;
     const lastOrder = await Order.find({}).sort({ _id: -1 }).limit(1);
     const todaysDate = new Date().getDate();
-    if (lastOrder && todaysDate === lastOrder.date.getDate()) { // 주문이 기존에 하나도 없을 경우 대비하여 last Order 있는지도 검사해줘야함
+    if (lastOrder && (todaysDate === lastOrder.date.getDate())) { // 주문이 기존에 하나도 없을 경우 대비하여 last Order 있는지도 검사해줘야함
       orderNum = lastOrder.orderNumber + 1;
     }
     const newOrder = await Order.create({
@@ -135,22 +135,31 @@ export const postSendOrder = async (req, res) => {
     orderContents.forEach(async (orderContent) => {
       let menu;
       if (orderContent.sideId) { // 세트메뉴이면
-        menu = await Menu.find({
-          _id: orderContent.menuId,
-          sideMenu: ObjectId(orderContent.sideId),
-          drink: ObjectId(orderContent.drinkId),
-        });
-        if (!menu){//해당 세트조합이 menu db상에 아직 안 만들어져있으면
-          menu = Menu.create({
-            nameKr : ,
-            isCombo : true,
-            drink : drinkId
-          })
+        const defaultCombo = await Menu.findById(orderContent.menuId);
+        const selectedSide = await Menu.findById(orderContent.sideId);
+        const selectedDrink = await Menu.findById(orderContent.drinkId);
+        if (!((defaultCombo.sideMenu == selectedSide) && (defaultCombo.drink === selectedDrink))) { // 해당 세트조합이 menu db상에 아직 안 만들어져있으면 이 부분 되는지 확인
+          const extraPrice = selectedSide.extraPrice + selectedDrink.extraPrice; // 해당 옵션으로 세트구성할 때 추가금액
+          menu = await Menu.create({
+            menuType: defaultCombo.menuType,
+            nameKr: defaultCombo.namekr,
+            price: defaultCombo.price + extraPrice,
+            isCombo: true,
+            isDefaultCombo: false,
+            drink: selectedDrink,
+            sidemenu: selectedSide,
+            isDiscounted: defaultCombo.isDiscounted + extraPrice,
+            isRecommended: false,
+          });
+          Menu.save();
         }
       } else { // 단품이면
         menu = await Menu.findById(orderContent.menuId);
       }
-      newOrder.choices.push(menu);
+      newOrder.choices.push({
+        menu,
+        amount: orderContent.amount,
+      });
     });
     Order.save();
     res.json(orderNum);

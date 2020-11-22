@@ -39,6 +39,10 @@ const MenuSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  defaultCombo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'menus',
+  },
   isDefaultCombo: {
     type: Boolean,
     required() {

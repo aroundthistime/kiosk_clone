@@ -153,6 +153,7 @@ const fillMenuDetailsPopup = (isCombo) => {
   showPopup(menuDetailsPopup);
 };
 
+
 const selectMenuBlock = async (event) => {
   let selectedMenuBlock = event.target;
   if (!selectedMenuBlock.classList.contains('.menuBlock')) {
@@ -189,6 +190,7 @@ const handleSingleBtnClick = (event) => {
 
 const handleComboBtnClick = (event) => {
   hidePopup(comboSinglePopup);
+  selectedMenu = selectedMenu.defaultCombo;
   fillMenuDetailsPopup(true); // isCombo에 대해 true 전달
 };
 
