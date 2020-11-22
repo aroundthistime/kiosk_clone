@@ -81,7 +81,7 @@ const prepareCategories = () => {
 };
 
 const isBurger = (menu) => {
-  if (menu.menu_type === '사이드' || menu.menu_type === '음료' || menu.menu_type === '디저트') {
+  if (menu.menuType === '사이드' || menu.menuType === '음료' || menu.menuType === '디저트') {
     return false;
   }
   return true;
@@ -118,20 +118,20 @@ const fillMenuDetailsPopup = (isCombo) => {
   const ingredientsAllergicEng = document.getElementById('ingredientsAllergicEng');
   const drinkOption = document.getElementById('menuDetailDrink');
   const sideOption = document.getElementById('menuDetailsSide');
-  menuNameKr.innerText = selectedMenu.name_kor;
-  menuNameEng.innerText = selectedMenu.name_eng;
+  menuNameKr.innerText = selectedMenu.nameKr;
+  menuNameEng.innerText = selectedMenu.nameEng;
   menuImg.src = selectedMenu.image;
   if (isDiscounted(selectedMenu)) {
     menuPrice.innerText = `${selectedMenu.isDiscounted} ₩`;
   } else {
     menuPrice.innerText = `${selectedMenu.price} ₩`;
   }
-  menuCalories.innerText = `${selectedMenu.calorie} Kcal`;
-  ingredientsNonAllergicKr.innerText = selectedMenu.ingredients_nonAllergic_kor;
-  ingredientsNonAllergicEng.innerText = selectedMenu.ingredients_nonAllergic_eng;
-  if (selectedMenu.ingredients_nonAllergic_kor) {
-    ingredientsAllergicKr.innerText = `, ${selectedMenu.ingredients_allergic_kor}`;
-    ingredientsAllergicEng.innerText = `, ${selectedMenu.ingredients_allergic_eng}`;
+  menuCalories.innerText = `${selectedMenu.calories} Kcal`;
+  ingredientsNonAllergicKr.innerText = selectedMenu.ingredientsNonAllergicKr;
+  ingredientsNonAllergicEng.innerText = selectedMenu.ingredientsNonAllergicEng;
+  if (selectedMenu.ingredientsNonAllergicKr) {
+    ingredientsAllergicKr.innerText = `, ${selectedMenu.ingredientsAllergicKr}`;
+    ingredientsAllergicEng.innerText = `, ${selectedMenu.ingredientsAllergicEng}`;
   } else {
     ingredientsAllergicKr.innerText = '';
     ingredientsAllergicEng.innerText = '';
@@ -299,12 +299,12 @@ const addToCart = (menu, price, drink = null, side = null) => {
   menuNameKr.classList.add('menu-name');
   menuNameKr.classList.add('language-convertable');
   menuNameKr.classList.add('language-convertable--kr');
-  menuNameKr.innerText = menu.name_kor;
+  menuNameKr.innerText = menu.nameKr;
   const menuNameEng = document.createElement('SPAN');
   menuNameEng.classList.add('menu-name');
   menuNameEng.classList.add('language-convertable');
   menuNameEng.classList.add('language-convertable--eng');
-  menuNameEng.innerText = menu.name_eng;
+  menuNameEng.innerText = menu.nameEng;
   const menuId = document.createElement('SPAN');
   menuId.classList.add('.menu-id');
   menuId.classList.add(INVISIBLE);
