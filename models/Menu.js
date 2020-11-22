@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 
 const MenuSchema = new mongoose.Schema({
-  menu_type: {
+  menuType: {
     type: String,
     required: true,
   },
-  name_kor: {
+  nameKr: {
     type: String,
     required: true,
   },
-  name_eng: {
+  nameEng: {
     type: String,
     required: true,
   },
@@ -23,23 +23,29 @@ const MenuSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  calorie: {
+  extraPrice: {
     type: Number,
     required() {
-      return !(this.isSetMenu) || this.isDefaultSet;
+      return (this.menuType === 'DRINKS' || this.menuType === 'SIDES');
     },
   },
-  isSetMenu: {
+  calories: {
+    type: Number,
+    required() {
+      return !(this.isSetMenu) || this.isDefaultCombo;
+    },
+  },
+  isCombo: {
     type: Boolean,
     required: true,
   },
-  isDefaultSet: {
+  isDefaultCombo: {
     type: Boolean,
     required() {
       return this.isSetMenu;
     },
   },
-  drinks: {
+  drink: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'menus',
     required() {
@@ -53,35 +59,35 @@ const MenuSchema = new mongoose.Schema({
       return this.isSetMenu;
     },
   },
-  ingredients_nonAllergic_kor: [
+  ingredientsNonAllergicKr: [
     {
       type: String,
       required() {
-        return !(this.menu_type === 'DRINKS' || this.menu_type === 'DESSERTS');
+        return !(this.menuType === 'DRINKS' || this.menuType === 'DESSERTS');
       },
     },
   ],
-  ingredients_nonAllergic_eng: [
+  ingredientsNonAllergicEng: [
     {
       type: String,
       required() {
-        return !(this.menu_type === 'DRINKS' || this.menu_type === 'DESSERTS');
+        return !(this.menuType === 'DRINKS' || this.menuType === 'DESSERTS');
       },
     },
   ],
-  ingredients_allergic_kor: [
+  ingredientsAllergicKr: [
     {
       type: String,
       required() {
-        return !(this.menu_type === 'DRINKS' || this.menu_type === 'DESSERTS');
+        return !(this.menuType === 'DRINKS' || this.menuType === 'DESSERTS');
       },
     },
   ],
-  ingredients_allergic_eng: [
+  ingredientsAllergicEng: [
     {
       type: String,
       required() {
-        return !(this.menu_type === 'DRINKS' || this.menu_type === 'DESSERTS');
+        return !(this.menuType === 'DRINKS' || this.menuType === 'DESSERTS');
       },
     },
   ],

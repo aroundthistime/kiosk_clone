@@ -22,3 +22,20 @@
 - [ ] db완성되면 주문전송마저하기
 - [ ] language settings frontjavascript (selectLanguage함수) 다시 한 번 확인
 - [ ] menu 가짜로 넣어서 grid 손보기
+
+* 스키마 프로퍼티명 변경사항(기존과 내용 같은데 이름만 변경된 경우)
+
+1. menu_type => menuType
+2. name_kor => nameKr
+3. name_eng => nameEng
+4. calorie => calories
+5. isSetMenu => isCombo
+6. drinks => drink
+7. ingredients_nonAllergic_kor => ingredientsNonAllergicKr
+8. ingredients_nonAllergic_eng => ingredientsNonAllergicEng
+9. ingredients_allergic_kor => ingredientsAllergicKr
+10. ingredients_allergic_eng => ingredientsAllergicEng
+
+11. order_number => orderNumber
+
+12. record_content => content

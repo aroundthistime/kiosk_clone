@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const RecordSchema = new mongoose.Schema({
-  record_content: {
+  content: {
     type: String,
     required: true,
   },
