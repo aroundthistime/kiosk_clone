@@ -30,6 +30,7 @@
     "gulp-autoprefixer": "^7.0.1",
     "gulp-csso": "^4.0.1",
     "gulp-imagemin": "^7.1.0",
+    "mongoose": "^5.10.15",
     "pug": "^3.0.0",
     "uglifyify": "^5.0.2",
     "uniq": "^1.0.1"

@@ -4,10 +4,10 @@ include mixins/menuBlock
 block content
     header
         .customerPage__banner
-            img.company-logo(src="/build/img/logo.png")
+            img.company-logo.no-drag(src="/build/img/logo.png")
             .language-settings
                 input(type="checkbox")#languageCheckbox
-    main
+    main.customerPageMain
         .categories
             each category in categories
                 div(class=`category ${category.nameEng} no-drag`)
@@ -16,7 +16,7 @@ block content
         .menu-list
             each category in categories
                 div(class=`menu-list menu-list__${category.nameEng} hidden`)
-                        each menu in category.menu
+                        //- each menu in category.menu
                             //- +menuBlock(menu) 오류방지 - 나중에 데이터 생기면 주석해제
     include ./partials/customerPageFooter
     include ./partials/customerPagePopups
