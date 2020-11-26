@@ -69,12 +69,9 @@ block content
                     .input-area 
                         input(type='date' value=today).startDate-chart
                         input(type='date' value=today).endDate-chart
-                        select
-                            option(value='sum') 매출액 통계
+                        select#select-for-category
                             option(value='menu') 메뉴별 통계
-                        select
-                            option(value="month") 월별 
-                            option(value="day") 일별 
+                            option(value='sum') 매출액 통계
                         i(onclick='search()').font-icon.fas.fa-search
 
                     canvas#myChart
@@ -84,12 +81,23 @@ block content
 
                         script. 
                             let toggleBtn = false;
+                            let myChart;
                             const tableArea = document.querySelector('.table');
                             const chartArea = document.querySelector('.chart');                    
-                            const convertPage = () => {
+                            const convertPage = async () => {
                                 toggleBtn = !toggleBtn;
 
                                 if(toggleBtn) {
+                                    if (myChart) {
+                                        myChart.destroy();
+                                    }
+                                    const chartData = await axios.post('/api/get-orders', { start : "#{today}", end : "#{today}" });
+                                    console.log(chartData);
+                                    const orderLists = chartData.data.filter(order => order.isCompleted);
+                                    const totalMenus = orderLists.map(order => order.choices);
+                                    const menuWithAmount = {};
+                                    totalMenus.forEach(menu => menu.forEach(el => menuWithAmount[el.menu.nameKr] ? menuWithAmount[el.menu.nameKr] += el.amount : menuWithAmount[el.menu.nameKr] = el.amount))
+                                    myChart = makeChart("menu", menuWithAmount);
                                     tableArea.style.display = 'none';
                                     chartArea.style.display = 'block';                    
                                 } else {
@@ -131,66 +139,127 @@ block content
                                 
                                 const orderLists = newOrders.data.filter(order => order.isCompleted);
                                 const totalMenus = orderLists.map(order => order.choices);
+
+
                                 let totalCount =  0;
                                 let totalAmount = 0;
+                                const menuWithAmount = {};
+                                const menuWithCost = {};
 
                                 totalMenus.forEach(menu => menu.forEach(el => totalCount += el.amount))
                                 totalMenus.forEach(menu => menu.forEach(el => totalAmount += el.menu.price * el.amount))
+                                totalMenus.forEach(menu => menu.forEach(el => menuWithAmount[el.menu.nameKr] ? menuWithAmount[el.menu.nameKr] += el.amount : menuWithAmount[el.menu.nameKr] = el.amount))
+                                orderLists.forEach(menu => menu.choices.forEach(el => {
+                                    const month = moment(menu.date).format('YYYY-MM');
+                                    menuWithCost[month] ? menuWithCost[month] += el.menu.price : menuWithCost[month] = el.menu.price;
+                                }))
 
-                                tableDiv.removeChild(tableContent);
+                                if(toggleBtn) {
+                                    const category = document.getElementById('select-for-category').value;
 
+                                    if(myChart) {
+                                        myChart.destroy();
+                                    }
 
-                                const table = document.createElement('table');
+                                    if(category === 'menu') {    
+                                        myChart = makeChart(category, menuWithAmount)
+                                    } else {
+                                        myChart = makeChart(category, menuWithCost);
+                                    }
 
-                                const trFirst = document.createElement('tr');
-                                const trLast = document.createElement('tr');
-                                trFirst.classList.add('first');
-                                for(let i = 0; i < 5; i++) {
-                                    let th = document.createElement('th');
-                                    th.innerText = ['일자', '품명', '비고', '수량', '단가'][i];
-                                    trFirst.appendChild(th);
-                                }
-                                table.appendChild(trFirst);
+                                    
+                                } else {
+                                    tableDiv.removeChild(tableContent);
 
-                                orderLists.forEach(order => {
-                                    order.choices.forEach(menu => {
-                                        let tr = document.createElement('tr');
-                                        for(let i = 0; i < 5; i++) {
-                                            let td = document.createElement('td');
-                                            if(i == 0) td.innerText = moment(order.date).format('YYYY-MM-DD HH:mm:ss');
-                                            else if(i == 1) td.innerText = menu.menu.nameKr;
-                                            else if(i == 2) td.innerText = menu.menu.isCombo ? "세트" : "단품";
-                                            else if(i == 3) td.innerText = menu.amount; 
-                                            else if(i == 4) td.innerText = menu.menu.price * menu.amount;
-                                            tr.appendChild(td);
-                                        }
-                                        table.appendChild(tr);
+                                    const table = document.createElement('table');
+
+                                    const trFirst = document.createElement('tr');
+                                    const trLast = document.createElement('tr');
+                                    trFirst.classList.add('first');
+                                    for(let i = 0; i < 5; i++) {
+                                        let th = document.createElement('th');
+                                        th.innerText = ['일자', '품명', '비고', '수량', '단가'][i];
+                                        trFirst.appendChild(th);
+                                    }
+                                    table.appendChild(trFirst);
+
+                                    orderLists.forEach(order => {
+                                        order.choices.forEach(menu => {
+                                            let tr = document.createElement('tr');
+                                            for(let i = 0; i < 5; i++) {
+                                                let td = document.createElement('td');
+                                                if(i == 0) td.innerText = moment(order.date).format('YYYY-MM-DD HH:mm:ss');
+                                                else if(i == 1) td.innerText = menu.menu.nameKr;
+                                                else if(i == 2) td.innerText = menu.menu.isCombo ? "세트" : "단품";
+                                                else if(i == 3) td.innerText = menu.amount; 
+                                                else if(i == 4) td.innerText = menu.menu.price * menu.amount;
+                                                tr.appendChild(td);
+                                            }
+                                            table.appendChild(tr);
+                                        })
                                     })
-                                })
 
-                                if(!orderLists.length) {
-                                    let tr = document.createElement('tr');
-                                    let td = document.createElement('td');
-                                    td.innerText = "해당기간의 판매 실적이 없습니다.";
-                                    td.colSpan = '5';
-                                    tr.appendChild(td);
-                                    tr.classList.add('no-list')
-                                    table.appendChild(tr);
+                                    if(!orderLists.length) {
+                                        let tr = document.createElement('tr');
+                                        let td = document.createElement('td');
+                                        td.innerText = "해당기간의 판매 실적이 없습니다.";
+                                        td.colSpan = '5';
+                                        tr.appendChild(td);
+                                        tr.classList.add('no-list')
+                                        table.appendChild(tr);
+                                    }
+
+                                    trLast.classList.add('last');
+                                    for(let i = 0; i < 5; i++) {
+                                        let td = document.createElement('td');
+                                        if(i == 0) td.innerText = '합계';
+                                        else if(i == 3) td.innerText = totalCount;
+                                        else if(i == 4) td.innerText = totalAmount;
+                                        trLast.appendChild(td);
+                                    }
+                                    table.appendChild(trLast);
+                                    tableDiv.appendChild(table);
                                 }
-
-                                trLast.classList.add('last');
-                                for(let i = 0; i < 5; i++) {
-                                    let td = document.createElement('td');
-                                    if(i == 0) td.innerText = '합계';
-                                    else if(i == 3) td.innerText = totalCount;
-                                    else if(i == 4) td.innerText = totalAmount;
-                                    trLast.appendChild(td);
-                                }
-                                table.appendChild(trLast);
-                                tableDiv.appendChild(table);
-
-
                             }
+
+                            const makeChart = (category='menu', chartData) => {
+                                const chartEl = document.getElementById('myChart').getContext('2d');
+                                const myChart = new Chart(chartEl, {
+                                    type: category === 'menu' ? 'horizontalBar' : 'bar',
+                                    data: {
+                                        labels: Object.keys(chartData),
+                                        datasets: [{
+                                            label: category === 'menu' ? '판매수량(개) ' : '단위(만원) ',
+                                            data: Object.values(chartData),
+                                            backgroundColor: [
+                                                'rgba(36, 102, 250, 0.2)', 'rgba(36, 12, 50, 0.2)', 'rgba(3, 102, 20, 0.2)', 'rgba(36, 182, 50, 0.2)',
+                                                'rgba(136, 202, 200, 0.2)', 'rgba(36, 182, 50, 0.2)', 'rgba(36, 202, 150, 0.2)', 'rgba(60, 12, 250, 0.2)',
+                                                'rgba(36, 122, 150, 0.2)', 'rgba(236, 152, 250, 0.2)', 'rgba(136, 152, 250, 0.2)', 'rgba(160, 12, 50, 0.2)',
+                                            ],
+                                            borderWidth: 2
+                                        }]
+                                    },
+                                    options: {
+                                        legend: {
+                                            display: false
+                                        },
+                                        scales: {
+                                            yAxes: [{
+                                                ticks: {
+                                                    beginAtZero: true
+                                                }
+                                            }],
+                                            xAxes: [{
+                                                ticks: {
+                                                    beginAtZero: true
+                                                }
+                                            }]
+                                        }
+                                    }
+                                }); 
+
+                                return myChart;
+                            }    
 
                       
                 
@@ -241,8 +310,6 @@ block content
                                         editButton.style.display = 'inline';
                                     }
                                 }
-
-                                //- records.forEach(el => console.log(el.date.substring(0, 10)));
 
                                 const editHandler = () => {
                                     const today = document.querySelector('.record-title#record-date').textContent;
