@@ -43,7 +43,7 @@ block content
                                         td #{menu.menu.nameKr}
                                         td #{menu.menu.isCombo ? "세트" : "단품"}
                                         td #{menu.amount}
-                                        td #{menu.menu.price * menu.amount}
+                                        td #{(menu.menu.price * menu.amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 
                             if !(todayOrders.length)
                                 tr.no-list
@@ -53,8 +53,8 @@ block content
                                 td 합계
                                 td
                                 td
-                                td #{total}
-                                td #{amount}    
+                                td #{total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                td #{amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}    
                         
                     .button-area
                         .button#export-csv CSV추출
@@ -96,7 +96,7 @@ block content
                                     const totalMenus = orderLists.map(order => order.choices);
                                     const menuWithAmount = {};
                                     totalMenus.forEach(menu => menu.forEach(el => menuWithAmount[el.menu.nameKr] ? menuWithAmount[el.menu.nameKr] += el.amount : menuWithAmount[el.menu.nameKr] = el.amount))
-                                    myChart = makeChart("menu", menuWithAmount);
+                                    myChart = makeChart(0, "menu", menuWithAmount);
                                     tableArea.style.display = 'none';
                                     chartArea.style.display = 'block';                    
                                 } else {
@@ -108,26 +108,34 @@ block content
                             const search = async () => {
                                 let start, end;
                                 let newOrders;
+                                let monthDiff;
 
                                 const tableDiv = document.querySelector('.table-area');
                                 const tableContent = document.querySelector('.table-area table');
                                 if (toggleBtn) {
                                     start = document.querySelector('.startDate-chart').value;
                                     end = document.querySelector('.endDate-chart').value;
+                                    const mStart = moment(start, 'YYYY-MM-DD');
+                                    const mEnd = moment(end, 'YYYY-MM-DD');
+                                    const dayDiff = moment.duration(mEnd.diff(mStart)).days();
+                                    monthDiff = moment.duration(mEnd.diff(mStart)).months();
 
-                                    const nStart = new Date(start), nEnd = new Date(end);
-                                    if(nStart > nEnd) {
+                                    if(dayDiff < 0) {
                                         alert('범위를 다시 설정해주세요!');
                                         return;
                                     }
+
+                                    
 
                                     newOrders = await axios.post('/api/get-orders', { start, end })
                                 } else {
                                     start = document.querySelector('.startDate-table').value;
                                     end = document.querySelector('.endDate-table').value;
+                                    const mStart = moment(start, 'YYYY-MM-DD');
+                                    const mEnd = moment(end, 'YYYY-MM-DD');
+                                    const dayDiff = moment.duration(mEnd.diff(mStart)).days();
 
-                                    const nStart = new Date(start), nEnd = new Date(end);
-                                    if(nStart > nEnd) {
+                                    if(dayDiff < 0) {
                                         alert('범위를 다시 설정해주세요!');
                                         return;
                                     }
@@ -149,9 +157,25 @@ block content
                                 totalMenus.forEach(menu => menu.forEach(el => totalAmount += el.menu.price * el.amount))
                                 totalMenus.forEach(menu => menu.forEach(el => menuWithAmount[el.menu.nameKr] ? menuWithAmount[el.menu.nameKr] += el.amount : menuWithAmount[el.menu.nameKr] = el.amount))
                                 orderLists.forEach(menu => menu.choices.forEach(el => {
-                                    const month = moment(menu.date).format('YYYY-MM');
-                                    menuWithCost[month] ? menuWithCost[month] += el.menu.price : menuWithCost[month] = el.menu.price;
+                                    const price = el.menu.price/10000;
+                                    let temp;
+
+                                    if(monthDiff) {
+                                        const month = moment(menu.date).format('YYYY-MM'); 
+                                        menuWithCost[month] ? menuWithCost[month] += price : menuWithCost[month] = price;
+                                        temp = menuWithCost[month];
+                                        temp = temp.toFixed(2) * 1;
+                                        menuWithCost[month] = temp;
+                                    } else {
+                                        const dates = moment(menu.date).format('YYYY-MM-DD');
+                                        menuWithCost[dates] ? menuWithCost[dates] += price : menuWithCost[dates] = price;
+                                        temp = menuWithCost[dates];
+                                        temp = temp.toFixed(2) * 1;
+                                        menuWithCost[dates] = temp;
+                                    }
+
                                 }))
+
 
                                 if(toggleBtn) {
                                     const category = document.getElementById('select-for-category').value;
@@ -161,9 +185,9 @@ block content
                                     }
 
                                     if(category === 'menu') {    
-                                        myChart = makeChart(category, menuWithAmount)
+                                        myChart = makeChart(monthDiff, category, menuWithAmount)
                                     } else {
-                                        myChart = makeChart(category, menuWithCost);
+                                        myChart = makeChart(monthDiff, category, menuWithCost);
                                     }
 
                                     
@@ -191,7 +215,7 @@ block content
                                                 else if(i == 1) td.innerText = menu.menu.nameKr;
                                                 else if(i == 2) td.innerText = menu.menu.isCombo ? "세트" : "단품";
                                                 else if(i == 3) td.innerText = menu.amount; 
-                                                else if(i == 4) td.innerText = menu.menu.price * menu.amount;
+                                                else if(i == 4) td.innerText = numberWithCommas(menu.menu.price * menu.amount);
                                                 tr.appendChild(td);
                                             }
                                             table.appendChild(tr);
@@ -212,8 +236,8 @@ block content
                                     for(let i = 0; i < 5; i++) {
                                         let td = document.createElement('td');
                                         if(i == 0) td.innerText = '합계';
-                                        else if(i == 3) td.innerText = totalCount;
-                                        else if(i == 4) td.innerText = totalAmount;
+                                        else if(i == 3) td.innerText = numberWithCommas(totalCount);
+                                        else if(i == 4) td.innerText = numberWithCommas(totalAmount);
                                         trLast.appendChild(td);
                                     }
                                     table.appendChild(trLast);
@@ -221,20 +245,26 @@ block content
                                 }
                             }
 
-                            const makeChart = (category='menu', chartData) => {
+                            const makeChart = (monthDiff = 0, category='menu', chartData) => {
+                                const dynamicColors = () => {
+                                    const r = Math.floor(Math.random() * 255);
+                                    const g = Math.floor(Math.random() * 255);
+                                    const b = Math.floor(Math.random() * 255);
+                                    return "rgb(" + r + "," + g + "," + b + ", 0.2)";
+                                };
+
                                 const chartEl = document.getElementById('myChart').getContext('2d');
+                                const colors = Object.keys(chartData).map(el => dynamicColors());
                                 const myChart = new Chart(chartEl, {
-                                    type: category === 'menu' ? 'horizontalBar' : 'bar',
+                                    type: category === 'menu' ? 'horizontalBar' : monthDiff ? 'bar' : 'line',
                                     data: {
                                         labels: Object.keys(chartData),
                                         datasets: [{
                                             label: category === 'menu' ? '판매수량(개) ' : '단위(만원) ',
                                             data: Object.values(chartData),
-                                            backgroundColor: [
-                                                'rgba(36, 102, 250, 0.2)', 'rgba(36, 12, 50, 0.2)', 'rgba(3, 102, 20, 0.2)', 'rgba(36, 182, 50, 0.2)',
-                                                'rgba(136, 202, 200, 0.2)', 'rgba(36, 182, 50, 0.2)', 'rgba(36, 202, 150, 0.2)', 'rgba(60, 12, 250, 0.2)',
-                                                'rgba(36, 122, 150, 0.2)', 'rgba(236, 152, 250, 0.2)', 'rgba(136, 152, 250, 0.2)', 'rgba(160, 12, 50, 0.2)',
-                                            ],
+                                            fill: monthDiff ? true : false,
+                                            backgroundColor: colors,
+                                            borderColor: category === 'menu' ? 'horizontalBar' : monthDiff ? 'bar' : 'line' === 'line' ? 'rgba(36, 102, 250, 0.65)' : '',
                                             borderWidth: 2
                                         }]
                                     },
@@ -259,6 +289,10 @@ block content
 
                                 return myChart;
                             }    
+
+                            const numberWithCommas = (number) => {
+                                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            }
 
                       
                 
