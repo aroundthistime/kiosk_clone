@@ -57,7 +57,7 @@ block content
                                 td #{amount}    
                         
                     .button-area
-                        .button CSV추출
+                        .button#export-csv CSV추출
                         .button(onClick='convertPage()') 그래프전환
                         //- .button(onClick='ttttt()') making
                         //- script.     
@@ -92,7 +92,6 @@ block content
                                         myChart.destroy();
                                     }
                                     const chartData = await axios.post('/api/get-orders', { start : "#{today}", end : "#{today}" });
-                                    console.log(chartData);
                                     const orderLists = chartData.data.filter(order => order.isCompleted);
                                     const totalMenus = orderLists.map(order => order.choices);
                                     const menuWithAmount = {};
