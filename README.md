@@ -49,7 +49,7 @@
 * 디버깅모음
 1. 2020/11/25 - controllers.js의 getMenuDetails에서 버거가 아닌 류가 선택된 경우 defaultCombo를 populate하면 안됨 => 검사문 추가 및 똑같은 버거류 검사문(isBurger)이 customerPage.js와 controllers.js에서 중복적으로 사용됨 -> 별도의 파일로 끄집어냄
 2. 2020/11/25 - emptyMessage에서 .hidden이 적용되지 않음(display : none보다 display : flex가 우선순위가 더 높아짐) => .hidden에 !important 구문 추가
-3. 2020/11/26 - 메뉴디테일 팝업에서 알레르기 유발성 재료에 대해서 한 span 안에 모두 넣으면 , 역시 빨간 글자가 되는 문제 발생 -> 알레르기 유발성 재료들을 span이 아닌 div(inline-block)로 바꾼 후 각각의 재료에 대해 ::before로 ", " 넣어주기
+3. 2020/11/26 - 메뉴디테일 팝업에서 알레르기 유발성 재료에 대해서 한 span 안에 모두 넣으면 , 역시 빨간 글자가 되는 문제 발생 -> 알레르기 유발성 재료들을 각 재료별로 span을 만들어서 넣어주고 ::before로 콤마를 넣어서 연결시킴
 4. 2020/11/27 - menu schema에서 일부 프로퍼티의 required가 이상하게 적용됨 => Menu Schema에서 required 판별 함수에서 기존 디비스키마의 잔존 프로퍼티인 isSetMenu => isCombo로 대체
 5. 2020/11/27 - main.js에서 async/await으로 인해 "regeneratorruntime is not defined" 에러 발생 => babelrc수정 (브라우저를 크롬 최신버전으로 지정) 및 babel polyfill import
 6. 2020/11/27 - 고객주문 페이지 3분이상 조작 없을시 자동 페이지 갱신이 이루어지지 않음 => if문의 조건식 lastMouseMove === savedMouseMove으로 변경
