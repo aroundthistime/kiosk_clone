@@ -1,9 +1,9 @@
-mixin optionBlock(menu = {}, defaultOption = {})
-    if menu === defaultOption
+mixin optionBlock(menu = {}, defaultOptionId)
+    if menu.id == defaultOptionId
         .optionBlock.optionBlock--default.optionBlock--selected
             .optionBlock__id.hidden #{menu.id}
             img.optionImg(src=menu.image)
-            img.optionBlock__check(src="https://e7.pngegg.com/pngimages/541/1022/png-clipart-check-mark-computer-icons-others-miscellaneous-angle-thumbnail.png")
+            img.optionBlock__check(src="/build/img/check.png")
             .optionBlock__menu-name
                 span.language-convertable.language-convertable--kr #{menu.nameKr}
                 span.language-convertable.language-convertable--eng.hidden #{menu.nameEng}
@@ -12,8 +12,9 @@ mixin optionBlock(menu = {}, defaultOption = {})
                 span.language-convertable.language-convertable--eng.hidden + #{menu.extraPrice}Won
     else
         .optionBlock
+            .optionBlock__id.hidden #{menu.id}
             img.optionImg(src=menu.image)
-            img.optionBlock__check(src="https://e7.pngegg.com/pngimages/541/1022/png-clipart-check-mark-computer-icons-others-miscellaneous-angle-thumbnail.png")
+            img.optionBlock__check(src="/build/img/check.png")
             .optionBlock__menu-name
                 span.language-convertable.language-convertable--kr #{menu.nameKr}
                 span.language-convertable.language-convertable--eng.hidden #{menu.nameEng}

@@ -1,0 +1,22 @@
+.btn--cancel{
+    background-color: $cancel-btn-bg;
+    display : flex;
+    justify-content: center;
+    align-items: center;
+    color : $white;
+    border-radius : 8px;
+}
+
+.btn--approve{
+    background-color: $approve-btn-bg;
+    display : flex;
+    justify-content: center;
+    align-items: center;
+    color : $white;
+    border-radius : 8px;
+}
+
+.btn--disabled{
+    cursor : auto !important;
+    opacity : 0.4;
+}

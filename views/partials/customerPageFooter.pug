@@ -11,29 +11,29 @@ footer.customerPageFooter
                 span.language-convertable.language-convertable--kr 가격
                 span.language-convertable.language-convertable--eng.hidden Price
         .shopping-cart__orders#shoppingCartOrders
-            //- .shopping-cart__order
+            //- .shopping-cart__order => 장바구니 내 각 주문 양식
             //-     .order__column.order__menu 여기서 .hidden은 고정이 있는게 아니라 그때그때 언어 상태에 따라반영
             //-         span.menu-name.language-convertable.language-convertable--kr 상품명
             //-         span.menu-name.language-convertable.language-convertable--eng Food Name
             //-         span.menu-id.hidden 메뉴ID
-            //-         if 세트메뉴
-            //-             span.drink-name.language-convertable.language-convertable--kr 
+            //-         if 세트메뉴이면
+            //-             span.drink-name.language-convertable.language-convertable--kr
             //-             span.drink-name.language-convertable.language-convertable--eng 세트 음료
             //-             span.drink-id.hidden
             //-             span.side-name.language-convertable.language-convertable--kr 세트 사이드
             //-             span.side-name.language-convertable.language-convertable--eng
             //-             span.side-id.hidden
             //-     .order__column.order__amount
-            //-         .amount__btn.amount__btn--reduce <i class="fas fa-minus"></i> 불가능한 상태면 disabled붙을 수 있음
-            //-         .amount__current 1
-            //-         .amount__btn.amount__btn--increase <i class="fas fa-plus"></i>
-            //-     .order__column.order__price
+            //-         .amount__btn.amount__btn--reduce.disabled.order-bar__btn <i class="fas fa-minus"></i>
+            //-         .amount__current.no-drag 1
+            //-         .amount__btn.amount__btn--increase.order-bar__btn <i class="fas fa-plus"></i>
+            //-     .order__column.order__price.no-drag 3500 ₩
             //-     .order__price--original.hidden 맨처음 금액 담겨져있음(1개당금액)
-            //-     .order__column.order__remove
+            //-     .order__column.order__remove.order-bar__btn
             //-         <i class="fas fa-times"></i>
-        .shopping-cart__empty-message#shoppingCartEmptyMessage
+        .shopping-cart__empty-message.no-drag#shoppingCartEmptyMessage
             span.language-convertable.language-convertable--kr 메뉴를 클릭하여 장바구니에 추가하십시오
-            span.language-convertable.language-convertable--eng.hidden Click on the menu to add them to the cart
+            span.language-convertable.language-convertable--eng.hidden Click on the menu to add to the cart
     .footer-row
             .total-infos
                 .total-amount.total-info
@@ -46,9 +46,10 @@ footer.customerPageFooter
                         span.language-convertable.language-convertable--kr 총 가격
                         span.language-convertable.language-convertable--eng.hidden Total Price
                     .total-info__column--value#shoppingCartTotalPrice 0 ₩
-            .customerPage__btn.customerPage__btn--cancel.btn--cancel.btn--disabled.no-drag#customerFinalCancelBtn
-                span.language-convertable.language-convertable--kr Cancel
-                span.language-convertable.language-convertable--eng.hidden 취소
-            .customerPage__btn.customerPage__btn--order.btn--approve.btn--disabled.no-drag#customerFinalOrderBtn
-                span.language-convertable.language-convertable--kr 주문하기
-                span.language-convertable.language-convertable--eng.hidden Order
+            .customerPage__btns
+                .customerPage__btn.customerPage__btn--cancel.btn--cancel.no-drag#customerFinalCancelBtn
+                    span.language-convertable.language-convertable--kr 취소
+                    span.language-convertable.language-convertable--eng.hidden Cancel
+                .customerPage__btn.customerPage__btn--order.btn--approve.btn--disabled.no-drag#customerFinalOrderBtn
+                    span.language-convertable.language-convertable--kr 주문하기
+                    span.language-convertable.language-convertable--eng.hidden Order

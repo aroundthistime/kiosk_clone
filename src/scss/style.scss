@@ -1,29 +1,10 @@
 @import "config/variables";
 @import "config/reset.scss";
 
+@import "partials/btns.scss";
+
 @import "pages/index.scss";
 
-.btn--cancel{
-    background-color: $cancel-btn-bg;
-    display : flex;
-    justify-content: center;
-    align-items: center;
-    color : $white;
-    border-radius : 8px;
-}
-
-.btn--approve{
-    background-color: $approve-btn-bg;
-    display : flex;
-    justify-content: center;
-    align-items: center;
-    color : $white;
-    border-radius : 8px;
-}
-
-.btn--disabled{
-    opacity : 0.4;
-}
 
 .no-drag {
     -ms-user-select: none;
@@ -34,5 +15,14 @@
 }
 
 .hidden{
-    display : none;
+    display : none !important;
+}
+
+.overlay{
+    position : fixed;
+    top : 0;
+    left : 0;
+    width : 100vw;
+    height : 100vw;
+    background-color : rgba(0, 0, 0, 0.5);
 }

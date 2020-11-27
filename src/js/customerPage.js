@@ -1,11 +1,12 @@
 import axios from 'axios';
-import routes from "../../routes";
+import routes from '../../routes';
+import { isBurger } from '../../isBurger'; // Menu개체를 매개변수로 받아서 버거류면 true 아니면 false 리턴
 
 const categories = document.querySelectorAll('.category');
 const menuLists = document.querySelectorAll('.menu-list');
 const menuBlocks = document.querySelectorAll('.menuBlock');
 
-const languageSettingsToggle = document.getElementById("languageCheckbox");
+const languageSettingsToggle = document.getElementById('languageCheckbox');
 const customerFinalOrderBtn = document.getElementById('customerFinalOrderBtn');
 const customerFinalCancelBtn = document.getElementById('customerFinalCancelBtn');
 const shoppingCartEmptyMessage = document.getElementById('shoppingCartEmptyMessage');
@@ -14,9 +15,9 @@ const shoppingCartEmptyMessage = document.getElementById('shoppingCartEmptyMessa
 const menuDetailsPopup = document.getElementById('menuDetails');
 const comboSinglePopup = document.getElementById('comboSinglePopup');
 const forHereToGoPopup = document.getElementById('forHereTogoPopup');
-const orderResultPopup = document.getElementById("orderResult");
+const orderResultPopup = document.getElementById('orderResult');
 const overlay = document.getElementById('overlay');
-const loadingPopup = document.getElementById("loadingPopup")
+const loadingPopup = document.getElementById('loadingPopup');
 
 let selectedMenu;
 let lastMouseMove;
@@ -28,33 +29,45 @@ const SOLD_OUT_CLASSNAME = 'menuBlock--sold-out';
 const THREE_MINUTES_TO_MILLISECONDS = 180000;
 const TEN_SECONDS_TO_MILLISECONDS = 10000;
 
+const hidePopup = (popup) => {
+  overlay.classList.add(INVISIBLE);
+  popup.classList.add(INVISIBLE);
+};
 
-const selectLanguage = async(event) => {
-  usingKorean = languageSettingsToggle.checked;
-  showPopup(loadingPopup);
-  document.querySelectorAll(".language-convertable").forEach((text) => {
-    if (usingKorean){
-      if (text.classList.contains(".language-convertable--kr")){
+const showPopup = (popup) => {
+  overlay.classList.remove(INVISIBLE);
+  popup.classList.remove(INVISIBLE);
+};
+
+const changeLanguage = () => {
+  document.querySelectorAll('.language-convertable').forEach((text) => {
+    if (usingKorean) {
+      if (text.classList.contains('language-convertable--kr')) {
         text.classList.remove(INVISIBLE);
-      } else{
+      } else {
         text.classList.add(INVISIBLE);
       }
-    } else{
-      if (text.classList.contains(".language-convertable--eng")){
-        text.classList.remove(INVISIBLE)
-      } else{
-        text.classList.add(INVISIBLE)
-      }
+    } else if (text.classList.contains('language-convertable--eng')) {
+      text.classList.remove(INVISIBLE);
+    } else {
+      text.classList.add(INVISIBLE);
     }
-  })
-}
+  });
+};
+
+const selectLanguage = async (event) => {
+  usingKorean = !languageSettingsToggle.checked;
+  showPopup(loadingPopup);
+  await changeLanguage();
+  hidePopup(loadingPopup);
+};
 
 const selectCategory = (event) => {
   let selectedCategory = event.target;
   while (!selectedCategory.classList.contains('category')) {
     selectedCategory = selectedCategory.parentNode; // in case the click event happened on the span
   }
-  const categoryName = selectedCategory.queryselector('category-name').innerText; // 영문 카테고리명
+  const categoryName = selectedCategory.querySelector('.category-name').innerText; // 영문 카테고리명
   categories.forEach((category) => {
     if (category.classList.contains(categoryName)) {
       category.classList.add(SELECTED_CATEGORY_CLASSNAME); // 카테고리탭(Tab) 선택처리
@@ -80,13 +93,6 @@ const prepareCategories = () => {
   });
 };
 
-const isBurger = (menu) => {
-  if (menu.menuType === '사이드' || menu.menuType === '음료' || menu.menuType === '디저트') {
-    return false;
-  }
-  return true;
-};
-
 const isDiscounted = (menu) => {
   if (menu.isDiscounted === 0) {
     return false;
@@ -94,14 +100,15 @@ const isDiscounted = (menu) => {
   return true;
 };
 
-const hidePopup = (popup) => {
-  overlay.classList.add(INVISIBLE);
-  popup.classList.add(INVISIBLE);
-};
-
-const showPopup = (popup) => {
-  overlay.classList.remove(INVISIBLE);
-  popup.classList.remove(INVISIBLE);
+const fillIngredientsList = (ingredientsDOM, ingredients) => {
+  // ingredientsDOM은 html문서상 재료목록 담는 span, ingredients는 Menu 개체가 가지는 재료의 리스트
+  ingredientsDOM.innerText = ''; // 해당 ingredients DOM의 내용 초기화
+  ingredients.forEach((ingredient) => {
+    const ingredientSpan = document.createElement('SPAN');
+    ingredientSpan.classList.add('ingredient');
+    ingredientSpan.innerText = ingredient;
+    ingredientsDOM.appendChild(ingredientSpan);
+  });
 };
 
 const fillMenuDetailsPopup = (isCombo) => {
@@ -116,7 +123,7 @@ const fillMenuDetailsPopup = (isCombo) => {
   const ingredientsAllergicKr = document.getElementById('ingredientsAllergicKr');
   const ingredientsNonAllergicEng = document.getElementById('ingredientsNonAllergicEng');
   const ingredientsAllergicEng = document.getElementById('ingredientsAllergicEng');
-  const drinkOption = document.getElementById('menuDetailDrink');
+  const drinkOption = document.getElementById('menuDetailsDrink');
   const sideOption = document.getElementById('menuDetailsSide');
   menuNameKr.innerText = selectedMenu.nameKr;
   menuNameEng.innerText = selectedMenu.nameEng;
@@ -127,15 +134,10 @@ const fillMenuDetailsPopup = (isCombo) => {
     menuPrice.innerText = `${selectedMenu.price} ₩`;
   }
   menuCalories.innerText = `${selectedMenu.calories} Kcal`;
-  ingredientsNonAllergicKr.innerText = selectedMenu.ingredientsNonAllergicKr;
-  ingredientsNonAllergicEng.innerText = selectedMenu.ingredientsNonAllergicEng;
-  if (selectedMenu.ingredientsNonAllergicKr) {
-    ingredientsAllergicKr.innerText = `, ${selectedMenu.ingredientsAllergicKr}`;
-    ingredientsAllergicEng.innerText = `, ${selectedMenu.ingredientsAllergicEng}`;
-  } else {
-    ingredientsAllergicKr.innerText = '';
-    ingredientsAllergicEng.innerText = '';
-  }
+  fillIngredientsList(ingredientsNonAllergicKr, selectedMenu.ingredientsNonAllergicKr);
+  fillIngredientsList(ingredientsAllergicKr, selectedMenu.ingredientsAllergicKr);
+  fillIngredientsList(ingredientsNonAllergicEng, selectedMenu.ingredientsNonAllergicEng);
+  fillIngredientsList(ingredientsAllergicEng, selectedMenu.ingredientsAllergicEng);
   if (isCombo) {
     singleComboOption.classList.remove('single');
     singleComboOption.classList.add('combo');
@@ -153,13 +155,12 @@ const fillMenuDetailsPopup = (isCombo) => {
   showPopup(menuDetailsPopup);
 };
 
-
 const selectMenuBlock = async (event) => {
   let selectedMenuBlock = event.target;
-  if (!selectedMenuBlock.classList.contains('.menuBlock')) {
+  if (!selectedMenuBlock.classList.contains('menuBlock')) {
     selectedMenuBlock = selectedMenuBlock.parentNode;
   }
-  const selectedMenuId = selectedMenuBlock.queryselector('.menu-id').innerText;
+  const selectedMenuId = selectedMenuBlock.querySelector('.menu-id').innerText;
   const response = await axios({
     url: `/api/menu-details/${selectedMenuId}`,
     method: 'GET',
@@ -188,15 +189,19 @@ const handleSingleBtnClick = (event) => {
   fillMenuDetailsPopup(false); // isCombo에 대해 false 전달해줌
 };
 
-const handleComboBtnClick = (event) => {
+const handleComboBtnClick = async (event) => {
   hidePopup(comboSinglePopup);
-  selectedMenu = selectedMenu.defaultCombo;
+  const response = await axios({
+    url: `/api/menu-details/${selectedMenu.defaultCombo}`,
+    method: 'GET',
+  });
+  selectedMenu = response.data;
   fillMenuDetailsPopup(true); // isCombo에 대해 true 전달
 };
 
 const handlePopupCancel = (event) => {
   let popup = event.target;
-  while (!popup.classList.contains('.popup')) {
+  while (!popup.classList.contains('popup')) {
     popup = popup.parentNode;
   }
   hidePopup(popup);
@@ -213,11 +218,11 @@ const prepareComboSinglePopup = () => {
 
 const selectOptionBlock = (event) => {
   let selectedOptionBlock = event.target;
-  while (!selectedOptionBlock.classList.contains(optionBlock)) {
+  while (!selectedOptionBlock.classList.contains('optionBlock')) {
     selectedOptionBlock = selectedOptionBlock.parentNode;
   }
   const optionsList = selectedOptionBlock.parentNode;// either <side options list> or <drinks options list>
-  optionsList.querySelectorAll('optionBlock').forEach((optionBlock) => {
+  optionsList.querySelectorAll('.optionBlock').forEach((optionBlock) => {
     if (optionBlock === selectedOptionBlock) {
       optionBlock.classList.add('optionBlock--selected');
     } else {
@@ -227,7 +232,7 @@ const selectOptionBlock = (event) => {
 };
 
 const getShoppingCartTotalPrice = () => { // return the pure int version of total price of shopping cart
-  const shoppingCartTotalPrice = document.getElementById(shoppingCartTotalPrice);
+  const shoppingCartTotalPrice = document.getElementById('shoppingCartTotalPrice');
   return parseInt(shoppingCartTotalPrice.innerText.substring(0, shoppingCartTotalPrice.innerText.length - 2)); // length-2는 " ₩"을 제거해주기 위함
 };
 
@@ -239,8 +244,8 @@ const reduceOrderAmount = (event) => {
   const clickedOrderBar = clickedReduceBtn.parentNode.parentNode;
   const reducedPrice = parseInt(clickedOrderBar.querySelector('.order__price--original').innerText); // change amount, price inside the shopping cart
   const clickedOrderAmount = clickedOrderBar.querySelector('.amount__current');
-  clickedOrderAmount.innerText = parseInt(clickedOrderAmount) - 1;
-  const clickedOrderPrice = clickedOrderBar.queryselector('.order__price');
+  clickedOrderAmount.innerText = parseInt(clickedOrderAmount.innerText) - 1;
+  const clickedOrderPrice = clickedOrderBar.querySelector('.order__price');
   clickedOrderPrice.innerText = parseInt(clickedOrderPrice.innerText) - reducedPrice;
   const shoppingCartTotalAmount = document.getElementById('shoppingCartTotalAmount'); // change amount, price in the total price, amount of shopping cart
   const shoppingCartTotalPrice = document.getElementById('shoppingCartTotalPrice');
@@ -260,8 +265,8 @@ const increaseOrderAmount = (event) => {
   const clickedOrderBar = clickedIncreaseBtn.parentNode.parentNode;
   const increasedPrice = parseInt(clickedOrderBar.querySelector('.order__price--original').innerText); // change amount, price inside the shopping cart
   const clickedOrderAmount = clickedOrderBar.querySelector('.amount__current');
-  clickedOrderAmount.innerText = parseInt(clickedOrderAmount) + 1;
-  const clickedOrderPrice = clickedOrderBar.queryselector('.order__price');
+  clickedOrderAmount.innerText = parseInt(clickedOrderAmount.innerText) + 1;
+  const clickedOrderPrice = clickedOrderBar.querySelector('.order__price');
   clickedOrderPrice.innerText = parseInt(clickedOrderPrice.innerText) + increasedPrice;
   const shoppingCartTotalAmount = document.getElementById('shoppingCartTotalAmount'); // change amount, price in the total price, amount of shopping cart
   const shoppingCartTotalPrice = document.getElementById('shoppingCartTotalPrice');
@@ -272,6 +277,10 @@ const increaseOrderAmount = (event) => {
   reduceBtn.classList.remove('disabled');
 };
 
+const handleFinalOrderBtnClick = (event) => { // must decide between 포장 & 매장 first if you click 최종주문 버튼
+  showPopup(forHereToGoPopup);
+};
+
 const removeOrderBar = (event) => {
   let clickedOrderBar = event.target;
   while (!clickedOrderBar.classList.contains('shopping-cart__order')) {
@@ -279,14 +288,15 @@ const removeOrderBar = (event) => {
   }
   const clickedOrderBarPrice = parseInt(clickedOrderBar.querySelector('.order__price').innerText);
   const clickedOrderBarAmount = parseInt(clickedOrderBar.querySelector('.amount__current').innerText);
-  const shoppingCartTotalPrice = document.getElementById('shoppingCartTotalAmount'); // modify total shopping cart infos
-  const shoppingCartTotalAmount = document.getElementById('shoppingCartTotalPrice');
+  const shoppingCartTotalPrice = document.getElementById('shoppingCartTotalPrice'); // modify total shopping cart infos
+  const shoppingCartTotalAmount = document.getElementById('shoppingCartTotalAmount');
   shoppingCartTotalPrice.innerText = `${getShoppingCartTotalPrice() - clickedOrderBarPrice} ₩`;
   shoppingCartTotalAmount.innerText = parseInt(shoppingCartTotalAmount.innerText) - clickedOrderBarAmount;
   clickedOrderBar.parentNode.removeChild(clickedOrderBar); // remove clicked orderbar from html
   if (shoppingCartTotalAmount.innerText === '0') { // if shopping cart is empty
     shoppingCartEmptyMessage.classList.remove(INVISIBLE);
     customerFinalOrderBtn.classList.add('btn--disabled');
+    customerFinalOrderBtn.removeEventListener('click', handleFinalOrderBtnClick);
   }
 };
 
@@ -308,9 +318,9 @@ const addToCart = (menu, price, drink = null, side = null) => {
   menuNameEng.classList.add('language-convertable--eng');
   menuNameEng.innerText = menu.nameEng;
   const menuId = document.createElement('SPAN');
-  menuId.classList.add('.menu-id');
+  menuId.classList.add('menu-id');
   menuId.classList.add(INVISIBLE);
-  menuId.innerText = menu.id;
+  menuId.innerText = menu._id;
   let drinkNameKr;
   let drinkNameEng;
   let drinkId;
@@ -349,12 +359,16 @@ const addToCart = (menu, price, drink = null, side = null) => {
   }
   if (usingKorean) { // only view the info of the current language settings
     menuNameEng.classList.add(INVISIBLE);
-    drinkNameEng.classList.add(INVISIBLE);
-    sideNameEng.classList.add(INVISIBLE);
+    if (drink) {
+      drinkNameEng.classList.add(INVISIBLE);
+      sideNameEng.classList.add(INVISIBLE);
+    }
   } else {
     menuNameKr.classList.add(INVISIBLE);
-    drinkNameKr.classList.add(INVISIBLE);
-    sideNameKr.classList.add(INVISIBLE);
+    if (drink) {
+      drinkNameKr.classList.add(INVISIBLE);
+      sideNameKr.classList.add(INVISIBLE);
+    }
   }
   orderBarMenu.appendChild(menuNameKr);
   orderBarMenu.appendChild(menuNameEng);
@@ -374,6 +388,8 @@ const addToCart = (menu, price, drink = null, side = null) => {
   const orderReduceBtn = document.createElement('DIV');
   orderReduceBtn.classList.add('amount__btn');
   orderReduceBtn.classList.add('amount__btn--reduce');
+  orderReduceBtn.classList.add('order-bar__btn');
+  orderReduceBtn.classList.add('disabled');
   const orderReduceIcon = document.createElement('I');
   orderReduceIcon.classList.add('fas');
   orderReduceIcon.classList.add('fa-minus');
@@ -385,6 +401,7 @@ const addToCart = (menu, price, drink = null, side = null) => {
   const orderIncreaseBtn = document.createElement('DIV');
   orderIncreaseBtn.classList.add('amount__btn');
   orderIncreaseBtn.classList.add('amount__btn--increase');
+  orderIncreaseBtn.classList.add('order-bar__btn');
   const orderIncreaseIcon = document.createElement('I');
   orderIncreaseIcon.classList.add('fas');
   orderIncreaseIcon.classList.add('fa-plus');
@@ -407,6 +424,7 @@ const addToCart = (menu, price, drink = null, side = null) => {
   const orderBarRemoveBtn = document.createElement('DIV');
   orderBarRemoveBtn.classList.add('order__column');
   orderBarRemoveBtn.classList.add('order__remove');
+  orderBarRemoveBtn.classList.add('order-bar__btn');
   const orderBarRemoveIcon = document.createElement('I');
   orderBarRemoveIcon.classList.add('fas');
   orderBarRemoveIcon.classList.add('fa-times');
@@ -420,18 +438,51 @@ const addToCart = (menu, price, drink = null, side = null) => {
   shoppingCartTotalAmount.innerText = parseInt(shoppingCartTotalAmount.innerText) + 1;
   shoppingCartEmptyMessage.classList.add(INVISIBLE); // remove shopping cart empty message
   customerFinalOrderBtn.classList.remove('btn--disabled'); // able 최종주문 버튼
+  customerFinalOrderBtn.addEventListener('click', handleFinalOrderBtnClick);
+};
+
+const alreadyInCart = (menuId, drinkId = null, sideId = null) => {
+  if (drinkId) { // 세트
+    return Array.from(document.querySelectorAll('.shopping-cart__order')).some((orderBar) => {
+      let orderBarDrinkId = orderBar.querySelector('.drink-id');
+      if (!orderBarDrinkId) { // 세트메뉴를 찾고있는데 단품이면
+        return false;
+      }
+      const orderBarMenuId = orderBar.querySelector('.menu-id').innerText;
+      const orderBarSideId = orderBar.querySelector('.side-id').innerText;
+      orderBarDrinkId = orderBarDrinkId.innerText;
+      if (orderBarMenuId === menuId && orderBarSideId === sideId && orderBarDrinkId === drinkId) {
+        orderBar.querySelector('.amount__btn--increase').click(); // 이미 존재하면 수량 하나 증가
+        return true;
+      }
+      return false;
+    });
+  } // 단품
+  return Array.from(document.querySelectorAll('.shopping-cart__order')).some((orderBar) => {
+    if (orderBar.querySelector('.drink-id')) { // 단품찾고있는데 세트메뉴이면
+      return false;
+    }
+    const orderBarMenuId = orderBar.querySelector('.menu-id').innerText;
+    if (orderBarMenuId === menuId) {
+      orderBar.querySelector('.amount__btn--increase').click(); // 이미 존재하면 수량 하나 증가
+      return true;
+    }
+    return false;
+  });
 };
 
 const handleAddCartBtnClick = (event) => {
-  const singleComboOption = document.getElementById('singelComboOption');
+  const singleComboOption = document.getElementById('singleComboOption');
   let menuPrice = selectedMenu.price;
   if (singleComboOption.classList.contains('single')) {
-    addToCart(selectedMenu, menuPrice);
+    if (!alreadyInCart(selectedMenu._id)) {
+      addToCart(selectedMenu, menuPrice);
+    }
   } else {
     let selectedSide;
     let selectedDrink;
     document.querySelectorAll('.optionBlock--selected').forEach((selectedOptionBlock) => {
-      const optionExtraPrice = selectedOptionBlock.querySelector('.optionBlock__extra-price');
+      const optionExtraPrice = selectedOptionBlock.querySelector('.optionBlock__extra-price').querySelector('span').innerText;
       menuPrice += parseInt(optionExtraPrice.substring(2, optionExtraPrice.length - 1));
       const optionNameBox = selectedOptionBlock.querySelector('.optionBlock__menu-name');
       const optionNameKr = optionNameBox.querySelector('.language-convertable--kr').innerText;
@@ -451,8 +502,12 @@ const handleAddCartBtnClick = (event) => {
         };
       }
     });
-    addToCart(selectedMenu, menuPrice, selectedDrink, selectedSide);
+    console.log(selectedSide, selectedDrink);
+    if (!alreadyInCart(selectedMenu._id, selectedDrink.id, selectedSide.id)) {
+      addToCart(selectedMenu, menuPrice, selectedDrink, selectedSide);
+    }
   }
+  hidePopup(menuDetailsPopup);
 };
 
 const prepareMenuDetailsPopup = () => {
@@ -467,118 +522,116 @@ const prepareMenuDetailsPopup = () => {
 };
 
 const getOrderContentsFromCart = () => {
-  const shoppingCartOrders = document.getElementById("shoppingCartOrders");
-  let orderContents = [];
-  shoppingCartOrders.querySelectorAll(".shopping-cart__order").forEach((orderBar) => {
-    const menuId = orderBar.querySelector(".menu-id").innerText;
-    const price = parseInt(orderBar.querySelector(".order__price").innerText);
-    const amount = parseInt(orderBar.querySelector(".amount__current").innerText);
-    const sideIdSpan = orderBar.querySelector(".side-id");
-    const drinkIdSpan = orderBar.querySelector(".drink-id");
-    if (sideIdSpan){
+  const shoppingCartOrders = document.getElementById('shoppingCartOrders');
+  const orderContents = [];
+  shoppingCartOrders.querySelectorAll('.shopping-cart__order').forEach((orderBar) => {
+    const menuId = orderBar.querySelector('.menu-id').innerText;
+    const price = parseInt(orderBar.querySelector('.order__price').innerText);
+    const amount = parseInt(orderBar.querySelector('.amount__current').innerText);
+    const sideIdSpan = orderBar.querySelector('.side-id');
+    const drinkIdSpan = orderBar.querySelector('.drink-id');
+    if (sideIdSpan) {
       orderContents.push({
         menuId,
         price,
         amount,
-        drinkId : drinkIdSpan.innerText,
-        sideId : sideIdSpan.innerText
-      })
+        drinkId: drinkIdSpan.innerText,
+        sideId: sideIdSpan.innerText,
+      });
     } else {
       orderContents.push({
         menuId,
         price,
         amount,
-        drinkId : null,
-        sideId : null
-      })
+        drinkId: null,
+        sideId: null,
+      });
     }
-  })
+  });
   return orderContents;
-}
+};
 
 const sendOrder = async (orderContents, totalPrice, isTakeout) => {
   const response = await axios({
-    url : routes.sendOrder,
-    method : "POST",
-    data : {
+    url: routes.sendOrder,
+    method: 'POST',
+    data: {
       orderContents,
       totalPrice,
-      isTakeout
-    }
+      isTakeout,
+    },
   });
-  const orderSuccessPopup = document.getElementById("orderSuccess");
-  const orderFailPopup = document.getElementById("orderFail");
-  if (response.status == 200) { //주문성공
-    const orderNum = document.getElementById("orderNum");
-    orderNum.innerText = response.data //수신한 주문번호 대입
+  const orderSuccessPopup = document.getElementById('orderSuccess');
+  const orderFailPopup = document.getElementById('orderFail');
+  if (response.status === 200) { // 주문성공
+    const orderNum = document.getElementById('orderNum');
+    orderNum.innerText = response.data; // 수신한 주문번호 대입
     orderSuccessPopup.classList.remove(INVISIBLE);
     orderFailPopup.classList.add(INVISIBLE);
-  } else{
+  } else {
     orderSuccessPopup.classList.add(INVISIBLE);
-    orderFailPopup.classList.remove(INVISIBLE)
+    orderFailPopup.classList.remove(INVISIBLE);
   }
   hidePopup(loadingPopup);
   showPopup(orderResultPopup);
-  setTimeout(refreshCustomerPage, TEN_SECONDS_TO_MILLISECONDS); //주문번호 보여준 후에 10초후까지 확인버튼 누르지 않으면 자동 페이지갱신
-}
+  setTimeout(refreshCustomerPage, TEN_SECONDS_TO_MILLISECONDS); // 주문번호 보여준 후에 10초후까지 확인버튼 누르지 않으면 자동 페이지갱신
+};
 
-const gatherOrderInfo = (event) => {//포장여부 설정시 포장여부, 주문내용, 총 가격 모두 추출
+const gatherOrderInfo = (event) => { // 포장여부 설정시 포장여부, 주문내용, 총 가격 모두 추출
   let eatingLocation = event.target;
-  while(!eatingLocation.classList.contains("binary-option")){
+  while (!eatingLocation.classList.contains('binary-option')) {
     eatingLocation = eatingLocation.parentNode;
   }
   hidePopup(forHereToGoPopup);
   showPopup(loadingPopup);
   let isTakeout;
-  if (eatingLocation.classList.contains("binary-option--toGo")){
+  if (eatingLocation.classList.contains('binary-option--toGo')) {
     isTakeout = true;
-  } else{
+  } else {
     isTakeout = false;
   }
   const orderContents = getOrderContentsFromCart();
   const totalPrice = getShoppingCartTotalPrice();
   sendOrder(orderContents, totalPrice, isTakeout);
-}
-
-const prepareForHereToGoPopup = () => {
-  const forHereBtn = forHereToGoPopup.querySelector(".binary-option--forHere");
-  const toGoBtn = forHereToGoPopup.querySelector(".binary-option--toGo");
-  const closeBtn = forHereToGoPopup.querySelector(".binary-options-popup__cancel");
-  forHereBtn.addEventListener("click", gatherOrderInfo);
-  toGoBtn.addEventListener("click", gatherOrderInfo);
-  closeBtn.addEventListener("click", handlePopupCancel);
 };
 
-const refreshCustomerPage = (event = null) {
+const prepareForHereToGoPopup = () => {
+  const forHereBtn = forHereToGoPopup.querySelector('.binary-option--forHere');
+  const toGoBtn = forHereToGoPopup.querySelector('.binary-option--toGo');
+  const closeBtn = forHereToGoPopup.querySelector('.binary-options-popup__cancel');
+  forHereBtn.addEventListener('click', gatherOrderInfo);
+  toGoBtn.addEventListener('click', gatherOrderInfo);
+  closeBtn.addEventListener('click', handlePopupCancel);
+};
+
+const refreshCustomerPage = (event = null) => {
   location.reload();
-}
-
-const handleFinalOrderBtnClick = (event) => { //must decide between 포장 & 매장 first if you click 최종주문 버튼
-  showPopup(forHereToGoPopup);
-}
-
+};
 const prepareCustomerFinalBtns = () => {
   customerFinalCancelBtn.addEventListener('click', refreshCustomerPage);
-  customerFinalOrderBtn.addEventListener("click", handleFinalOrderBtnClick);
 };
 
 const detectMouseMove = (event) => {
   const savedMouseMove = lastMouseMove = Math.random();
   setTimeout(() => { // refresh the page if no one uses the machine for 3 minutes
-    if (lastMouseMove !== savedMouseMove) {
+    if (lastMouseMove === savedMouseMove) {
       refreshCustomerPage();
     }
   }, THREE_MINUTES_TO_MILLISECONDS);
 };
 
-const init = () => {
-  languageSettingsToggle.addEventListener("click", selectLanguage);
+const initCustomerPage = () => {
+  languageSettingsToggle.addEventListener('click', selectLanguage);
   prepareCategories();
   prepareMenuBlocks();
   prepareComboSinglePopup();
   prepareMenuDetailsPopup();
   prepareForHereToGoPopup();
   prepareCustomerFinalBtns(); // 최종 주문, 최종 취소 버튼
-  document.getElementById("orderResultBtn").addEventListener("click", refreshCustomerPage); //주문 다 끝나고 확인버튼 누르면 refresh
+  document.getElementById('orderResultBtn').addEventListener('click', refreshCustomerPage); // 주문 다 끝나고 확인버튼 누르면 refresh
   window.addEventListener('mousemove', detectMouseMove);
 };
+
+if (languageSettingsToggle) { // 언어설정이 있으면 고객주문페이지
+  initCustomerPage();
+}

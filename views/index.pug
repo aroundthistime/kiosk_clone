@@ -13,11 +13,12 @@ block content
                 div(class=`category ${category.nameEng} no-drag`)
                     span.language-convertable.language-convertable--kr #{category.nameKr}
                     span.language-convertable.language-convertable--eng.hidden.category-name #{category.nameEng}
-        .menu-list
+        .menu-lists
             each category in categories
                 div(class=`menu-list menu-list__${category.nameEng} hidden`)
-                        //- each menu in category.menu
-                            //- +menuBlock(menu) 오류방지 - 나중에 데이터 생기면 주석해제
+                    if category.menus
+                        each menu in category.menus
+                            +menuBlock(menu)
     include ./partials/customerPageFooter
     .overlay.hidden#overlay
     include ./partials/customerPagePopups

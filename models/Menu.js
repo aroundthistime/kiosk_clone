@@ -16,7 +16,7 @@ const MenuSchema = new mongoose.Schema({
   image: {
     type: String,
     required() {
-      return !(this.isSetMenu);
+      return !(this.isCombo) || this.isDefaultCombo;
     },
   },
   price: {
@@ -32,7 +32,7 @@ const MenuSchema = new mongoose.Schema({
   calories: {
     type: Number,
     required() {
-      return !(this.isSetMenu) || this.isDefaultCombo;
+      return !(this.isCombo) || this.isDefaultCombo;
     },
   },
   isCombo: {
@@ -46,21 +46,21 @@ const MenuSchema = new mongoose.Schema({
   isDefaultCombo: {
     type: Boolean,
     required() {
-      return this.isSetMenu;
+      return this.isCombo;
     },
   },
   drink: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'menus',
     required() {
-      return this.isSetMenu;
+      return this.isCombo;
     },
   },
   sideMenu: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'menus',
     requried() {
-      return this.isSetMenu;
+      return this.isCombo;
     },
   },
   ingredientsNonAllergicKr: [
@@ -106,6 +106,10 @@ const MenuSchema = new mongoose.Schema({
   isRecommended: {
     type: Boolean,
     default: true,
+  },
+  isDiscontinued: {
+    type: Boolean,
+    default: false,
   },
 });
 
