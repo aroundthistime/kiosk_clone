@@ -1,0 +1,36 @@
+mixin salesTable(todayOrders)
+    //- 천 단위로 숫자에 콤마 부여 함수
+    - const numberWithCommas = (number) => { return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+    
+    table
+        tr.first
+            th 일자 
+            th 품명
+            th 비고
+            th 수량
+            th 단가
+
+            - let amount = 0; //- 금액 총합
+            - let total = 0;  //- 수량 총합
+            each order in todayOrders
+                each menu in order.choices
+                    - total += menu.amount 
+                    - amount += (menu.menu.price * menu.amount);
+                    tr
+                        td #{moment(order.date).format('YYYY-MM-DD HH:mm:ss')}
+                        td #{menu.menu.nameKr}
+                        td #{menu.menu.isCombo ? "세트" : "단품"}
+                        td #{numberWithCommas(menu.amount)}
+                        td #{numberWithCommas(menu.menu.price * menu.amount)}
+
+            if !(todayOrders.length)
+                tr.no-list
+                    td(colspan='5') 해당기간의 판매 실적이 없습니다.
+
+            tr.last
+                td 합계
+                td
+                td
+                td #{numberWithCommas(total)}
+                td #{numberWithCommas(amount)}
+    

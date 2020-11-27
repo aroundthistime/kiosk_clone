@@ -1,0 +1,360 @@
+@import '../mixins/button-mixin.scss';
+@import '../mixins//fontStyle-mixin.scss';
+
+// salesControll 페이지 관련 scss 설정
+#salesControll {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .topArea {
+    height: 200px;
+    background-color: #185494;
+    margin-bottom: 4rem;
+
+    .logo {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    span.title {
+      position: absolute;
+      top: 50%;
+      left: calc(1rem + 150px);
+      transform: translateY(-50%);
+      @include setBlackHans(#fff, 5rem);
+    }
+
+    @media screen and (max-width: 500px) {
+      .logo {
+        width: 100px;
+        height: 100px;
+      }
+      span.title {
+        font-size: 4rem;
+        margin-left: -2rem;
+      }
+    }
+  }
+
+  .middleArea {
+    span.title {
+      @include setBlackHans($size: 3rem);
+    }
+    .table {
+      width: 90%;
+      margin: auto;
+      margin-bottom: 4rem;
+
+      table {
+        width: 100%;
+        border: 2px solid #dedede;
+        border-collapse: collapse;
+        text-align: center;
+        margin-bottom: 1.5rem;
+
+        tr {
+          border-bottom: 2px solid #dedede;
+        }
+        tr.first {
+          background-color: #b2b2b2;
+          color: #fff;
+        }
+        tr.last {
+          border-top: solid;
+        }
+        tr.no-list {
+          height: 80px;
+        }
+      }
+    }
+
+    .button-area {
+      display: flex;
+      float: right;
+      margin-bottom: 2rem;
+
+      .button {
+        @include setButton($bgColor: #595959, $width: 125px);
+        @include setBlackHans($color: #fff, $size: 1.25rem);
+
+        &:hover {
+          opacity: 0.65;
+          cursor: pointer;
+        }
+      }
+      .button + .button {
+        margin-left: 1rem;
+      }
+    }
+
+    .input-area {
+      margin: 2rem 0 2rem 0;
+      position: relative;
+
+      input {
+        height: 30px;
+        width: 150px;
+      }
+      input + input {
+        margin-left: 1rem;
+      }
+
+      select {
+        margin-right: 5rem;
+        height: 34px;
+        padding: 5px;
+        float: right;
+      }
+      .font-icon {
+        font-size: 30px;
+        position: absolute;
+        right: 0;
+
+        &:hover {
+          opacity: 0.65;
+          cursor: pointer;
+        }
+      }
+    }
+    @media screen and (max-width: 815px) {
+      .input-area {
+        input {
+          width: 130px;
+        }
+        input + input {
+          margin-right: 0;
+        }
+        select + select {
+          margin-top: 0.35rem;
+          margin-right: 5rem;
+        }
+      }
+    }
+    @media screen and (max-width: 660px) {
+      .input-area {
+        input + input {
+          margin-right: 5rem;
+        }
+        select {
+          float: left;
+          //margin: 0;
+          margin-top: 0.35rem;
+          margin-bottom: 0.5rem;
+        }
+        select + select {
+          margin-left: calc(-2rem - 2px);
+        }
+      }
+    }
+
+    .chart {
+      width: 90%;
+      margin: auto;
+      display: none;
+
+      #myChart {
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
+
+  .bottomArea {
+    span.title {
+      @include setBlackHans($size: 3rem);
+    }
+
+    .record {
+      width: 90%;
+      margin: auto;
+      margin-bottom: 8rem;
+      display: flex;
+      justify-content: space-between;
+
+      .calendar-area {
+        width: 50%;
+        min-height: 450px;
+        max-height: 500px;
+
+        #calendar {
+          width: 100%;
+          height: 100%;
+        }
+        .fc-daygrid-day.fc-day.with-record {
+          background-color: rgba(144, 243, 157, 0.288);
+        }
+        .fc-daygrid-day.fc-day.fc-day-today {
+          font-weight: bolder;
+          text-decoration: underline;
+        }
+        .fc-day-sat {
+          color: #0000ff;
+        }
+        .fc-day-sun {
+          color: #ff0000;
+        }
+        .fc-daygrid-body,
+        .fc-scrollgrid-sync-table,
+        .fc-col-header {
+          width: 100% !important;
+        }
+        .fc-head .fc-widget-header {
+          margin-right: 0 !important;
+        }
+        .fc-scroller {
+          overflow: visible !important;
+        }
+
+        @media screen and (max-width: 1000px) {
+          .fc-toolbar-title {
+            font-size: 1.35rem;
+          }
+        }
+        @media screen and (max-width: 870px) {
+          .fc-toolbar-title {
+            font-size: 1rem;
+          }
+        }
+      }
+
+      .write-area {
+        position: relative;
+        padding: 15px;
+        border: 1px solid #000;
+        width: 45%;
+        min-height: 435px;
+        max-height: 500px;
+        box-sizing: border-box;
+
+        .title-area {
+          margin-bottom: 1rem;
+
+          .font-icon {
+            font-size: 30px;
+            position: absolute;
+            right: 15px;
+
+            &:hover {
+              opacity: 0.65;
+              cursor: pointer;
+            }
+          }
+          .record-title {
+            margin-left: 1rem;
+            font-size: 25px;
+            font-weight: bold;
+          }
+
+          @media screen and (max-width: 1000px) {
+            .record-title {
+              font-size: 1.35rem;
+              margin-left: 0.65rem;
+            }
+          }
+          @media screen and (max-width: 870px) {
+            .record-title#record-special {
+              display: none;
+            }
+          }
+        }
+
+        .body-area {
+          display: flex;
+          height: calc(100% - 33px - 1rem);
+          justify-content: center;
+          align-items: center;
+
+          pre {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding-left: 17px;
+            padding-right: 17px;
+            padding-top: 20px;
+            overflow-y: auto;
+          }
+
+          .editable-area {
+            width: 100%;
+            height: 100%;
+            display: none;
+
+            #record-form {
+              flex-direction: column;
+              justify-content: space-between;
+              display: flex;
+              width: 100%;
+
+              #input-record {
+                box-sizing: border-box;
+                padding: 15px;
+                resize: none;
+                width: 100%;
+                height: 80%;
+              }
+            }
+
+            .button-area {
+              width: 100%;
+              display: flex;
+              justify-content: space-between;
+
+              .button {
+                @include setButton($bgColor: #595959, $width: 40%);
+                @include setBlackHans($size: 1.25rem);
+                color: #fff;
+                border: none;
+
+                &:hover {
+                  opacity: 0.65;
+                  cursor: pointer;
+                }
+              }
+              .button + .button {
+                background-color: #185494;
+              }
+
+              @media screen and (max-width: 1024px) {
+                .button {
+                  width: 30%;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @media screen and (max-width: 710px) {
+      .record {
+        display: flex;
+        flex-direction: column;
+
+        .calendar-area {
+          width: 100%;
+          padding: 0;
+
+          .fc-toolbar-title {
+            font-size: 1.75rem;
+          }
+        }
+
+        .write-area {
+          margin: 2.5rem 0 0 0;
+          width: 100%;
+          box-sizing: border-box;
+
+          .record-title#record-special {
+            display: inline !important;
+          }
+
+          .body-area {
+            height: 400px;
+          }
+        }
+      }
+    }
+  }
+}

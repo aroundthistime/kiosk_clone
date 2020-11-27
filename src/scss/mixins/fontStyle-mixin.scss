@@ -1,0 +1,6 @@
+// 검은고딕 글씨체 관련 믹스인
+@mixin setBlackHans($color: #000, $size: 1rem) {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: $size;
+  color: $color;
+}

@@ -41,10 +41,10 @@ export const salesControllPage = async (req, res) => {
       success: false,
       errors: {
         'access-error': error.message,
-      }
+      },
     });
   }
-}
+};
 
 export const getRecord = async (req, res) => {
   const { date, content } = req.body;
@@ -59,57 +59,35 @@ export const getRecord = async (req, res) => {
     if (!record) {
       data = await newRecord.save();
     } else {
-      data = await record.update(
-        { $set: { content } }
-      );
+      data = await record.update({ $set: { content } });
     }
 
     const records = await Record.find();
     return res.status(200).json(records);
-    
   } catch (error) {
     console.log(error.message);
     return res.status(400);
   }
-}
+};
 
-export const makeTheOrder = async (req, res) => {
-  const newMenu = {
-    menuType: ['BURGER', 'DRINK', 'DESSERTS'][Math.random() * 3 >> 0],
-    nameKr: ['주니어와퍼', '콜라', '감자튀김'][Math.random() * 3 >> 0],
-    nameEng: ['juniorWapper', 'Cola', 'Pommes'][Math.random() * 3 >> 0],
-    image: '123',
-    price: Math.random() * 10000 >> 0,
-    calories: 1,
-    isCombo: false,
-  }
+export const getAllRecords = async (req, res) => {
   try {
-    const menu = await new Menu(newMenu).save();
-    const newOrder = {
-      orderNumber: Math.random() * 10 >> 0,
-      isTakeout: true,
-      date: Date.now(),
-      price: Math.random() * 10000 >> 0,
-      isCompleted: true,
-      choices: [{ menu, amount: 1}],
-    }
-    const order = await new Order(newOrder).save();
-    console.log(order);
-    return res.status(200).json();
+    const records = await Record.find();
+    return res.status(200).json(records);
   } catch (error) {
     console.log(error.message);
     return res.status(400);
   }
-}
+};
 
 export const getOrdersForTable = async (req, res) => {
   const { start, end } = req.body;
   try {
     const orders = await Order.find({
       date: {
-        $gte: new Date(start + " 00:00:00"),
-        $lte: new Date(end + " 23:59:59"),
-      }
+        $gte: new Date(start + ' 00:00:00'),
+        $lte: new Date(end + ' 23:59:59'),
+      },
     }).populate('choices.menu');
 
     return res.status(200).json(orders);
@@ -117,4 +95,4 @@ export const getOrdersForTable = async (req, res) => {
     console.log(error.message);
     return res.status(400);
   }
-}
+};

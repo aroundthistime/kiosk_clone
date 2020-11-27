@@ -5,8 +5,8 @@ const SALESCONTROLL_PAGE = '/salesControll';
 const MENU_DETAILS = '/api/menu-details/:id';
 const SEND_ORDER = '/api/send-order';
 const GET_RECORDS = '/api/submit-record';
-const MAKE_ORDER = '/api/make-order';
 const GET_ORDRES = '/api/get-orders';
+const GET_ALL_RECORDS = '/api/get-all-records';
 
 const routes = {
   customerPage: CUSTOMER_PAGE,
@@ -14,8 +14,8 @@ const routes = {
   menuDetails: MENU_DETAILS,
   sendOrder: SEND_ORDER,
   getRecord: GET_RECORDS,
-  makeOrder: MAKE_ORDER,
   getOrders: GET_ORDRES,
+  getAllRecords: GET_ALL_RECORDS,
 };
 
 export default routes;
