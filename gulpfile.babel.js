@@ -36,7 +36,7 @@ const styles = () => gulp.src(routes.scss.src).pipe(sass().on('error', sass.logE
 const js = () => gulp.src(routes.js.src).pipe(bro({
   transform: [
     babelify.configure({ presets: ['@babel/preset-env'] }),
-    // ['uglifyify', { global: true }],
+    ['uglifyify', { global: true }],
   ],
 })).pipe(gulp.dest(routes.js.dest));
 
