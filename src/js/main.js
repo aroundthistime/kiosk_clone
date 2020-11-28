@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 
-import './setTableAndChart';
-import './setCalendar';
-import './exportCSVFile';
-import './setRecord';
+import './salesControll/setTableAndChart';
+import './salesControll/setCalendar';
+import './salesControll/exportCSVFile';
+import './salesControll/setRecord';
