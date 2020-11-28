@@ -32,8 +32,17 @@ block content
                         +salesTable(todayOrders)
                         
                     .button-area
+                        .button#dummydummy 더미데이터 생성
                         .button#export-csv CSV추출
                         .button.convertPage 그래프전환
+
+                        script.     
+                            const dummy = document.getElementById('dummydummy');
+
+                            dummy.addEventListener('click', async () => {
+                                const order = await axios.get('/api/make-dummy');
+                                console.log(moment(order.data.date).format('YYYY-MM-DD') + ' 날짜 데이터 생성');
+                            })
 
                 .chart
                     .input-area 

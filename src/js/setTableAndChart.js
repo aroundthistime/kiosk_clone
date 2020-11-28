@@ -1,6 +1,11 @@
 import axios from 'axios';
 import moment from 'moment';
 
+const WARNING_MESSAGE = '범위를 다시 설정해주세요.';
+const BLANK_MESSAGE = '해당 기간의 판매실적이 없습니다.';
+const TABLE_TITLE = ['일자', '품명', '비고', '수량', '단가'];
+const COLSAPN = 5;
+
 document.addEventListener('DOMContentLoaded', () => {
   let toggleBtn = false;
   let myChart;
@@ -67,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       monthDiff = moment.duration(mEnd.diff(mStart)).months();
 
       if (dayDiff < 0) {
-        alert('범위를 다시 설정해주세요!');
+        alert(WARNING_MESSAGE);
         return;
       }
 
@@ -80,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
       dayDiff = moment.duration(mEnd.diff(mStart)).days();
 
       if (dayDiff < 0) {
-        alert('범위를 다시 설정해주세요!');
+        alert(WARNING_MESSAGE);
         return;
       }
 
@@ -136,6 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
       })
     );
 
+    // 차트용 데이터 날짜순 정렬
+    const menuWithCostSorted = {};
+    Object.keys(menuWithCost)
+      .sort()
+      .forEach((key) => {
+        menuWithCostSorted[key] = menuWithCost[key];
+      });
+
     if (toggleBtn) {
       const category = document.getElementById('select-for-category').value;
 
@@ -146,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (category === 'menu') {
         myChart = makeChart(monthDiff, category, menuWithAmount);
       } else {
-        myChart = makeChart(monthDiff, category, menuWithCost);
+        myChart = makeChart(monthDiff, category, menuWithCostSorted);
       }
     } else {
       const table = makeTable(orderLists, totalCount, totalAmount);
@@ -173,9 +186,9 @@ const makeTable = (orderLists, totalCount, totalAmount) => {
   const trFirst = document.createElement('tr');
   const trLast = document.createElement('tr');
   trFirst.classList.add('first');
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < COLSAPN; i++) {
     let th = document.createElement('th');
-    th.innerText = ['일자', '품명', '비고', '수량', '단가'][i];
+    th.innerText = TABLE_TITLE[i];
     trFirst.appendChild(th);
   }
   table.appendChild(trFirst);
@@ -183,7 +196,7 @@ const makeTable = (orderLists, totalCount, totalAmount) => {
   orderLists.forEach((order) => {
     order.choices.forEach((menu) => {
       let tr = document.createElement('tr');
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < COLSAPN; i++) {
         let td = document.createElement('td');
         if (i == 0)
           td.innerText = moment(order.date).format('YYYY-MM-DD HH:mm:ss');
@@ -201,15 +214,15 @@ const makeTable = (orderLists, totalCount, totalAmount) => {
   if (!orderLists.length) {
     let tr = document.createElement('tr');
     let td = document.createElement('td');
-    td.innerText = '해당기간의 판매 실적이 없습니다.';
-    td.colSpan = '5';
+    td.innerText = BLANK_MESSAGE;
+    td.colSpan = COLSAPN;
     tr.appendChild(td);
     tr.classList.add('no-list');
     table.appendChild(tr);
   }
 
   trLast.classList.add('last');
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < COLSAPN; i++) {
     let td = document.createElement('td');
     if (i == 0) td.innerText = '합계';
     else if (i == 3) td.innerText = numberWithCommas(totalCount);

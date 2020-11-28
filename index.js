@@ -4,9 +4,11 @@ import moment from 'moment';
 import './db';
 import {
   fakeCustomerPage,
+  fakeDB,
   getAllRecords,
   getOrdersForTable,
   getRecord,
+  makeDummyData,
   makeTheOrder,
   salesControllPage,
 } from './controllers';
@@ -32,6 +34,9 @@ app.get(routes.salesControllPage, salesControllPage);
 app.post(routes.getRecord, getRecord);
 app.post(routes.getOrders, getOrdersForTable);
 app.get(routes.getAllRecords, getAllRecords);
+app.get(routes.makeDummy, makeDummyData);
+
 app.get('/order', (req, res) => res.render('order'));
 app.get('/alert', (req, res) => res.render('alert'));
 // app.get('/salesControll', (req, res) => res.render('salesControll'));
+// app.get('/fake', fakeDB);

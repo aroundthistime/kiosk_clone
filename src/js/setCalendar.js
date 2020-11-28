@@ -1,10 +1,12 @@
 import moment from 'moment';
 
+const ASPECTRATIO = 1;
+
 document.addEventListener('DOMContentLoaded', () => {
   const calendarEl = document.getElementById('calendar');
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
-    aspectRatio: 1, // 달력 가로세로 비율 설정
+    aspectRatio: ASPECTRATIO, // 달력 가로세로 비율 설정
     headerToolbar: {
       left: 'prev',
       center: 'title',
