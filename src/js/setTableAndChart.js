@@ -193,23 +193,27 @@ const makeTable = (orderLists, totalCount, totalAmount) => {
   }
   table.appendChild(trFirst);
 
-  orderLists.forEach((order) => {
-    order.choices.forEach((menu) => {
-      let tr = document.createElement('tr');
-      for (let i = 0; i < COLSAPN; i++) {
-        let td = document.createElement('td');
-        if (i == 0)
-          td.innerText = moment(order.date).format('YYYY-MM-DD HH:mm:ss');
-        else if (i == 1) td.innerText = menu.menu.nameKr;
-        else if (i == 2) td.innerText = menu.menu.isCombo ? '세트' : '단품';
-        else if (i == 3) td.innerText = menu.amount;
-        else if (i == 4)
-          td.innerText = numberWithCommas(menu.menu.price * menu.amount);
-        tr.appendChild(td);
-      }
-      table.appendChild(tr);
+  orderLists
+    .sort((prev, next) => prev.date.localeCompare(next.date))
+    .forEach((order) => {
+      order.choices.forEach((menu) => {
+        let tr = document.createElement('tr');
+        for (let i = 0; i < COLSAPN; i++) {
+          let td = document.createElement('td');
+          if (i == 0)
+            td.innerText = moment(order.date).format('YYYY-MM-DD HH:mm:ss');
+          else if (i == 1) td.innerText = menu.menu.nameKr;
+          else if (i == 2) td.innerText = menu.menu.isCombo ? '세트' : '단품';
+          else if (i == 3) td.innerText = menu.amount;
+          else if (i == 4)
+            td.innerText = numberWithCommas(menu.menu.price * menu.amount);
+          tr.appendChild(td);
+        }
+        table.appendChild(tr);
+      });
     });
-  });
+
+  console.log(orderLists);
 
   if (!orderLists.length) {
     let tr = document.createElement('tr');

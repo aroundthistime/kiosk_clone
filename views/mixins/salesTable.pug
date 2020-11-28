@@ -15,7 +15,7 @@ mixin salesTable(todayOrders)
 
             if !(todayOrders.length)
                 tr.no-list
-                    td(colspan='5') 해당기간의 판매 실적이 없습니다.
+                    td(colspan='5') 해당 기간의 판매 실적이 없습니다.
             else
                 each order in todayOrders
                     each menu in order.choices
