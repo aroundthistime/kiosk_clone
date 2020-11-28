@@ -213,8 +213,6 @@ const makeTable = (orderLists, totalCount, totalAmount) => {
       });
     });
 
-  console.log(orderLists);
-
   if (!orderLists.length) {
     let tr = document.createElement('tr');
     let td = document.createElement('td');
