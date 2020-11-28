@@ -1,6 +1,5 @@
 import axios from 'axios';
 import routes from '../../routes';
-import { isBurger } from '../../isBurger'; // Menu개체를 매개변수로 받아서 버거류면 true 아니면 false 리턴
 
 const categories = document.querySelectorAll('.category');
 const menuLists = document.querySelectorAll('.menu-list');
@@ -28,6 +27,7 @@ const INVISIBLE = 'hidden'; // classname that makes element invisible;
 const SOLD_OUT_CLASSNAME = 'menuBlock--sold-out';
 const THREE_MINUTES_TO_MILLISECONDS = 180000;
 const TEN_SECONDS_TO_MILLISECONDS = 10000;
+const NON_BURGER_MENU_TYPES = ['사이드', '음료', '디저트']; // 햄버거가 아닌 류들의 메뉴타입
 
 const hidePopup = (popup) => {
   overlay.classList.add(INVISIBLE);
@@ -153,6 +153,13 @@ const fillMenuDetailsPopup = (isCombo) => {
     sideOption.classList.add(INVISIBLE);
   }
   showPopup(menuDetailsPopup);
+};
+
+const isBurger = (menu) => {
+  if (NON_BURGER_MENU_TYPES.includes(menu.menuType)) {
+    return false;
+  }
+  return true;
 };
 
 const selectMenuBlock = async (event) => {

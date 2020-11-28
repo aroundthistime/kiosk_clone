@@ -1,6 +1,5 @@
 import Menu from './models/Menu';
 import Order from './models/Order';
-import { isBurger } from './isBurger';
 
 const DRINKS = '음료';
 const SIDES = '사이드';
