@@ -606,6 +606,7 @@ const prepareForHereToGoPopup = () => {
 
 const refreshCustomerPage = (event = null) => {
   location.reload();
+  window.scrollTo(0, 0); // 페이지 하단에서 reload되는 것 방지
 };
 const prepareCustomerFinalBtns = () => {
   customerFinalCancelBtn.addEventListener('click', refreshCustomerPage);
