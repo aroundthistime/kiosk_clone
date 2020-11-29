@@ -28,6 +28,7 @@ const SOLD_OUT_CLASSNAME = 'menuBlock--sold-out';
 const THREE_MINUTES_TO_MILLISECONDS = 180000;
 const TEN_SECONDS_TO_MILLISECONDS = 10000;
 const NON_BURGER_MENU_TYPES = ['사이드', '음료', '디저트']; // 햄버거가 아닌 류들의 메뉴타입
+const DRINK = '음료';
 
 const hidePopup = (popup) => {
   overlay.classList.add(INVISIBLE);
@@ -119,6 +120,7 @@ const fillMenuDetailsPopup = (isCombo) => {
   const menuImg = document.getElementById('menuDetailsImg');
   const menuPrice = document.getElementById('menuDetailsPrice');
   const menuCalories = document.getElementById('menuDetailsCalories');
+  const ingredientsBox = document.getElementById('menuDetailsIngredients');
   const ingredientsNonAllergicKr = document.getElementById('ingredientsNonAllergicKr');
   const ingredientsAllergicKr = document.getElementById('ingredientsAllergicKr');
   const ingredientsNonAllergicEng = document.getElementById('ingredientsNonAllergicEng');
@@ -134,10 +136,15 @@ const fillMenuDetailsPopup = (isCombo) => {
     menuPrice.innerText = `${selectedMenu.price} ₩`;
   }
   menuCalories.innerText = `${selectedMenu.calories} Kcal`;
-  fillIngredientsList(ingredientsNonAllergicKr, selectedMenu.ingredientsNonAllergicKr);
-  fillIngredientsList(ingredientsAllergicKr, selectedMenu.ingredientsAllergicKr);
-  fillIngredientsList(ingredientsNonAllergicEng, selectedMenu.ingredientsNonAllergicEng);
-  fillIngredientsList(ingredientsAllergicEng, selectedMenu.ingredientsAllergicEng);
+  if (selectedMenu.menuType === DRINK) { // 음료면 재료 정보 없음
+    ingredientsBox.classList.add(INVISIBLE);
+  } else {
+    ingredientsBox.classList.remove(INVISIBLE);
+    fillIngredientsList(ingredientsNonAllergicKr, selectedMenu.ingredientsNonAllergicKr);
+    fillIngredientsList(ingredientsAllergicKr, selectedMenu.ingredientsAllergicKr);
+    fillIngredientsList(ingredientsNonAllergicEng, selectedMenu.ingredientsNonAllergicEng);
+    fillIngredientsList(ingredientsAllergicEng, selectedMenu.ingredientsAllergicEng);
+  }
   if (isCombo) {
     singleComboOption.classList.remove('single');
     singleComboOption.classList.add('combo');
@@ -509,7 +516,6 @@ const handleAddCartBtnClick = (event) => {
         };
       }
     });
-    console.log(selectedSide, selectedDrink);
     if (!alreadyInCart(selectedMenu._id, selectedDrink.id, selectedSide.id)) {
       addToCart(selectedMenu, menuPrice, selectedDrink, selectedSide);
     }
