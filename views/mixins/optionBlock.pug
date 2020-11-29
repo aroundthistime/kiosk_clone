@@ -1,0 +1,23 @@
+mixin optionBlock(menu = {}, defaultOptionId)
+    if menu.id == defaultOptionId
+        .optionBlock.optionBlock--default.optionBlock--selected
+            .optionBlock__id.hidden #{menu.id}
+            img.optionImg(src=menu.image)
+            img.optionBlock__check(src="/build/img/check.png")
+            .optionBlock__menu-name
+                span.language-convertable.language-convertable--kr #{menu.nameKr}
+                span.language-convertable.language-convertable--eng.hidden #{menu.nameEng}
+            .optionBlock__extra-price
+                span.language-convertable.language-convertable--kr + #{menu.extraPrice}원
+                span.language-convertable.language-convertable--eng.hidden + #{menu.extraPrice}Won
+    else
+        .optionBlock
+            .optionBlock__id.hidden #{menu.id}
+            img.optionImg(src=menu.image)
+            img.optionBlock__check(src="/build/img/check.png")
+            .optionBlock__menu-name
+                span.language-convertable.language-convertable--kr #{menu.nameKr}
+                span.language-convertable.language-convertable--eng.hidden #{menu.nameEng}
+            .optionBlock__extra-price
+                span.language-convertable.language-convertable--kr + #{menu.extraPrice}원
+                span.language-convertable.language-convertable--eng.hidden + #{menu.extraPrice}Won

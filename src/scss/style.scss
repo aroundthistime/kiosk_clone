@@ -1,3 +1,9 @@
+@import 'config/variables';
+@import 'config/reset.scss';
+
+@import 'partials/btns.scss';
+
+@import 'pages/index.scss';
 @import 'pages/salesControll.scss';
 
 // 기본 웹뷰 공간 초기화
@@ -45,4 +51,25 @@ body {
   width: 100%;
   border: 1px solid rgb(65, 65, 65);
   margin: 2rem 0 2rem 0;
+}
+
+.no-drag {
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vw;
+  background-color: rgba(0, 0, 0, 0.5);
 }

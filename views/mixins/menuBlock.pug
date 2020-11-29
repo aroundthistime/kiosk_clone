@@ -1,0 +1,39 @@
+mixin menuBlock(menu = {})
+    if menu.isSoldout
+        .menuBlock.menuBlock--sold-out.no-drag
+            .menu-id.hidden #{menu.id}
+            img.menuBlock__img(src=menu.image)
+            .menuBlock__name.language-convertable.language-convertable--kr #{menu.nameKr}
+            .menuBlock__name.language-convertable.language-convertable--eng.hidden #{menu.nameEng}
+            if menu.isDiscounted === 0
+                .menuBlock__price #{menu.price}
+            else
+                .menuBlock__price
+                    .menuBlock__price--before #{menu.price}
+                    <i class="fas fa-long-arrow-alt-right"></i>
+                    .menuBlock__price--after #{menu.isDiscounted}
+            if menu.isSoldout
+                .menuBlock__badge--sold-out.menuBlock__badge
+                    .language-convertable.language-convertable--kr 품절
+                    .language-convertable.language-convertable--eng.hidden SOLD OUT
+            else if menu.isDiscounted !== 0
+                .menuBlock__badge--discounted.menuBlock__badge SALE
+    else
+        .menuBlock.no-drag
+            .menu-id.hidden #{menu.id}
+            img.menuBlock__img(src=menu.image)
+            .menuBlock__name.language-convertable.language-convertable--kr #{menu.nameKr}
+            .menuBlock__name.language-convertable.language-convertable--eng.hidden #{menu.nameEng}
+            if menu.isDiscounted === 0
+                .menuBlock__price #{menu.price}
+            else
+                .menuBlock__price
+                    .menuBlock__price--before #{menu.price}
+                    <i class="fas fa-long-arrow-alt-right"></i>
+                    .menuBlock__price--after #{menu.isDiscounted}
+            if menu.isSoldout
+                .menuBlock__badge--sold-out.menuBlock__badge
+                    .language-convertable.language-convertable--kr 품절
+                    .language-convertable.language-convertable--eng.hidden SOLD OUT
+            else if menu.isDiscounted !== 0
+                .menuBlock__badge--discounted.menuBlock__badge SALE

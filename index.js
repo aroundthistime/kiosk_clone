@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import moment from 'moment';
-import './db';
 import {
   fakeCustomerPage,
   fakeDB,
@@ -11,7 +10,17 @@ import {
   makeDummyData,
   makeTheOrder,
   salesControllPage,
+  getCustomerPage,
+  getMenuDetails,
+  postSendOrder,
 } from './controllers';
+
+import '@babel/polyfill';
+import './db';
+import './models/Menu';
+import './models/Order';
+import './models/Record';
+
 import routes from './routes';
 
 const app = express();
@@ -29,14 +38,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.locals.moment = moment;
 
-app.get(routes.customerPage, fakeCustomerPage);
+// salesControll router
 app.get(routes.salesControllPage, salesControllPage);
 app.post(routes.getRecord, getRecord);
 app.post(routes.getOrders, getOrdersForTable);
 app.get(routes.getAllRecords, getAllRecords);
 app.get(routes.makeDummy, makeDummyData);
 
-app.get('/order', (req, res) => res.render('order'));
-app.get('/alert', (req, res) => res.render('alert'));
-// app.get('/salesControll', (req, res) => res.render('salesControll'));
+// customerPage router
+app.get(routes.customerPage, getCustomerPage);
+app.get(routes.menuDetails, getMenuDetails);
+app.post(routes.sendOrder, postSendOrder);
+
 // app.get('/fake', fakeDB);

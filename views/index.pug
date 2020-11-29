@@ -1,4 +1,24 @@
 extends layouts/main.pug
+include mixins/menuBlock
 
 block content
-    h4 This is main page for testing axios
+    header
+        .customerPage__banner
+            img.company-logo.no-drag(src="/build/img/logo.png")
+            .language-settings
+                input(type="checkbox")#languageCheckbox
+    main.customerPageMain
+        .categories
+            each category in categories
+                div(class=`category ${category.nameEng} no-drag`)
+                    span.language-convertable.language-convertable--kr #{category.nameKr}
+                    span.language-convertable.language-convertable--eng.hidden.category-name #{category.nameEng}
+        .menu-lists
+            each category in categories
+                div(class=`menu-list menu-list__${category.nameEng} hidden`)
+                    if category.menus
+                        each menu in category.menus
+                            +menuBlock(menu)
+    include ./partials/customerPageFooter
+    .overlay.hidden#overlay
+    include ./partials/customerPagePopups

@@ -5,6 +5,7 @@ const WARNING_MESSAGE = '범위를 다시 설정해주세요.';
 const BLANK_MESSAGE = '해당 기간의 판매실적이 없습니다.';
 const TABLE_TITLE = ['일자', '품명', '비고', '수량', '단가'];
 const COLSAPN = 5;
+const MONEY_UNIT = 10000;
 
 document.addEventListener('DOMContentLoaded', () => {
   let toggleBtn = false;
@@ -107,39 +108,39 @@ document.addEventListener('DOMContentLoaded', () => {
     totalMenus.forEach((menus) =>
       menus.forEach((menu) => (totalAmount += menu.menu.price * menu.amount))
     );
-    totalMenus.forEach((menus) =>
+    totalMenus.forEach((menus) => {
       menus.forEach((menu) =>
         menuWithAmount[menu.menu.nameKr]
           ? (menuWithAmount[menu.menu.nameKr] += menu.amount)
           : (menuWithAmount[menu.menu.nameKr] = menu.amount)
-      )
-    );
+      );
+    });
 
     // 차트용 데이터 Formatting 과정 For { 메뉴이름 : 금액 }
-    orderLists.forEach((menu) =>
-      menu.choices.forEach((item) => {
-        const price = item.menu.price / 10000;
-        let temp;
+    orderLists.forEach((menu) => {
+      const price = menu.price / MONEY_UNIT;
+      let temp;
 
-        if (monthDiff) {
-          const month = moment(menu.date).format('YYYY-MM');
-          menuWithCost[month]
-            ? (menuWithCost[month] += price)
-            : (menuWithCost[month] = price);
-          temp = menuWithCost[month];
-          temp = temp.toFixed(2) * 1;
-          menuWithCost[month] = temp;
-        } else {
-          const dates = moment(menu.date).format('YYYY-MM-DD');
-          menuWithCost[dates]
-            ? (menuWithCost[dates] += price)
-            : (menuWithCost[dates] = price);
-          temp = menuWithCost[dates];
-          temp = temp.toFixed(2) * 1;
-          menuWithCost[dates] = temp;
-        }
-      })
-    );
+      if (monthDiff) {
+        const month = moment(menu.date).format('YYYY-MM');
+        menuWithCost[month]
+          ? (menuWithCost[month] += price)
+          : (menuWithCost[month] = price);
+        temp = menuWithCost[month];
+        temp = temp.toFixed(2) * 1;
+        menuWithCost[month] = temp;
+      } else {
+        const dates = moment(menu.date).format('YYYY-MM-DD');
+        menuWithCost[dates]
+          ? (menuWithCost[dates] += price)
+          : (menuWithCost[dates] = price);
+        temp = menuWithCost[dates];
+        temp = temp.toFixed(2) * 1;
+        menuWithCost[dates] = temp;
+      }
+    });
+
+    console.log(menuWithCost);
 
     // 차트용 데이터 날짜순 정렬
     const menuWithCostSorted = {};

@@ -1,0 +1,103 @@
+include ../mixins/optionBlock
+
+.popups.no-drag
+    .binary-options-popup.popup.loading-popup.hidden#loadingPopup
+        .popup-title
+            span.language-convertable.language-convertable--kr 잠시만 기다려주세요
+            span.language-convertable.language-convertable--eng.hidden Please wait
+        img.loading-image(src="/build/img/loading.jpg")
+    #menuDetails.popup.menuDetails-popup.hidden
+        #singleComboOption.hidden
+        .menuDetails__menu-name#menuDetailsMenuName
+            span.language-convertable.language-convertable--kr 메뉴이름
+            span.language-convertable.language-convertable--eng.hidden
+        .menuDetails__row
+            img.menuDetails__menu-image#menuDetailsImg(src="/build/img/logo.png")
+            .menuDetails__menu-infos--short
+                .menu-infos__menu-info
+                    .menu-info__title
+                        span.language-convertable.language-convertable--kr 가격
+                        span.language-convertable.language-convertable--eng.hidden Price
+                    .menu-info__content#menuDetailsPrice 3000
+                .menu-infos__menu-info
+                    .menu-info__title
+                        span.language-convertable.language-convertable--kr 칼로리 :
+                        span.language-convertable.language-convertable--eng.hidden Calories :
+                    .menu-info__content#menuDetailsCalories 3000kcal
+        .menuDetails__options
+            .menuDetails__ingredients
+                .menu-info__title
+                    span.language-convertable.language-convertable--kr 재료정보
+                    span.language-convertable.language-convertable--eng.hidden Ingredients
+                .menu-info__content
+                    span.ingredients--non-allergic.language-convertable.language-convertable--kr#ingredientsNonAllergicKr
+                    span.ingredients--allergic.language-convertable.language-convertable--kr#ingredientsAllergicKr
+                    span.ingredients--non-allergic.language-convertable.language-convertable--eng.hidden#ingredientsNonAllergicEng
+                    span.ingredients--allergic.language-convertable.language-convertable--eng.hidden#ingredientsAllergicEng
+                    p.allergic-alert.language-convertable.language-convertable--kr * 빨간색으로 표시된 재료들은 알레르기를 유발할 수 있습니다.
+                    p.allergic-alert.language-convertable.language-convertable--eng.hidden * Ingredients written in red can cause allergies
+            .menuDetails__option.menuDetails__option--side.hidden#menuDetailsDrink
+                .menu-info__title
+                    span.language-convertable.language-convertable--kr 음료 선택
+                    span.language-convertable.language-convertable--eng.hidden Select your Drink
+                .option-list.option-list--drinks             
+                    each drink in drinks
+                        +optionBlock(drink, defaultDrinkId)
+            .menuDetails__option.menuDetails__option--drink.hidden#menuDetailsSide
+                .menu-info__title
+                    span.language-convertable.language-convertable--kr 사이드 선택
+                    span.language-convertable.language-convertable--eng.hidden Select your Side dish
+                .option-list.option-list--side
+                    each side in sides
+                        +optionBlock(side, defaultSideId)
+        .menuDetails__btns
+            .menuDetails__btn.btn--cancel.no-drag#menuDetailsCancelBtn
+                span.language-convertable.language-convertable--kr 취소
+                span.language-convertable.language-convertable--eng.hidden Cancel
+            .menuDetails__btn.btn--approve.no-drag#menuDetailsAddCartBtn
+                span.language-convertable.language-convertable--kr 장바구니에 추가
+                span.language-convertable.language-convertable--eng.hidden Add to Cart  
+    .binary-options-popup.popup.hidden#comboSinglePopup
+        .binary-options-popup__options
+            .binary-option.binary-option--single
+                span.language-convertable.language-convertable--kr 단품
+                span.language-convertable.language-convertable--eng.hidden Burger Only
+            .binary-option.binary-option--combo
+                span.language-convertable.language-convertable--kr 세트
+                span.language-convertable.language-convertable--eng.hidden Meal
+        .binary-options-popup__cancel.btn--cancel.no-drag
+            span.language-convertable.language-convertable--kr 취소
+            span.language-convertable.language-convertable--eng.hidden Cancel
+    .binary-options-popup.popup.hidden#forHereTogoPopup
+        .binary-options-popup__options
+            .binary-option.binary-option--forHere
+                span.language-convertable.language-convertable--kr 매장식사
+                span.language-convertable.language-convertable--eng.hidden For Here
+            .binary-option.binary-option--toGo
+                span.language-convertable.language-convertable--kr 포장
+                span.language-convertable.language-convertable--eng.hidden To Go
+        .binary-options-popup__cancel.btn--cancel.no-drag
+            span.language-convertable.language-convertable--kr 취소
+            span.language-convertable.language-convertable--eng.hidden Cancel
+    .binary-options-popup.popup.orderResult-popup.hidden#orderResult
+        .orderResult__success#orderSuccess
+            .result-message
+                span.language-convertable.language-convertable--kr 주문이 완료되었습니다
+                span.language-convertable.language-convertable--eng.hidden Order Complete
+            .result-message--small
+                span.language-convertable.language-convertable--kr 감사합니다
+                span.language-convertable.language-convertable--eng.hidden Thank you
+            .result-message
+                span.language-convertable.language-convertable--kr 주문번호
+                span.language-convertable.language-convertable--eng.hidden Your Order Number
+            .result-message__order-num#orderNum
+        .orderResult__fail#orderFail
+            .result-message
+                span.language-convertable.language-convertable--kr 주문에 실패하였습니다
+                span.language-convertable.language-convertable--eng.hidden Order Failed
+            .result-message--small
+                span.language-convertable.language-convertable--kr 다시 시도해 주세요
+                span.language-convertable.language-convertable--eng.hidden Please try again
+        .binary-options-popup__cancel.btn--cancel.no-drag#orderResultBtn
+            span.language-convertable.language-convertable--kr 확인
+            span.language-convertable.language-convertable--eng.hidden Done

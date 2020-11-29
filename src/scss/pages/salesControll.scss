@@ -1,5 +1,5 @@
 @import '../mixins/button-mixin.scss';
-@import '../mixins//fontStyle-mixin.scss';
+@import '../mixins/fontStyle-mixin.scss';
 
 // salesControll 페이지 관련 scss 설정
 #salesControll {
@@ -61,12 +61,23 @@
         tr.first {
           background-color: #b2b2b2;
           color: #fff;
+          height: 30px;
+          th {
+            font-weight: bolder;
+          }
         }
         tr.last {
           border-top: solid;
+          height: 30px;
         }
         tr.no-list {
           height: 80px;
+        }
+        td,
+        th {
+          padding-top: 2.5px;
+          padding-bottom: 2.5px;
+          vertical-align: middle;
         }
       }
     }
@@ -205,6 +216,10 @@
         }
         .fc-scroller {
           overflow: visible !important;
+        }
+        .fc-toolbar-title,
+        .fc-col-header-cell-cushion {
+          font-weight: bolder;
         }
 
         @media screen and (max-width: 1000px) {

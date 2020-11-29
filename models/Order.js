@@ -10,11 +10,9 @@ const OrderSchema = new mongoose.Schema({
       menu: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Menu',
-        required: true,
       },
       amount: {
         type: Number,
-        required: true,
       },
     },
   ],
