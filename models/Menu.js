@@ -26,7 +26,7 @@ const MenuSchema = new mongoose.Schema({
   extraPrice: {
     type: Number,
     required() {
-      return this.menuType === 'DRINKS' || this.menuType === 'SIDES';
+      return this.menuType === '음료' || this.menuType === '사이드';
     },
   },
   calories: {
@@ -67,7 +67,7 @@ const MenuSchema = new mongoose.Schema({
     {
       type: String,
       required() {
-        return !(this.menuType === 'DRINKS' || this.menuType === 'DESSERTS');
+        return !(this.menuType === '음료');
       },
     },
   ],
@@ -75,7 +75,7 @@ const MenuSchema = new mongoose.Schema({
     {
       type: String,
       required() {
-        return !(this.menuType === 'DRINKS' || this.menuType === 'DESSERTS');
+        return !(this.menuType === '음료');
       },
     },
   ],
@@ -83,7 +83,7 @@ const MenuSchema = new mongoose.Schema({
     {
       type: String,
       required() {
-        return !(this.menuType === 'DRINKS' || this.menuType === 'DESSERTS');
+        return !(this.menuType === '음료');
       },
     },
   ],
@@ -91,7 +91,7 @@ const MenuSchema = new mongoose.Schema({
     {
       type: String,
       required() {
-        return !(this.menuType === 'DRINKS' || this.menuType === 'DESSERTS');
+        return !(this.menuType === '음료');
       },
     },
   ],
