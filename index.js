@@ -13,6 +13,7 @@ import {
   getCustomerPage,
   getMenuDetails,
   postSendOrder,
+  getOrderInOrdernotice,
 } from './controllers';
 
 import '@babel/polyfill';
@@ -49,5 +50,12 @@ app.get(routes.makeDummy, makeDummyData);
 app.get(routes.customerPage, getCustomerPage);
 app.get(routes.menuDetails, getMenuDetails);
 app.post(routes.sendOrder, postSendOrder);
+
+// orderNotice router
+app.get('/orderNotice', (req, res) => res.render('orderNotice'));
+app.get(routes.getOrderInOrdernotice, getOrderInOrdernotice);
+
+
+
 
 // app.get('/fake', fakeDB);

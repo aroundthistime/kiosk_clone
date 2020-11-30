@@ -344,3 +344,20 @@ export const makeDummyData = async (req, res) => {
     res.status(400);
   }
 }
+
+
+// orderNotice 페이지 //
+
+// 주문내역 수신
+export const getOrderInOrdernotice = async (req, res) => {
+  try {
+    const orders = await Order.find({
+      isCompleted: false,
+    }).populate('choices.menu');
+    
+    return res.status(200).json(orders);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400);
+  }
+};

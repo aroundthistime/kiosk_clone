@@ -1,0 +1,47 @@
+extends layouts/main.pug
+
+block title
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.css", integrity="sha256-uq9PNlMzB+1h01Ij9cx7zeE2OR2pLAfRw3uUUOOPKdA=", crossorigin="anonymous")
+
+
+block content
+    #orderNotice
+        .topArea 
+            .container
+                img.logo(src='build/img/logo.png' alt="버거킹 로고이미지")
+                span.title 주문알림
+                
+                .button-area
+                    .button 메뉴관리 >>
+                    .button(onclick="window.open('salesControll')") 매출관리 >>
+                
+        .middleArea
+            .container
+                .order-notification  
+
+                //- 주문내역 팝업창 (평소엔 hidden상태)
+                .order-popup
+                    .order-popup-box
+                        p.order-popup-title 주문번호
+                        p.order-popup-num
+                        div.order-popup-menu
+                        button.order-popup-cancel 확인
+
+
+                //- 주문내역 팝업창 스크립트
+                script.
+                    const orderPopup = document.querySelector('.order-popup');
+                    const orderPopupCancel = document.querySelector('.order-popup-cancel');
+
+                    const togglePopup = (orderNum, orderMenu) => {
+                        const orderPopupNum = document.querySelector('.order-popup-num');
+                        const orderPopupMenu = document.querySelector('.order-popup-menu');
+                        orderPopupNum.innerHTML = orderNum;
+                        orderPopupMenu.innerHTML = orderMenu;
+
+                        const orderPopupCancel = document.querySelector('.order-popup-cancel');
+                        orderPopupCancel.addEventListener('click', function() {
+                            togglePopup(orderNum, orderMenu);
+                        });
+                        orderPopup.classList.toggle("show-popup");
+                    }               
