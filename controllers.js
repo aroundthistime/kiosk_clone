@@ -45,7 +45,8 @@ export const fakeDB = async (req, res) => {
     menuType: '와퍼',
     nameKr: '와퍼',
     nameEng: 'Whopper',
-    image: 'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/a5146dcb-d6a6-4280-92be-25e8f4496fac.png',
+    image:
+      'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/a5146dcb-d6a6-4280-92be-25e8f4496fac.png',
     price: 5300,
     calories: 300,
     isCombo: false,
@@ -58,7 +59,8 @@ export const fakeDB = async (req, res) => {
     menuType: '음료',
     nameKr: '코카콜라 (M)',
     nameEng: 'CocaCola (M)',
-    image: 'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/fe2cdf8d-0487-4e5c-860a-beb85d223a3f.png',
+    image:
+      'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/fe2cdf8d-0487-4e5c-860a-beb85d223a3f.png',
     price: 1000,
     calories: 120,
     isCombo: false,
@@ -69,7 +71,8 @@ export const fakeDB = async (req, res) => {
     menuType: '사이드',
     nameKr: '감자튀김 (M)',
     nameEng: 'French Fries (M)',
-    image: 'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/84bd24cb-9b87-45bd-b371-b824c35018ad.png',
+    image:
+      'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/84bd24cb-9b87-45bd-b371-b824c35018ad.png',
     price: 1500,
     calories: 150,
     isCombo: false,
@@ -80,7 +83,8 @@ export const fakeDB = async (req, res) => {
     menuType: '와퍼',
     nameKr: '와퍼 [세트]',
     nameEng: 'Whopper [Combo]',
-    image: 'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/8d3c7992-5803-4445-b0f5-dca6cc877cfd.png',
+    image:
+      'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/8d3c7992-5803-4445-b0f5-dca6cc877cfd.png',
     price: 7300,
     calories: 600,
     isCombo: true,
@@ -98,7 +102,8 @@ export const fakeDB = async (req, res) => {
     menuType: '사이드',
     nameKr: '어니언링',
     nameEng: 'Onion Ring',
-    image: 'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/47a6fc52-9e23-4770-8354-cabb545f5124.png',
+    image:
+      'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/47a6fc52-9e23-4770-8354-cabb545f5124.png',
     price: 2000,
     calories: 180,
     isCombo: false,
@@ -108,19 +113,20 @@ export const fakeDB = async (req, res) => {
   res.redirect('/');
 };
 
-const getCategoryMenus = (category) => new Promise(async (resolve) => {
-  const menus = await Menu.find({
-    menuType: category.nameKr, // 해당 카테고리에 속하며
-    isDiscontinued: false, // 판매중이고
-    isCombo: false, // 단품인 메뉴들
+const getCategoryMenus = (category) =>
+  new Promise(async (resolve) => {
+    const menus = await Menu.find({
+      menuType: category.nameKr, // 해당 카테고리에 속하며
+      isDiscontinued: false, // 판매중이고
+      isCombo: false, // 단품인 메뉴들
+    });
+    categoriesWithMenu.push({
+      nameEng: category.nameEng,
+      nameKr: category.nameKr,
+      menus,
+    });
+    resolve();
   });
-  categoriesWithMenu.push({
-    nameEng: category.nameEng,
-    nameKr: category.nameKr,
-    menus,
-  });
-  resolve();
-});
 
 export const getCustomerPage = async (req, res) => {
   categoriesWithMenu = [];
@@ -137,7 +143,8 @@ export const getCustomerPage = async (req, res) => {
   for (let i = 0; i < categories.length; i++) {
     await getCategoryMenus(categories[i]);
   }
-  const drinks = await Menu.find({ // 이 drinks와 sides는 세트메뉴용 옵션들
+  const drinks = await Menu.find({
+    // 이 drinks와 sides는 세트메뉴용 옵션들
     menuType: DRINKS, // 음료이면서
     isDiscontinued: false, // 판매중이고
     isSoldOut: false, // 품절되지 않은 메뉴
@@ -177,44 +184,49 @@ export const getMenuDetails = async (req, res) => {
   }
 };
 
-const saveOrderContent = async (orderContent) => new Promise(async (resolve) => {
-  let menuId;
-  if (orderContent.sideId) { // 세트메뉴이면
-    const defaultCombo = await Menu.findById(orderContent.menuId);
-    let menu = await Menu.find({ // DB에서 해당 세트조합 개체 찾기
-      nameKr: defaultCombo.nameKr,
-      isCombo: true,
-      drink: orderContent.drinkId,
-      sideMenu: orderContent.sideId,
-    });
-    menu = menu[0];
-    if (!menu) { // 해당 세트조합이 DB에 없는경우(새로 생성)
-      const selectedSide = await Menu.findById(orderContent.sideId);
-      const selectedDrink = await Menu.findById(orderContent.drinkId);
-      const extraPrice = selectedSide.extraPrice + selectedDrink.extraPrice;
-      menu = await Menu.create({
-        menuType: defaultCombo.menuType,
+const saveOrderContent = async (orderContent) =>
+  new Promise(async (resolve) => {
+    let menuId;
+    if (orderContent.sideId) {
+      // 세트메뉴이면
+      const defaultCombo = await Menu.findById(orderContent.menuId);
+      let menu = await Menu.find({
+        // DB에서 해당 세트조합 개체 찾기
         nameKr: defaultCombo.nameKr,
-        nameEng: defaultCombo.nameEng,
-        price: defaultCombo.price + extraPrice,
         isCombo: true,
-        isDefaultCombo: false,
         drink: orderContent.drinkId,
         sideMenu: orderContent.sideId,
-        isDiscounted: defaultCombo.isDiscounted + extraPrice,
-        isRecommended: false,
       });
+      menu = menu[0];
+      if (!menu) {
+        // 해당 세트조합이 DB에 없는경우(새로 생성)
+        const selectedSide = await Menu.findById(orderContent.sideId);
+        const selectedDrink = await Menu.findById(orderContent.drinkId);
+        const extraPrice = selectedSide.extraPrice + selectedDrink.extraPrice;
+        menu = await Menu.create({
+          menuType: defaultCombo.menuType,
+          nameKr: defaultCombo.nameKr,
+          nameEng: defaultCombo.nameEng,
+          price: defaultCombo.price + extraPrice,
+          isCombo: true,
+          isDefaultCombo: false,
+          drink: orderContent.drinkId,
+          sideMenu: orderContent.sideId,
+          isDiscounted: defaultCombo.isDiscounted + extraPrice,
+          isRecommended: false,
+        });
+      }
+      menuId = menu._id;
+    } else {
+      // 단품이면
+      menuId = orderContent.menuId;
     }
-    menuId = menu._id;
-  } else { // 단품이면
-    menuId = orderContent.menuId;
-  }
-  newOrder.choices.push({
-    menu: menuId,
-    amount: orderContent.amount,
+    newOrder.choices.push({
+      menu: menuId,
+      amount: orderContent.amount,
+    });
+    resolve();
   });
-  resolve();
-});
 
 export const postSendOrder = async (req, res) => {
   const {
@@ -225,7 +237,8 @@ export const postSendOrder = async (req, res) => {
     let lastOrder = await Order.find({}).sort({ _id: -1 }).limit(1);
     lastOrder = lastOrder[0]; // find로 찾으면 배열로 찾아지기 때문
     const currentDate = new Date().getDate();
-    if ((lastOrder) && (currentDate === lastOrder.date.getDate())) { // 기존에 주문이 하나도 없을 경우도 검사
+    if (lastOrder && currentDate === lastOrder.date.getDate()) {
+      // 기존에 주문이 하나도 없을 경우도 검사
       orderNum = lastOrder.orderNumber + 1;
     }
     newOrder = await Order.create({
@@ -233,7 +246,9 @@ export const postSendOrder = async (req, res) => {
       isTakeout,
       price: totalPrice,
     });
-    const promises = orderContents.map((orderContent) => saveOrderContent(orderContent));
+    const promises = orderContents.map((orderContent) =>
+      saveOrderContent(orderContent)
+    );
     await Promise.all(promises);
     newOrder.save();
     res.json(orderNum);
@@ -343,8 +358,7 @@ export const makeDummyData = async (req, res) => {
     console.log(error.message);
     res.status(400);
   }
-}
-
+};
 
 // orderNotice 페이지 //
 
@@ -354,7 +368,7 @@ export const getOrderInOrdernotice = async (req, res) => {
     const orders = await Order.find({
       isCompleted: false,
     }).populate('choices.menu');
-    
+
     return res.status(200).json(orders);
   } catch (error) {
     console.log(error.message);

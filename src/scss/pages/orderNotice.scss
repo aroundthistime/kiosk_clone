@@ -1,18 +1,17 @@
 @import '../mixins/button-mixin.scss';
 @import '../mixins/fontStyle-mixin.scss';
 
-
 // orderNotice 페이지 관련 scss 설정
-
 #orderNotice {
   position: relative;
   display: flex;
   flex-direction: column;
   outline: none;
+  height: 100vh;
 
   .topArea {
     height: 200px;
-    background-color: #E1C89F;
+    background-color: #e1c89f;
     margin-bottom: 4rem;
 
     .logo {
@@ -47,10 +46,10 @@
       .button {
         display: inline-block;
         vertical-align: middle;
-        border-color: #FFFFFF;
+        border-color: #ffffff;
         border-width: 2px;
         border-style: solid;
-        @include setButton($bgColor: #F3E9D9, $width: 130px);
+        @include setButton($bgColor: #f3e9d9, $width: 130px);
         @include setBlackHans($color: #000000, $size: 1.5rem);
         padding: 8px 15px 8px 15px;
         outline: none;
@@ -67,14 +66,14 @@
       @media screen and (max-width: 930px) {
         .button {
           width: 80px;
-          font-size:1rem;
+          font-size: 1rem;
           position: relative;
           top: 35%;
           padding: 5px 10px 5px 10px;
         }
       }
     }
-    
+
     @media screen and (max-width: 730px) {
       .button-area {
         top: 5%;
@@ -82,20 +81,12 @@
       }
     }
   }
-  
 
   .middleArea {
-    .container {
-      width: 700px;
-
-      @media screen and (max-width: 700px) {
-        width: 480px;
-      }
-    }
-
     .order-notification {
       position: relative;
       width: 650px;
+      margin: auto;
       margin-bottom: 15px;
       @media screen and (max-width: 700px) {
         width: 480px;
@@ -109,7 +100,7 @@
     .order-notice-state {
       display: inline-block;
       vertical-align: middle;
-      width: 30px; 
+      width: 30px;
       height: 100px;
       padding-top: 30px;
       border-top-left-radius: 20px;
@@ -128,15 +119,15 @@
         height: 80px;
         font-size: 0.8rem;
         line-height: 15px;
-      }           
+      }
     }
 
     .order-content {
       display: inline-block;
       vertical-align: middle;
-      width: 530px; 
+      width: 530px;
       height: 130px;
-      background-color: #F6A800;
+      background-color: #f6a800;
 
       &:hover {
         cursor: pointer;
@@ -145,7 +136,7 @@
       @media screen and (max-width: 700px) {
         width: 380px;
         height: 110px;
-      }    
+      }
     }
 
     .order-num {
@@ -165,7 +156,7 @@
         font-size: 2rem;
         width: 50px;
         line-height: 44px;
-      }    
+      }
     }
 
     .order-menu {
@@ -175,7 +166,7 @@
       padding: 10px 0 0 15px;
       font-size: 1.1rem;
       width: 350px;
-      height: 110px; 
+      height: 110px;
       overflow-x: hidden;
       overflow-y: hidden;
       z-index: 1;
@@ -184,19 +175,19 @@
         font-size: 0.8rem;
         width: 245px;
         height: 95px;
-      } 
+      }
     }
 
     .order-menu-more-button {
-      float:right;
+      float: right;
       position: relative;
       margin: 0;
       top: 30%;
       right: 10%;
       font-size: 1rem;
       padding: 0 10px 0 10px;
-      background-color: #EBDEF1;
-      border-color: #C49DD6;
+      background-color: #ebdef1;
+      border-color: #c49dd6;
       border-width: 1px;
       z-index: 2;
       outline: none;
@@ -216,8 +207,8 @@
       position: relative;
       float: right;
       width: 90px;
-      height: 130px; 
-      background-color: #F6A800;
+      height: 130px;
+      background-color: #f6a800;
       border-top-right-radius: 20px;
       border-bottom-right-radius: 20px;
       outline: none;
@@ -225,9 +216,9 @@
       @media screen and (max-width: 700px) {
         width: 80px;
         height: 110px;
-      } 
+      }
     }
-             
+
     .order-cancel-button {
       margin-top: 30%;
       border-radius: 5px;
@@ -246,7 +237,7 @@
 
       @media screen and (max-width: 700px) {
         font-size: 0.8rem;
-      } 
+      }
     }
 
     .order-complete-button {
@@ -265,33 +256,32 @@
 
       @media screen and (max-width: 700px) {
         font-size: 0.8rem;
-      } 
+      }
     }
-            
   }
-      
+
   .order-popup {
-    position: fixed; 
-    left: 0; 
-    top: 0; 
-    width: 100%; 
-    height: 100%; 
-    background-color: rgba(0, 0, 0, 0.8); 
-    opacity: 0; 
-    visibility: hidden; 
-    transform: scale(1.1); 
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.1);
     transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
     z-index: 3;
   }
 
   .order-popup-box {
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%); 
-    background-color: white; 
-    padding: 1rem 1.5rem; 
-    width: 400px; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 1rem 1.5rem;
+    width: 400px;
     height: 500px;
 
     .order-popup-title {
@@ -339,10 +329,10 @@
   }
 
   .show-popup {
-    opacity: 1; 
-    visibility: visible; 
-    transform: scale(1.0); 
-    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s; 
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
     z-index: 3;
   }
 }
