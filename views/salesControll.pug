@@ -5,7 +5,6 @@ include mixins/salesTable
 block title
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.css", integrity="sha256-uq9PNlMzB+1h01Ij9cx7zeE2OR2pLAfRw3uUUOOPKdA=", crossorigin="anonymous")
 
-
 block content
     #salesControll
         - let today = moment().format('YYYY-MM-DD')
@@ -15,13 +14,13 @@ block content
         
         .topArea 
             .container
-                img.logo(src='build/img/logo.png' alt="버거킹 로고이미지")
-                span.title 매출분석 
+                img.topArea__logo(src='build/img/logo.png' alt="버거킹 로고이미지")
+                span.topArea__title 매출분석 
 
 
         .middleArea 
             .container 
-                span.title 매출조회
+                span.middleArea__title 매출조회
                 .divider
                 
                 .table
@@ -32,17 +31,8 @@ block content
                         +salesTable(todayOrders)
                         
                     .button-area
-                        .button#dummydummy 더미데이터 생성
-                        .button#export-csv CSV추출
-                        .button.convertPage 그래프전환
-
-                        script.     
-                            const dummy = document.getElementById('dummydummy');
-
-                            dummy.addEventListener('click', async () => {
-                                const order = await axios.get('/api/make-dummy');
-                                console.log(moment(order.data.date).format('YYYY-MM-DD') + ' 날짜 데이터 생성');
-                            })
+                        .button-area__button.button-area__button-export--csv CSV추출
+                        .button-area__button.button-area__button-convertable--page 그래프전환
 
                 .chart
                     .input-area 
@@ -51,36 +41,35 @@ block content
                     canvas#myChart
 
                     .button-area
-                        .button.convertPage 테이블전환                                            
+                        .button-area__button.button-area__button-convertable--page 테이블전환                                            
 
 
         .bottomArea 
             .container 
-                span.title 매출기록
+                span.bottomArea__title 매출기록
                 .divider
-                .record
+                .record-area
                     .calendar-area 
                         #calendar(data-date=records)
                     .write-area
                         .title-area
-                            span.record-title#record-date #{today}
-                            span.record-title#record-special 특이사항
+                            span.title-area__record-title#record-date #{today}
+                            span.title-area__record-title#record-special 특이사항
                             i.font-icon.far.fa-edit(style="display: inline")
 
-                        .body-area
+                        .content-area
                             if todayRecord
-                                pre.record-content #{todayRecord.content}
+                                pre.content-area__record-content #{todayRecord.content}
                             else
-                                pre.record-content 기록된 사항이 없습니다.
+                                pre.content-area__record-content 기록된 사항이 없습니다.
 
                             .editable-area
                                 form#record-form
                                     textarea(placeholder='특이사항을 기록해주세요...')#input-record
                                     .button-area
-                                        .button.cancelBtn 취소
-                                        input(value='완료' type='submit').button 
+                                        .button-area__button.button-area__button--cancel 취소
+                                        input(value='완료' type='submit').button-area__button 
                                 
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.js" integrity="sha256-oenhI3DRqaPoTMAVBBzQUjOKPEdbdFFtTCNIosGwro0=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>

@@ -1,37 +1,43 @@
-const csvBtn = document.getElementById('export-csv');
+if (window.location.pathname === '/salesControll') {
 
-if (csvBtn) {
-  csvBtn.addEventListener('click', () => {
-    const fileName = 'file.csv';
-    const BOM = '\uFEFF'; // 개행문자 따옴표 인식문제 방지
-    const table = document.querySelector('.table-area table');
-    let csvString = BOM;
-    for (let rowCount = 0; rowCount < table.rows.length; rowCount++) {
-      let rowData = table.rows[rowCount].cells;
-      for (let colCount = 0; colCount < rowData.length; colCount++) {
-        let colData = rowData[colCount].innerHTML;
-        if (colData === null || colData.length === 0) {
-          // 따옴표 처리
-          colData = ''.replace(/"/g, '""');
-        } else {
-          colData = colData.toString().replace(/"/g, '""');
+  const FILENAME = 'file.csv';
+  const DOWNLOAD_TYPE = 'text/csv; charset=utf8';
+
+  const csvBtn = document.querySelector('.button-area__button-export--csv');
+
+  if (csvBtn) {
+    csvBtn.addEventListener('click', () => {
+      const fileName = FILENAME;
+      const BOM = '\uFEFF'; // 개행문자 따옴표 인식문제 방지
+      const table = document.querySelector('.table-area table');
+      let csvString = BOM;
+      for (let rowCount = 0; rowCount < table.rows.length; rowCount++) {
+        let rowData = table.rows[rowCount].cells;
+        for (let colCount = 0; colCount < rowData.length; colCount++) {
+          let colData = rowData[colCount].innerHTML;
+          if (colData === null || colData.length === 0) {
+            // 따옴표 처리
+            colData = ''.replace(/"/g, '""');
+          } else {
+            colData = colData.toString().replace(/"/g, '""');
+          }
+          csvString = csvString + '"' + colData + '",';
         }
-        csvString = csvString + '"' + colData + '",';
+        csvString = csvString.substring(0, csvString.length - 1);
+        csvString = csvString + '\r\n';
       }
       csvString = csvString.substring(0, csvString.length - 1);
-      csvString = csvString + '\r\n';
-    }
-    csvString = csvString.substring(0, csvString.length - 1);
 
-    const blob = new Blob([csvString], { type: 'text/csv; charset=utf8' });
-    const csvUrl = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.setAttribute('style', 'display:none');
-    a.setAttribute('href', csvUrl);
-    a.setAttribute('download', fileName);
-    document.body.appendChild(a);
+      const blob = new Blob([csvString], { type: DOWNLOAD_TYPE });
+      const csvUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.setAttribute('style', 'display:none');
+      a.setAttribute('href', csvUrl);
+      a.setAttribute('download', fileName);
+      document.body.appendChild(a);
 
-    a.click();
-    a.remove();
-  });
+      a.click();
+      a.remove();
+    });
+  }
 }

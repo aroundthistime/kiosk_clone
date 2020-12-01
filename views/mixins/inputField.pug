@@ -1,11 +1,11 @@
 mixin inputField(type, today)
     if type == 'table'
-        input(type='date' value=today).startDate-table
-        input(type='date' value=today).endDate-table
+        input(type='date' value=today).input-area__date#startDate-table
+        input(type='date' value=today).input-area__date#endDate-table
         i.font-icon.fas.fa-search
     else if type == 'chart'
-        input(type='date' value=today).startDate-chart
-        input(type='date' value=today).endDate-chart
+        input(type='date' value=today).input-area__date#startDate-chart
+        input(type='date' value=today).input-area__date#endDate-chart
         select#select-for-category
             option(value='menu') 메뉴별 통계
             option(value='sum') 매출액 통계

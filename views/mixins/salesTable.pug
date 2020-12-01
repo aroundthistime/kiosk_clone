@@ -3,7 +3,7 @@ mixin salesTable(todayOrders)
     - const numberWithCommas = (number) => { return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
     
     table
-        tr.first
+        tr.tbody__first-list
             th 일자 
             th 품명
             th 비고
@@ -14,7 +14,7 @@ mixin salesTable(todayOrders)
             - let total = 0;  //- 수량 총합
 
             if !(todayOrders.length)
-                tr.no-list
+                tr.tbody__no-list
                     td(colspan='5') 해당 기간의 판매 실적이 없습니다.
             else
                 each order in todayOrders
@@ -28,7 +28,7 @@ mixin salesTable(todayOrders)
                             td #{numberWithCommas(menu.amount)}
                             td #{numberWithCommas(menu.menu.price * menu.amount)}
 
-            tr.last
+            tr.tbody__last-list
                 td 합계
                 td
                 td

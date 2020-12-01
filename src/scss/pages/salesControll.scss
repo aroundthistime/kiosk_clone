@@ -12,14 +12,14 @@
     background-color: #185494;
     margin-bottom: 4rem;
 
-    .logo {
+    .topArea__logo {
       position: absolute;
       width: 150px;
       height: 150px;
       top: 50%;
       transform: translateY(-50%);
     }
-    span.title {
+    span.topArea__title {
       position: absolute;
       top: 50%;
       left: calc(1rem + 150px);
@@ -28,11 +28,11 @@
     }
 
     @media screen and (max-width: 500px) {
-      .logo {
+      .topArea__logo {
         width: 100px;
         height: 100px;
       }
-      span.title {
+      span.topArea__title {
         font-size: 4rem;
         margin-left: -2rem;
       }
@@ -40,7 +40,7 @@
   }
 
   .middleArea {
-    span.title {
+    span.middleArea__title {
       @include setBlackHans($size: 3rem);
     }
     .table {
@@ -58,7 +58,7 @@
         tr {
           border-bottom: 2px solid #dedede;
         }
-        tr.first {
+        tr.tbody__first-list {
           background-color: #b2b2b2;
           color: #fff;
           height: 30px;
@@ -66,11 +66,11 @@
             font-weight: bolder;
           }
         }
-        tr.last {
+        tr.tbody__last-list {
           border-top: solid;
           height: 30px;
         }
-        tr.no-list {
+        tr.tbody__no-list {
           height: 80px;
         }
         td,
@@ -87,7 +87,7 @@
       float: right;
       margin-bottom: 2rem;
 
-      .button {
+      .button-area__button {
         @include setButton($bgColor: #595959, $width: 125px);
         @include setBlackHans($color: #fff, $size: 1.25rem);
 
@@ -96,7 +96,7 @@
           cursor: pointer;
         }
       }
-      .button + .button {
+      .button-area__button + .button-area__button {
         margin-left: 1rem;
       }
     }
@@ -173,11 +173,11 @@
   }
 
   .bottomArea {
-    span.title {
+    span.bottomArea__title {
       @include setBlackHans($size: 3rem);
     }
 
-    .record {
+    .record-area {
       width: 90%;
       margin: auto;
       margin-bottom: 8rem;
@@ -256,26 +256,26 @@
               cursor: pointer;
             }
           }
-          .record-title {
+          .title-area__record-title {
             margin-left: 1rem;
             font-size: 25px;
             font-weight: bold;
           }
 
           @media screen and (max-width: 1000px) {
-            .record-title {
+            .title-area__record-title {
               font-size: 1.35rem;
               margin-left: 0.65rem;
             }
           }
           @media screen and (max-width: 870px) {
-            .record-title#record-special {
+            .title-area__record-title#record-special {
               display: none;
             }
           }
         }
 
-        .body-area {
+        .content-area {
           display: flex;
           height: calc(100% - 33px - 1rem);
           justify-content: center;
@@ -316,7 +316,7 @@
               display: flex;
               justify-content: space-between;
 
-              .button {
+              .button-area__button {
                 @include setButton($bgColor: #595959, $width: 40%);
                 @include setBlackHans($size: 1.25rem);
                 color: #fff;
@@ -327,12 +327,12 @@
                   cursor: pointer;
                 }
               }
-              .button + .button {
+              .button-area__button + .button-area__button {
                 background-color: #185494;
               }
 
               @media screen and (max-width: 1024px) {
-                .button {
+                .button-area__button {
                   width: 30%;
                 }
               }
@@ -343,7 +343,7 @@
     }
 
     @media screen and (max-width: 710px) {
-      .record {
+      .record-area {
         display: flex;
         flex-direction: column;
 
@@ -361,11 +361,11 @@
           width: 100%;
           box-sizing: border-box;
 
-          .record-title#record-special {
+          .title-area__record-title#record-special {
             display: inline !important;
           }
 
-          .body-area {
+          .content-area {
             height: 400px;
           }
         }
