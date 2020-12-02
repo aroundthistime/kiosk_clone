@@ -13,6 +13,9 @@ import {
   getCustomerPage,
   getMenuDetails,
   postSendOrder,
+  getAlert,
+  getPreparingOrders,
+  getCheckPreparingStatus,
 } from './controllers';
 
 import '@babel/polyfill';
@@ -27,13 +30,13 @@ const app = express();
 
 const PORT = 5000;
 
-const handleListening = () =>
-  console.log(`✅ Listening on https://localhost/${PORT}`);
+const handleListening = () => console.log(`✅ Listening on https://localhost/${PORT}`);
 
 app.listen(PORT, handleListening);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use('/build', express.static(path.join(__dirname, 'build')));
+app.use('/sounds', express.static(path.join(__dirname, 'sounds')));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.locals.moment = moment;
@@ -51,3 +54,6 @@ app.get(routes.menuDetails, getMenuDetails);
 app.post(routes.sendOrder, postSendOrder);
 
 // app.get('/fake', fakeDB);
+app.get(routes.alert, getAlert);
+app.get(routes.getPreparing, getPreparingOrders);
+app.get(routes.checkPreparingStatus, getCheckPreparingStatus);

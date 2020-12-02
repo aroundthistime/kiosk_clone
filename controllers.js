@@ -1,7 +1,7 @@
+import moment from 'moment';
 import Menu from './models/Menu';
 import Order from './models/Order';
 import Record from './models/Record';
-import moment from 'moment';
 
 const DRINKS = '음료';
 const SIDES = '사이드';
@@ -224,6 +224,7 @@ export const postSendOrder = async (req, res) => {
     let orderNum = 1;
     let lastOrder = await Order.find({}).sort({ _id: -1 }).limit(1);
     lastOrder = lastOrder[0]; // find로 찾으면 배열로 찾아지기 때문
+    console.log(orderNum);
     const currentDate = new Date().getDate();
     if ((lastOrder) && (currentDate === lastOrder.date.getDate())) { // 기존에 주문이 하나도 없을 경우도 검사
       orderNum = lastOrder.orderNumber + 1;
@@ -273,7 +274,7 @@ export const getRecord = async (req, res) => {
   });
 
   try {
-    const record = await Record.findOne({ date: date });
+    const record = await Record.findOne({ date });
     let data;
     if (!record) {
       data = await newRecord.save();
@@ -307,8 +308,8 @@ export const getOrdersForTable = async (req, res) => {
     // 입력받은 기간 내 주문내역
     const orders = await Order.find({
       date: {
-        $gte: new Date(start + ' 00:00:00'),
-        $lte: new Date(end + ' 23:59:59'),
+        $gte: new Date(`${start} 00:00:00`),
+        $lte: new Date(`${end} 23:59:59`),
       },
     }).populate('choices.menu');
 
@@ -343,4 +344,41 @@ export const makeDummyData = async (req, res) => {
     console.log(error.message);
     res.status(400);
   }
-}
+};
+
+export const getAlert = (req, res) => {
+  res.render('alert', { pageTitle: `알림판 | ${COMPANY_NAME}` });
+};
+
+export const getPreparingOrders = async (req, res) => {
+  try {
+    const preparingOrders = await Order.find({ isCompleted: false });
+    res.json(preparingOrders);
+  } catch (error) {
+    res.status(400);
+    console.log(error);
+  } finally {
+    res.end();
+  }
+};
+
+export const getCheckPreparingStatus = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  try {
+    const order = await Order.findById(id);
+    if (!order) { // 주문 취소된 경우
+      res.status(204);
+    } else if (order.isCompleted) {
+      res.json(true);
+    } else {
+      res.json(false);
+    }
+  } catch (error) {
+    res.status(400);
+    console.log(error);
+  } finally {
+    res.end();
+  }
+};

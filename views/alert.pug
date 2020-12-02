@@ -1,7 +1,11 @@
 extends layouts/main
 
 block content
-    .preparing
-        .alert-title 준비중
-    .done
-        .alert-title 완료
+    .alert-board#alertBoard
+        section.alert-board__preparing
+            .alert-title 준비 중 | Preparing
+            .alert-board__orders#preparingOrders
+        section.alert-board__complete
+            .alert-title 준비 완료 | Complete
+            .alert-board__orders#completeOrders
+    audio#alertAudio(src="/sounds/alertBoard.mp3")
