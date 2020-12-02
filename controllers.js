@@ -1,7 +1,6 @@
 import Menu from './models/Menu';
 import Order from './models/Order';
 import Record from './models/Record';
-import moment from 'moment';
 
 const DRINKS = '음료';
 const SIDES = '사이드';
@@ -260,7 +259,7 @@ export const postSendOrder = async (req, res) => {
   }
 };
 
-export const salesControllPage = async (req, res) => {
+export const getSalesControllPage = async (req, res) => {
   try {
     const records = await Record.find();
     const orders = await Order.find().populate('choices.menu');
@@ -289,11 +288,10 @@ export const getRecord = async (req, res) => {
 
   try {
     const record = await Record.findOne({ date: date });
-    let data;
     if (!record) {
-      data = await newRecord.save();
+      await newRecord.save();
     } else {
-      data = await record.update({ $set: { content } });
+      await record.update({ $set: { content } });
     }
 
     const records = await Record.find();
@@ -334,40 +332,39 @@ export const getOrdersForTable = async (req, res) => {
   }
 };
 
-// 주문내역 더미데이터 임시 생성
-export const makeDummyData = async (req, res) => {
-  const menu = await Menu.findOne({
-    menuType: ['와퍼', '음료', '사이드'][(Math.random() * 3) >> 0],
-  });
-  const date = moment().subtract((Math.random() * 200 + 1) >> 0, 'days');
-  const orders = new Order({
-    date,
-    price: (Math.random() * 20000 + 1) >> 0,
-    isCompleted: true,
-    orderNumber: (Math.random() * 20000 + 1) >> 0,
-    isTakeout: true,
-    choices: {
-      menu,
-      amount: (Math.random() * 3 + 1) >> 0,
-    },
-  });
+// orderNotice 페이지 //
+export const getKitchenPage = async (req, res) => {
   try {
-    const newOrder = await orders.save();
-    res.status(200).json(newOrder);
+    const orders = await Order.find({
+      isCompleted: false,
+    }).sort({ orderNumber: -1 }).populate({
+      path: 'choices.menu',
+      populate: { path: 'drink' }
+    }).populate({
+      path: 'choices.menu',
+      populate: { path: 'sideMenu' }
+    });
+
+
+    res.status(200).render('orderNotice', { orders });
   } catch (error) {
     console.log(error.message);
-    res.status(400);
+    return res.status(400);
   }
-};
 
-// orderNotice 페이지 //
-
+}
 // 주문내역 수신
 export const getOrderInOrdernotice = async (req, res) => {
   try {
     const orders = await Order.find({
       isCompleted: false,
-    }).populate('choices.menu');
+    }).sort({ orderNumber: -1 }).populate({
+      path: 'choices.menu',
+      populate: { path: 'drink' }
+    }).populate({
+      path: 'choices.menu',
+      populate: { path: 'sideMenu' }
+    });
 
     return res.status(200).json(orders);
   } catch (error) {
@@ -375,3 +372,36 @@ export const getOrderInOrdernotice = async (req, res) => {
     return res.status(400);
   }
 };
+
+export const checkOrderStatus = async (req, res) => {
+  const {
+    body: { id },
+  } = req;
+
+  try {
+    const order = await Order.findOne({ _id: id });
+    await order.update({ $set: { isChecked: true } });
+    return res.status(200).json();
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400);
+  }
+}
+
+export const processOrder = async (req, res) => {
+  const {
+    body: { id, task },
+  } = req;
+
+  try {
+    if (task === 'complete') {
+      const order = await Order.findOne({ _id: id });
+      await order.update({ $set: { isCompleted: true } });
+    } else {
+      await Order.deleteOne({ _id: id });
+    }
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400);
+  }
+}

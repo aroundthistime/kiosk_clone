@@ -1,129 +1,147 @@
-setInterval(async function() {
+if (window.location.pathname === '/kitchen') {
 
-    // 비동기통신으로 주문내역수신
-    const getOrder = await axios.get('/api/get-order-in-ordernotice');
-    
-    if (getOrder.data.length > 0) {
-        const index = (getOrder.data.length) - 1;
-        let getOrderNum = getOrder.data[index].orderNumber;
-        const getOrderId = getOrder.data[index]._id;
-        const getOrderMenu = new Array();
+    const notificationBox = document.querySelector('.middleArea .container');
+    const NO_ORDERLIST_WARNIG_MSG = '수신된 주문 내역이 없습니다.';
 
-        for(var i=0; i < getOrder.data[index].choices.length; i++) {
-            if (getOrder.data[index].choices[i].menu.isCombo == true) {
-                getOrderMenu.push(getOrder.data[index].choices[i].menu.nameKr + " x " + getOrder.data[index].choices[i].amount + "<br>(" + getOrder.data[index].choices[i].menu.drink + ", " + getOrder.data[index].choices[i].menu.sideMenu + ")<br><br>");
-                // getOrderMenu.push(getOrder.data[index].choices[i].menu.nameKr + " x " + getOrder.data[index].choices[i].amount + "<br><br>");
-            } else {
-                getOrderMenu.push(getOrder.data[index].choices[i].menu.nameKr + " x " + getOrder.data[index].choices[i].amount + "<br><br>");
-            }
+    setInterval(async () => {
+
+        // 비동기통신으로 주문내역수신
+        const orders = await axios.get('/api/get-order-in-ordernotice');
+        const newOrders = orders.data;
+
+        // 기존 HTML 블럭 제거
+        const notifications = document.querySelectorAll('.order-notifications');
+        const noOrderLists = document.querySelector('.order-notifications__no-list');
+        notifications.forEach(notification => notification.remove());
+        if (noOrderLists) noOrderLists.remove();
+
+        // 수신 주문 내역이 없는 경우
+        if (!newOrders.length) {
+            const noOrderListDiv = document.createElement('order-notifications__no-list');
+            noOrderListDiv.classList.add('order-notifications__no-list');
+            const noOrderMessage = document.createElement('p');
+            noOrderMessage.innerText = NO_ORDERLIST_WARNIG_MSG;
+            noOrderListDiv.appendChild(noOrderMessage);
+            notificationBox.appendChild(noOrderListDiv);
         }
+        // 수신 주문 내역이 있는 경우
+        else {
+            newOrders.forEach(order => {
+                const newOrderNum = order.orderNumber;
+                const newOrderStatus = order.isChecked;
+                const newOrderId = order._id;
+                const newOrderTakeout = order.isTakeout ? '포장' : '매장';
+                const newOrderMenus = order.choices;
 
-        // 'NEW'표시 블록생성
-        const orderNoticeState = document.createElement('div');
-        const State = document.createElement('span');
-        State.innerHTML = "N<br>E<br>W";
-        orderNoticeState.setAttribute("class", "order-notice-state");
-        orderNoticeState.appendChild(State); 
-        
-        // 주문번호, 주문내역블록 생성
-        const orderContent = document.createElement('div');
-        orderContent.setAttribute("class", "order-content");
-        let orderNum = document.createElement('span');
-        const orderMenu = document.createElement('span');
-        orderNum.setAttribute("class", "order-num");
-        orderMenu.setAttribute("class", "order-menu"); 
-        orderNum.innerHTML = getOrderNum;                         // 주문번호
+                // 주문내역 박스모델 생성
+                const orderNotificationDiv = document.createElement('div');
+                orderNotificationDiv.classList.add('order-notifications', newOrderStatus ? 'order-notifications__status--check' : 'order-notifications__status--new');
+                orderNotificationDiv.id = newOrderId;
 
-        for(var i=0; i < getOrderMenu.length; i++) {                           // 주문내역, 수량
-            orderMenu.innerHTML = orderMenu.innerHTML + getOrderMenu[i];                       
+                // 주문 NEW or CHECK 상태 블럭 생성
+                const orderNotificationStatus = document.createElement('p');
+                orderNotificationStatus.classList.add('order-notifications__status', newOrderStatus ? 'check' : 'new');
+                orderNotificationStatus.innerText = newOrderStatus ? 'check' : 'new';
+                orderNotificationStatus.addEventListener('click', () => togglePopup(newOrderId));
+                orderNotificationDiv.appendChild(orderNotificationStatus);
+
+                // 주문 번호 및 매장 or 포장여부 표시 블럭 생성
+                const orderNotificationDetails = document.createElement('p');
+                const orderNotificationNum = document.createElement('span');
+                const orderNotificationTakeout = document.createElement('span');
+                orderNotificationDetails.classList.add('order-notifications-details');
+                orderNotificationDetails.addEventListener('click', () => togglePopup(newOrderId));
+                orderNotificationNum.classList.add('order-notifications__number');
+                orderNotificationNum.innerText = newOrderNum;
+                orderNotificationNum.id = newOrderId + '_num';
+                orderNotificationDetails.appendChild(orderNotificationNum);
+                orderNotificationTakeout.classList.add('order-notifications__takeout');
+                orderNotificationTakeout.innerText = newOrderTakeout;
+                orderNotificationTakeout.id = newOrderId + '_takeout';
+                orderNotificationDetails.appendChild(orderNotificationTakeout);
+                orderNotificationDiv.appendChild(orderNotificationDetails);
+
+                // 주문의 메뉴 정보 블럭 생성
+                const orderNotificationMenu = document.createElement('div');
+                orderNotificationMenu.classList.add('order-notifications-menu-info');
+                orderNotificationMenu.id = newOrderId + '_order';
+                orderNotificationMenu.addEventListener('click', () => togglePopup(newOrderId));
+
+                newOrderMenus.forEach(menu => {
+                    // 각 메뉴를 저장할 블럭 생성
+                    const menuItem = document.createElement('div');
+                    menuItem.classList.add('order-notifications-menu');
+
+                    // 메뉴 이름 저장
+                    const menuName = document.createElement('p');
+                    menuName.classList.add('order-notifications__menu-name');
+                    menuName.innerText = menu.menu.nameKr + ' x ' + menu.amount;
+                    menuItem.appendChild(menuName);
+
+                    // 세트메뉴일 경우 구성 재료 저장
+                    if (menu.menu.isCombo) {
+                        const MenuSides = document.createElement('p');
+                        MenuSides.classList.add('order-notifications__menu-sides');
+                        MenuSides.innerText = menu.menu.drink.nameKr + ', ' + menu.menu.sideMenu.nameKr;
+                        menuItem.appendChild(MenuSides);
+                    }
+                    orderNotificationMenu.appendChild(menuItem);
+                })
+                orderNotificationDiv.appendChild(orderNotificationMenu);
+
+                // 주문처리 버튼 생성
+                const buttonArea = document.createElement('div');
+                buttonArea.classList.add('button-area');
+                const cancelBtn = document.createElement('div');
+                cancelBtn.classList.add('button-area__button', 'button-area__button--cancel');
+                cancelBtn.innerText = '취소';
+                cancelBtn.addEventListener('click', () => processOrder(newOrderId, 'cancel'));
+                buttonArea.appendChild(cancelBtn);
+                const completeBtn = document.createElement('div');
+                completeBtn.classList.add('button-area__button', 'button-area__button--complete');
+                completeBtn.innerText = '완료';
+                completeBtn.addEventListener('click', () => processOrder(newOrderId, 'complete'));
+                buttonArea.appendChild(completeBtn);
+                orderNotificationDiv.appendChild(buttonArea);
+
+                notificationBox.appendChild(orderNotificationDiv);
+
+            })
         }
+    }, 500);
 
-        if ((orderMenu.innerHTML.length) > 30) {                 // 주문내역 글자수 30자초과시 더보기버튼생성
-            const moreBtn = document.createElement('button');
-            moreBtn.setAttribute("class", "order-menu-more-button");
-            moreBtn.innerHTML = "더보기";
-            orderContent.appendChild(moreBtn);
-        }                        
 
-        orderContent.appendChild(orderNum);
-        orderContent.appendChild(orderMenu);
-        
-        // 주문취소, 주문완료버튼블록 생성
-        const orderProcessBtn = document.createElement('div');
-        orderProcessBtn.setAttribute("class", "order-process-button");
-        const cancelBtn = document.createElement('button');
-        cancelBtn.setAttribute("class", "order-cancel-button");
-        cancelBtn.innerHTML = "취소";
-        const br = document.createElement('br');
-        const completeBtn = document.createElement('button');
-        completeBtn.setAttribute("class", "order-complete-button");
-        completeBtn.innerHTML = "완료";
+    const orderPopup = document.querySelector('.order-popup');
+    const orderPopupCancel = document.querySelector('.order-popup-cancel');
 
-        cancelBtn.addEventListener('click', function() {    // 주문취소이벤트
-            // -- DB에 주문취소되었다고 전송하는코드추가해야함 -- //
-            orderNoticeState.style.display = 'none';
-            orderContent.style.display = 'none';
-            orderProcessBtn.style.display = 'none';
-        });
+    const togglePopup = async (id) => {
+        const selectedNum = document.getElementById(id + '_num').innerText;
+        const selectedTakeout = document.getElementById(id + '_takeout').innerText;
+        const selectedOrder = document.getElementById(id + '_order').innerHTML;
+        const orderPopupNum = document.querySelector('.order-popup-num');
+        const orderPopupTakeout = document.querySelector('.order-popup-takeout');
+        const orderPopupMenu = document.querySelector('.order-popup-menu');
 
-        completeBtn.addEventListener('click', function() {     // 주문완료이벤트
-            // -- DB에 주문완료되었다고 전송하는코드추가해야함 -- //
-            orderNoticeState.style.display = 'none';
-            orderContent.style.display = 'none';
-            orderProcessBtn.style.display = 'none';
-        });                    
+        orderPopupNum.innerHTML = selectedNum;
+        orderPopupTakeout.innerHTML = selectedTakeout;
+        orderPopupMenu.innerHTML = selectedOrder;
 
-        orderProcessBtn.appendChild(cancelBtn);
-        orderProcessBtn.appendChild(br);
-        orderProcessBtn.appendChild(completeBtn);
+        await axios.post('/api/check-order', { id });
 
-        // 주문클릭시 더보기팝업창생성, 'NEW'-> 'CHECK'표시 변경, 색상변경기능
-        orderNoticeState.addEventListener('click', function() {
-            togglePopup(orderNum.innerHTML, orderMenu.innerHTML);
-
-            State.innerHTML = "C<br>H<br>E<br>C<br>K";
-            orderNoticeState.style.backgroundColor = '#62A22B';
-            orderNoticeState.style.fontSize = '70%';
-            orderNoticeState.style.lineHeight = '13px';
-            orderContent.style.backgroundColor = '#E5E5E5';
-            orderProcessBtn.style.backgroundColor = '#E5E5E5';
-            orderNum.style.borderRightColor = '#999999';
-        });
-
-        orderContent.addEventListener('click', function() {
-            togglePopup(orderNum.innerHTML, orderMenu.innerHTML);
-
-            State.innerHTML = "C<br>H<br>E<br>C<br>K";
-            orderNoticeState.style.backgroundColor = '#62A22B';
-            orderNoticeState.style.fontSize = '70%';
-            orderNoticeState.style.lineHeight = '13px';
-            orderContent.style.backgroundColor = '#E5E5E5';
-            orderProcessBtn.style.backgroundColor = '#E5E5E5';
-            orderNum.style.borderRightColor = '#999999';
-        });
-
-        const orderBox = document.createElement('div');
-        orderBox.setAttribute("class", "order-notification");
-        orderBox.setAttribute("id", getOrderId);              // 주문알림박스 id에 수신한주문 id부여
-        orderBox.appendChild(orderNoticeState);
-        orderBox.appendChild(orderContent);
-        orderBox.appendChild(orderProcessBtn);
-
-        const orderNotification = document.querySelector('.order-notification');
-        const orderNotificationNodes = orderNotification.childNodes.length;
-
-        // 주문알림박스가 이미화면에 존재하는지 조건검사후 박스생성             
-            if ((orderNotificationNodes) == 0) {
-                orderNotification.appendChild(orderBox);
-                console.log('주문수신성공');
-                console.log(getOrder);
-            } else {
-                if (orderBox.id != orderNotification.firstChild.id) {
-                    orderNotification.insertBefore(orderBox, orderNotification.firstChild);
-                    console.log('주문수신성공');
-                    console.log(getOrder);
-                }
-            }
+        orderPopup.classList.toggle("show-popup");
     }
-    
- }, 100);
+
+    const cancelPopup = () => {
+        orderPopup.classList.toggle("show-popup");
+    }
+
+    const processOrder = async (id, task) => {
+        await axios.post('/api/process-order', {
+            id,
+            task,
+        });
+    }
+
+    orderPopupCancel.addEventListener('click', cancelPopup);
+
+}

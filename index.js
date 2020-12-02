@@ -2,18 +2,18 @@ import express from 'express';
 import path from 'path';
 import moment from 'moment';
 import {
-  fakeCustomerPage,
   fakeDB,
   getAllRecords,
   getOrdersForTable,
   getRecord,
-  makeDummyData,
-  makeTheOrder,
-  salesControllPage,
   getCustomerPage,
   getMenuDetails,
   postSendOrder,
   getOrderInOrdernotice,
+  getSalesControllPage,
+  getKitchenPage,
+  checkOrderStatus,
+  processOrder,
 } from './controllers';
 
 import '@babel/polyfill';
@@ -40,11 +40,10 @@ app.use(express.json());
 app.locals.moment = moment;
 
 // salesControll router
-app.get(routes.salesControllPage, salesControllPage);
+app.get(routes.salesControllPage, getSalesControllPage);
 app.post(routes.getRecord, getRecord);
 app.post(routes.getOrders, getOrdersForTable);
 app.get(routes.getAllRecords, getAllRecords);
-app.get(routes.makeDummy, makeDummyData);
 
 // customerPage router
 app.get(routes.customerPage, getCustomerPage);
@@ -52,8 +51,10 @@ app.get(routes.menuDetails, getMenuDetails);
 app.post(routes.sendOrder, postSendOrder);
 
 // orderNotice router
-app.get('/orderNotice', (req, res) => res.render('orderNotice'));
+app.get(routes.orderNoticePage, getKitchenPage);
 app.get(routes.getOrderInOrdernotice, getOrderInOrdernotice);
+app.post(routes.checkOrderStatus, checkOrderStatus);
+app.post(routes.processOrder, processOrder);
 
 
 

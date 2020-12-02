@@ -1,6 +1,6 @@
 const CUSTOMER_PAGE = '/';
 const SALESCONTROLL_PAGE = '/salesControll';
-const ORDERNOTICE_PAGE = '/orderNotice';
+const ORDERNOTICE_PAGE = '/kitchen';
 
 // API
 const MENU_DETAILS = '/api/menu-details/:id';
@@ -8,8 +8,9 @@ const SEND_ORDER = '/api/send-order';
 const GET_RECORDS = '/api/submit-record';
 const GET_ORDRES = '/api/get-orders';
 const GET_ALL_RECORDS = '/api/get-all-records';
-const MAKE_DUMMY = '/api/make-dummy';
 const GET_ORDER_IN_ORDERNOTICE = '/api/get-order-in-ordernotice';
+const CHECK_ORDER_STATUS = '/api/check-order';
+const PROCESS_ORDER = '/api/process-order';
 
 const routes = {
   customerPage: CUSTOMER_PAGE,
@@ -20,8 +21,9 @@ const routes = {
   getRecord: GET_RECORDS,
   getOrders: GET_ORDRES,
   getAllRecords: GET_ALL_RECORDS,
-  makeDummy: MAKE_DUMMY,
   getOrderInOrdernotice: GET_ORDER_IN_ORDERNOTICE,
+  checkOrderStatus: CHECK_ORDER_STATUS,
+  processOrder: PROCESS_ORDER,
 };
 
 export default routes;

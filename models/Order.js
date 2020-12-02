@@ -20,6 +20,10 @@ const OrderSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  isChecked: {
+    type: Boolean,
+    default: false,
+  },
   date: {
     type: Date,
     default: Date.now,

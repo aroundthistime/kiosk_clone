@@ -41,7 +41,7 @@ const MenuSchema = new mongoose.Schema({
   },
   defaultCombo: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'menus',
+    ref: 'Menu',
   },
   isDefaultCombo: {
     type: Boolean,
@@ -51,14 +51,14 @@ const MenuSchema = new mongoose.Schema({
   },
   drink: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'menus',
+    ref: 'Menu',
     required() {
       return this.isCombo;
     },
   },
   sideMenu: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'menus',
+    ref: 'Menu',
     requried() {
       return this.isCombo;
     },

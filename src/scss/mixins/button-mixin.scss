@@ -7,4 +7,9 @@
   width: $width;
   text-align: center;
   box-sizing: content-box;
+
+  &:hover {
+    opacity: 0.65;
+    cursor: pointer;
+  }
 }
