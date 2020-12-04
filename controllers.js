@@ -332,29 +332,31 @@ export const getOrdersForTable = async (req, res) => {
   }
 };
 
-// orderNotice 페이지 //
+
+// kitchen 페이지 //
+
 export const getKitchenPage = async (req, res) => {
   try {
+    // 페이지를 읽기전에 먼저 기존 주문내역 수신
     const orders = await Order.find({
       isCompleted: false,
-    }).sort({ orderNumber: -1 }).populate({
+    }).sort({ orderNumber: -1 }).populate({       // objectID로 읽어오는것 방지
       path: 'choices.menu',
-      populate: { path: 'drink' }
+      populate: { path: 'drink' } 
     }).populate({
       path: 'choices.menu',
       populate: { path: 'sideMenu' }
     });
 
-
-    res.status(200).render('orderNotice', { orders });
+    res.status(200).render('kitchen', { orders });
   } catch (error) {
     console.log(error.message);
     return res.status(400);
   }
+};
 
-}
 // 주문내역 수신
-export const getOrderInOrdernotice = async (req, res) => {
+export const getOrdersInKitchen = async (req, res) => {
   try {
     const orders = await Order.find({
       isCompleted: false,
@@ -386,7 +388,7 @@ export const checkOrderStatus = async (req, res) => {
     console.log(error.message);
     return res.status(400);
   }
-}
+};
 
 export const processOrder = async (req, res) => {
   const {
@@ -394,14 +396,16 @@ export const processOrder = async (req, res) => {
   } = req;
 
   try {
-    if (task === 'complete') {
+    // 주문완료시
+    if (task === 'complete') { 
       const order = await Order.findOne({ _id: id });
       await order.update({ $set: { isCompleted: true } });
-    } else {
+    } //주문취소시
+    else { 
       await Order.deleteOne({ _id: id });
     }
   } catch (error) {
     console.log(error.message);
     return res.status(400);
   }
-}
+};

@@ -9,9 +9,9 @@ import {
   getCustomerPage,
   getMenuDetails,
   postSendOrder,
-  getOrderInOrdernotice,
   getSalesControllPage,
   getKitchenPage,
+  getOrdersInKitchen,
   checkOrderStatus,
   processOrder,
 } from './controllers';
@@ -50,13 +50,10 @@ app.get(routes.customerPage, getCustomerPage);
 app.get(routes.menuDetails, getMenuDetails);
 app.post(routes.sendOrder, postSendOrder);
 
-// orderNotice router
-app.get(routes.orderNoticePage, getKitchenPage);
-app.get(routes.getOrderInOrdernotice, getOrderInOrdernotice);
+// kitchen router
+app.get(routes.kitchenPage, getKitchenPage);
+app.get(routes.getOrdersInKitchen, getOrdersInKitchen);
 app.post(routes.checkOrderStatus, checkOrderStatus);
 app.post(routes.processOrder, processOrder);
-
-
-
 
 // app.get('/fake', fakeDB);
