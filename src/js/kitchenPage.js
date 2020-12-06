@@ -1,7 +1,10 @@
+import axios from 'axios';
+
 if (window.location.pathname === '/kitchen') {
 
     const notificationContainer = document.querySelector('.middleArea .container');
     const NO_ORDERLIST_WARNIG_MSG = '주문 내역이 없습니다';
+    const alarmSound = document.getElementById('alarmInKitchen');
 
     setInterval(async () => {
 
@@ -30,6 +33,7 @@ if (window.location.pathname === '/kitchen') {
             ordersList.forEach(order => {
                 const newOrderNum = order.orderNumber;
                 const newOrderStatus = order.isChecked;
+                const newOrderAlarmStatus = order.isAlarmed;
                 const newOrderId = order._id;
                 const newOrderTakeout = order.isTakeout ? '포장' : '매장';
                 const newOrderMenus = order.choices;
@@ -116,6 +120,12 @@ if (window.location.pathname === '/kitchen') {
 
                 // 모든 블럭 생성이 끝났으면, 주문알림 컨테이너에 해당 주문내역박스 추가
                 notificationContainer.appendChild(orderNotificationBox);
+
+                // 알림소리상태 체크후 알림음 발생
+                if (!newOrderAlarmStatus) {
+                    alarmSound.play();
+                    checkOrderAlarm(newOrderId);
+                }                
             })
         }
     }, 850);
@@ -127,6 +137,9 @@ if (window.location.pathname === '/kitchen') {
         });
     }
 
+    const checkOrderAlarm = async (id) => {
+        await axios.post('/api/check-order-alarm-status', { id });
+    }
 
     // 주문내역박스 클릭시 표시되는 팝업창 
     const orderPopupBox = document.querySelector('.order-popup');

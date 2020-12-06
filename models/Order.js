@@ -24,6 +24,10 @@ const OrderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isAlarmed: {
+    type: Boolean,
+    default: false,
+  },
   date: {
     type: Date,
     default: Date.now,

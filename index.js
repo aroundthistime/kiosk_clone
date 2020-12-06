@@ -13,6 +13,7 @@ import {
   getKitchenPage,
   getOrdersInKitchen,
   checkOrderStatus,
+  checkOrderAlarmStatus,
   processOrder,
 } from './controllers';
 
@@ -35,6 +36,7 @@ app.listen(PORT, handleListening);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use('/build', express.static(path.join(__dirname, 'build')));
+app.use('/src', express.static(path.join(__dirname, 'src')));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.locals.moment = moment;
@@ -54,6 +56,7 @@ app.post(routes.sendOrder, postSendOrder);
 app.get(routes.kitchenPage, getKitchenPage);
 app.get(routes.getOrdersInKitchen, getOrdersInKitchen);
 app.post(routes.checkOrderStatus, checkOrderStatus);
+app.post(routes.checkOrderAlarmStatus, checkOrderAlarmStatus);
 app.post(routes.processOrder, processOrder);
 
 // app.get('/fake', fakeDB);

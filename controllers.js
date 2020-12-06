@@ -390,6 +390,21 @@ export const checkOrderStatus = async (req, res) => {
   }
 };
 
+export const checkOrderAlarmStatus = async (req, res) => {
+  const {
+    body: { id },
+  } = req;
+
+  try {
+    const order = await Order.findOne({ _id: id });
+    await order.update({ $set: { isAlarmed: true } });
+    return res.status(200).json();
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400);
+  }
+};
+
 export const processOrder = async (req, res) => {
   const {
     body: { id, task },
