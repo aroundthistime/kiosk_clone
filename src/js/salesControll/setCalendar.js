@@ -1,10 +1,10 @@
 import moment from 'moment';
-if (window.location.pathname === '/salesControll') {
 
+if (window.location.pathname === '/salesControll') {
+  const ASPECTRATIO = 1;
   const calendarEl = document.getElementById('calendar'); // 달력 영역 지정
   const RECORD_TITLE_CLASSNAME = '.content-area__record-content'; // 특이사항 제목 클래스명
   const DATE_FORMAT = 'YYYY-MM-DD'; // 날짜 출력 형식 지정
-  const ASPECTRATIO = 1;  // 달력 가로세로 비율값
   const NO_RECORD_MESSAGE = '기록된 사항이 없습니다.';  // 특이사항 기록이 없을 시 출력 메시지
   const CALENDAR_TYPE = 'dayGridMonth'; // 캘린더 출력 형식 리터럴 상수 정의
   const LOCALSTORAGE_RECORD = 'records'  // localstorage에 저장된 레코드 관련 ID

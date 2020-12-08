@@ -1,8 +1,8 @@
 import axios from 'axios';
 import routes from '../../routes';
 
-const categories = document.querySelectorAll('.category');
-const menuLists = document.querySelectorAll('.menu-list');
+const categories = document.querySelectorAll('.category'); // 페이지 상단에 위치한 카테고리 목록들
+const menuLists = document.querySelectorAll('.menu-list'); // 각 카테고리에 해당하는 메뉴목록
 const menuBlocks = document.querySelectorAll('.menuBlock');
 
 const languageSettingsToggle = document.getElementById('languageCheckbox');
@@ -11,21 +11,21 @@ const customerFinalCancelBtn = document.getElementById('customerFinalCancelBtn')
 const shoppingCartEmptyMessage = document.getElementById('shoppingCartEmptyMessage');
 
 // popups
-const menuDetailsPopup = document.getElementById('menuDetails');
-const comboSinglePopup = document.getElementById('comboSinglePopup');
-const forHereToGoPopup = document.getElementById('forHereTogoPopup');
-const orderResultPopup = document.getElementById('orderResult');
-const overlay = document.getElementById('overlay');
+const menuDetailsPopup = document.getElementById('menuDetails'); // 메뉴 자세한 정보 확인 및 장바구니에 담을 수 있음
+const comboSinglePopup = document.getElementById('comboSinglePopup'); // 단품 세트여부 선택팝업
+const forHereToGoPopup = document.getElementById('forHereTogoPopup'); // 매장식사 포장여부 선택팝업
+const orderResultPopup = document.getElementById('orderResult'); // 최종적으로 주문했을 때 주문결과 알려줌
+const overlay = document.getElementById('overlay'); // 팝업이 뜰 때 팝업 외의 영역을 가려줌
 const loadingPopup = document.getElementById('loadingPopup');
 
-let selectedMenu;
-let lastMouseMove;
+let selectedMenu; // 선택된 메뉴 개체 (object)
+let lastMouseMove; // 가장 최근 마우스 움직였을 때(마우스 움직일 때마다 난수 넣어줌)
 let usingKorean = true;
 
 const SELECTED_CATEGORY_CLASSNAME = 'category--selected';
 const INVISIBLE = 'hidden'; // classname that makes element invisible;
 const SOLD_OUT_CLASSNAME = 'menuBlock--sold-out';
-const THREE_MINUTES_TO_MILLISECONDS = 180000;
+const THREE_MINUTES_TO_MILLISECONDS = 180000; // 페이지 미조작시 자동갱신시간
 const TEN_SECONDS_TO_MILLISECONDS = 10000;
 const NON_BURGER_MENU_TYPES = ['사이드', '음료', '디저트']; // 햄버거가 아닌 류들의 메뉴타입
 const DRINK = '음료';
@@ -145,7 +145,7 @@ const fillMenuDetailsPopup = (isCombo) => {
     fillIngredientsList(ingredientsNonAllergicEng, selectedMenu.ingredientsNonAllergicEng);
     fillIngredientsList(ingredientsAllergicEng, selectedMenu.ingredientsAllergicEng);
   }
-  if (isCombo) {
+  if (isCombo) { // 세트면 사이드, 음료 옵션 보여줌
     singleComboOption.classList.remove('single');
     singleComboOption.classList.add('combo');
     document.querySelectorAll('.optionBlock--default').forEach((defaultOptionBlock) => {
@@ -153,7 +153,7 @@ const fillMenuDetailsPopup = (isCombo) => {
     });
     drinkOption.classList.remove(INVISIBLE);
     sideOption.classList.remove(INVISIBLE);
-  } else {
+  } else { // 그렇지 않다면 사이드, 음료 옵션 보여주지 않음
     singleComboOption.classList.add('single');
     singleComboOption.classList.remove('combo');
     drinkOption.classList.add(INVISIBLE);
@@ -314,10 +314,7 @@ const removeOrderBar = (event) => {
   }
 };
 
-const addToCart = (menu, price, drink = null, side = null) => {
-  const shoppingCart = document.getElementById('shoppingCartOrders');
-  const orderBar = document.createElement('DIV');
-  orderBar.classList.add('shopping-cart__order');
+const createOrderBarMenu = (orderBar, menu, drink, side) => {
   const orderBarMenu = document.createElement('DIV'); // 메뉴이름 (및 ID값) column
   orderBarMenu.classList.add('order__column');
   orderBarMenu.classList.add('order__menu');
@@ -396,6 +393,9 @@ const addToCart = (menu, price, drink = null, side = null) => {
     orderBarMenu.appendChild(sideId);
   }
   orderBar.appendChild(orderBarMenu);
+};
+
+const createOrderBarAmount = (orderBar) => {
   const orderBarAmount = document.createElement('DIV'); // 해당 메뉴 수량 확인 및 조절 column
   orderBarAmount.classList.add('order__column');
   orderBarAmount.classList.add('order__amount');
@@ -425,6 +425,9 @@ const addToCart = (menu, price, drink = null, side = null) => {
   orderBarAmount.appendChild(orderCurrentAmount);
   orderBarAmount.appendChild(orderIncreaseBtn);
   orderBar.appendChild(orderBarAmount);
+};
+
+const createOrderBarPrices = (orderBar, price) => {
   const orderBarPrice = document.createElement('DIV');
   orderBarPrice.classList.add('order__column');
   orderBarPrice.classList.add('order__price');
@@ -435,6 +438,9 @@ const addToCart = (menu, price, drink = null, side = null) => {
   orderBarOriginalPrice.classList.add(INVISIBLE);
   orderBarOriginalPrice.innerText = price;
   orderBar.appendChild(orderBarOriginalPrice);
+};
+
+const createOrderBarRemoveBtn = (orderBar) => { // 해당 메뉴 장바구니에서 지우는 버튼
   const orderBarRemoveBtn = document.createElement('DIV');
   orderBarRemoveBtn.classList.add('order__column');
   orderBarRemoveBtn.classList.add('order__remove');
@@ -445,6 +451,16 @@ const addToCart = (menu, price, drink = null, side = null) => {
   orderBarRemoveBtn.appendChild(orderBarRemoveIcon);
   orderBarRemoveBtn.addEventListener('click', removeOrderBar);
   orderBar.appendChild(orderBarRemoveBtn);
+};
+
+const addToCart = (menu, price, drink = null, side = null) => {
+  const shoppingCart = document.getElementById('shoppingCartOrders');
+  const orderBar = document.createElement('DIV');
+  orderBar.classList.add('shopping-cart__order');
+  createOrderBarMenu(orderBar, menu, drink, side); // 메뉴에 대한 이름 정보 column 추가
+  createOrderBarAmount(orderBar); // 해당 메뉴 수량 확인 및 조절 column 추가
+  createOrderBarPrices(orderBar, price); // 해당 메뉴 가격 정보 column 추가
+  createOrderBarRemoveBtn(orderBar); // 해당 메뉴 장바구니에서 삭제하는 버튼 추가
   shoppingCart.appendChild(orderBar);
   const shoppingCartTotalPrice = document.getElementById('shoppingCartTotalPrice'); // modify total info of the shopping cart as well
   const shoppingCartTotalAmount = document.getElementById('shoppingCartTotalAmount');
@@ -636,7 +652,7 @@ const detectMouseMove = (event) => {
 
 const initCustomerPage = () => {
   languageSettingsToggle.addEventListener('click', selectLanguage);
-  prepareCategories();
+  prepareCategories(); // prepare함수들은 해당 영역의 요소들에 eventlistenr을 더하고 초기상태 설정
   prepareMenuBlocks();
   prepareComboSinglePopup();
   prepareMenuDetailsPopup();

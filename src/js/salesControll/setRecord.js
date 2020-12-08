@@ -67,7 +67,7 @@ if (window.location.pathname === '/salesControll') {
       localStorage.setItem('records', JSON.stringify(records));
 
       const recordEl = document.querySelector(RECORD_CONTENT_CLASSNAME);
-      recordEl.innerText = content ? content : NO_REACORD_MESSAGE;
+      recordEl.innerText = content || NO_REACORD_MESSAGE;
 
       const daysOnCalendar = document.querySelectorAll('.fc-daygrid-day.fc-day');
       daysOnCalendar.forEach((day) => {
