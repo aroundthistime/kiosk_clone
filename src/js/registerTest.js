@@ -510,8 +510,8 @@ if (window.location.pathname === '/test') {
     let noDiscount = singleInfo["isDiscounted"] === "" || singleInfo["isDiscounted"] === null || isNaN(singleInfo["isDiscounted"]);
 
     // 재료구성 (음료가 아닌데 비어있을 경우)
-    let noNonAllergenEng = singleInfo["ingredientsNonAllergicEng"].length === 0;
-    let noNonAllergenKr = singleInfo["ingredientsNonAllergicKr"].length === 0;
+    let noNonAllergenEng = singleInfo["ingredientsAllergicEng"].length === 0;
+    let noNonAllergenKr = singleInfo["ingredientsAllergicKr"].length === 0;
 
     let checkDrink = singleInfo["menuType"] === "음료"
 
@@ -607,7 +607,7 @@ if (window.location.pathname === '/test') {
         },
         success: function (response) {
           if (response["result"] === "success") {
-            alert(response["msg"] + " 세트");
+            console.log(response["msg"] + " 세트");
           } else {
             alert("메뉴 받아오기 실패");
           }
@@ -616,7 +616,7 @@ if (window.location.pathname === '/test') {
 
     }
 
-    // 단품 폼 서버에 POST (오작동 방지를 위해 2초간격 setTimeout())
+    // 단품 폼 서버에 POST (오작동 방지를 위해 1초간격 setTimeout())
 
     setTimeout(function () {
       $.ajax({
@@ -636,14 +636,15 @@ if (window.location.pathname === '/test') {
         },
         success: function (response) {
           if (response["result"] === "success") {
-            alert(response["msg"] + " 단품");
+            console.log(response["msg"] + " 단품");
+            window.location.href = window.location.href;
           } else {
             closePopup();
             alert("메뉴 올리기 실패");
           }
         }
       })
-    }, 2000);
+    }, 500);
 
     closePopup();
   }
