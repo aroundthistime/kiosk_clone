@@ -494,7 +494,7 @@ export const postEditMenu = async (req, res) => {
     } else {
       // 1. 단품인 경우의 분기 (브라우저로부터 받아온 objectId로 DB에서 찾는다)
 
-      await Menu.updateOne({ nameKr: nameKr }, {
+      await Menu.updateOne({ _id: objectId }, {
         $set: {
           isCombo,
           image,
@@ -518,9 +518,6 @@ export const postEditMenu = async (req, res) => {
           isDiscontinued,
         }
       })
-
-      // 2. 세트인 경우의 분기 (nameKr를 받아와서 DB에서 찾는다)
-
     }
     return res.status(200).json({
       result: 'success',
