@@ -1,0 +1,267 @@
+extends layouts/main.pug
+
+block title
+    title BURGERKING
+    script(src = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
+
+block content
+    #menu-register
+      .top-area
+        // 헤더에 해당
+        .header
+          a.btn(href='')  《 주문알림
+          img.logo(src='https://cdn.freebiesupply.com/images/thumbs/2x/burger-king-logo.png' alt='버거킹 로고이미지')
+          span.title 메뉴관리
+      // 카테고리와 안내문에 해당
+      .direction
+        // 사용법안내 회색창
+        p(style="font-family: 'Gothic A1', sans-serif;") [안내] 생성된 메뉴를 클릭하면 상세정보 수정이 가능합니다.
+      #category-tabs
+        // 라디오버튼으로 카테고리 탭을 구현함
+        input#premium-category(type='radio' name='categories' checked='checked')
+        label(for='premium-category') 프리미엄
+        input#whoppers-category(type='radio' name='categories')
+        label(for='whoppers-category') 와퍼
+        input#chicken-burgers-category(type='radio' name='categories')
+        label(for='chicken-burgers-category') 치킨버거
+        input#sides-category(type='radio' name='categories')
+        label(for='sides-category') 사이드
+        input#drinks-category(type='radio' name='categories')
+        label(for='drinks-category') 음료
+        input#desserts-category(type='radio' name='categories')
+        label(for='desserts-category') 디저트
+        .premium
+          // 메뉴등록 버튼
+          .container
+        .whoppers
+          // 메뉴등록 버튼
+          .container
+        .chicken-burgers
+          // 메뉴등록 버튼
+          .container
+        .sides
+          // 메뉴등록 버튼
+          .container
+        .drinks
+          // 메뉴등록 버튼
+          .container
+        .desserts
+          // 메뉴등록 버튼
+          .container
+      .popup-area
+        #register-popup.popup
+          span.register-or-edit 메뉴등록
+          .input-form
+            #form-tabs
+              input#single(type='radio' name='singleOrCombo' checked='checked')
+              label(for='single') 단품
+              input#combo(type='radio' name='singleOrCombo')
+              label(for='combo') 세트
+              // 여기에 입력폼 표시
+              .input-form1
+              .input-form2
+          a.decline(href='#a' onclick='return false;') 취소
+          a.submit(href='#' onclick='return false;') 확인
+        .dim
+      //팝업창 영역 (신규등록/수정 겸용)
+      .hidden1
+        form#input-form-single
+          .basic-info
+            input#object-id-single(type='text' placeholder='예: https://sample.com/image.png' autocomplete='off')
+            .text-form
+              p.lab 상품이미지(링크)
+              p.lab-required * 필수입력 항목
+              br
+              input#product-image(type='text' placeholder='예: https://sample.com/image.png' required='' autocomplete='off')
+              label(for='product-image')
+            p.lab 카테고리
+            p.lab-required * 필수입력 항목
+            .radios
+              input#premium(type='radio' name='category' value='프리미엄' required='')
+              label(for='premium')
+                span
+                | 프리미엄
+              input#whoppers(type='radio' name='category' value='와퍼')
+              label(for='whoppers')
+                span
+                | 와퍼
+              input#chicken-burgers(type='radio' name='category' value='치킨버거')
+              label(for='chicken-burgers')
+                span
+                | 치킨버거
+              input#sides(type='radio' name='category' value='사이드')
+              label(for='sides')
+                span
+                | 사이드
+              input#drinks(type='radio' name='category' value='음료')
+              label(for='drinks')
+                span
+                | 음료
+              input#desserts(type='radio' name='category' value='디저트')
+              label(for='desserts')
+                span
+                | 디저트
+            .text-form
+              p.lab 메뉴이름(한글)
+              p.lab-required * 필수입력 항목
+              br
+              input#name-kr(type='text' placeholder='최대 20자 입력가능 (예: 와퍼)' maxlength='20' required='' autocomplete='off')
+              label(for='name-kr')
+            .text-form
+              p.lab 메뉴이름(영어)
+              p.lab-required * 필수입력 항목
+              br
+              input#name-eng(type='text' placeholder='최대 50자 입력 (예: Whopper)' maxlength='50' required='' autocomplete='off')
+              label(for='name-eng')
+            .text-form
+              p.lab 칼로리(kcal)
+              p.lab-required * 필수입력 항목
+              br
+              input#calories(type='text' placeholder='숫자만 입력 (예: 1000)' maxlength='20' required='' autocomplete='off')
+              label(for='calories')
+            .text-form
+              p.lab 상품가격(원)
+              p.lab-required * 필수입력 항목
+              br
+              input#price(type='text' placeholder='숫자만 입력 (예: 1000)' maxlength='20' required='' autocomplete='off')
+              label(for='price')
+            .text-form
+              p.lab 세트추가금액(원)
+              p.lab-required * 필수입력 항목
+              br
+              input#extra-price(type='text' value='0' maxlength='20' required='' autocomplete='off')
+              label(for='extra-price')
+
+            p.lab 재료구성
+            p.lab-required * 음료 제외 필수입력
+            .checkboxes
+              input#beef(type='checkbox' name='ingredients' value='beef' required='')
+              label(for='beef') 쇠고기
+              input#pork(type='checkbox' name='ingredients' value='pork')
+              label(for='pork') 돼지고기
+              input#chicken(type='checkbox' name='ingredients' value='chicken')
+              label(for='chicken') 닭고기
+              input#pollock(type='checkbox' name='ingredients' value='pollock')
+              label(for='pollock') 명태연육
+              input#crab(type='checkbox' name='ingredients' value='crab')
+              label(for='crab') 붉은대게
+              input#shellfish(type='checkbox' name='ingredients' value='shellfish')
+              label(for='shellfish') 조개류
+              input#shrimp(type='checkbox' name='ingredients' value='shrimp')
+              label(for='shrimp') 새우
+              input#cheese(type='checkbox' name='ingredients' value='cheese')
+              label(for='cheese') 치즈
+              input#egg(type='checkbox' name='ingredients' value='egg')
+              label(for='egg') 난류
+              input#flour(type='checkbox' name='ingredients' value='flour')
+              label(for='flour') 밀가루
+              input#soybean(type='checkbox' name='ingredients' value='soybean')
+              label(for='soybean') 대두
+              input#potato(type='checkbox' name='ingredients' value='potato')
+              label(for='potato') 감자
+              input#lettuce(type='checkbox' name='ingredients' value='lettuce')
+              label(for='lettuce') 양상추
+              input#tomato(type='checkbox' name='ingredients' value='tomato')
+              label(for='tomato') 토마토
+              input#cucumber(type='checkbox' name='ingredients' value='cucumber')
+              label(for='cucumber') 오이
+              input#onion(type='checkbox' name='ingredients' value='onion')
+              label(for='onion') 양파
+              input#truffle(type='checkbox' name='ingredients' value='truffle')
+              label(for='truffle') 트러플
+            p.lab 알레르기 유발재료
+            .checkboxes
+              input#beef-allergen(type='checkbox' name='allergens' value='beef' required='')
+              label(for='beef-allergen') 쇠고기
+              input#pork-allergen(type='checkbox' name='allergens' value='pork')
+              label(for='pork-allergen') 돼지고기
+              input#chicken-allergen(type='checkbox' name='allergens' value='chicken')
+              label(for='chicken-allergen') 닭고기
+              input#shellfish-allergen(type='checkbox' name='allergens' value='shellfish')
+              label(for='shellfish-allergen') 조개류
+              input#shrimp-allergen(type='checkbox' name='allergens' value='shrimp')
+              label(for='shrimp-allergen') 새우
+              input#egg-allergen(type='checkbox' name='allergens' value='egg')
+              label(for='egg-allergen') 난류
+              input#soybean-allergen(type='checkbox' name='allergens' value='soybean')
+              label(for='soybean-allergen') 대두
+              input#tomato-allergen(type='checkbox' name='allergens' value='tomato')
+              label(for='tomato-allergen') 토마토
+          span.smaller-title 기타설정
+          .divider
+          .text-form
+            p.lab 할인가격
+            p.lab-required * 필수입력 항목
+            br
+            input#is-discounted(type='text' value='0' maxlength='20' required='' autocomplete='off')
+            label(for='is-discounted')
+          p.lab 품절
+          .radios
+            input#is-sold-out(type='radio' value='1' name='soldOut')
+            label(for='is-sold-out')
+              span
+              | 예
+            input#is-not-sold-out(type='radio' checked='checked' value='0' name='soldOut')
+            label(for='is-not-sold-out')
+              span
+              | 아니오
+          p.lab 추천
+          .radios
+            input#is-recommended(type='radio' checked='checked' value='1' name='recommendation')
+            label(for='is-recommended')
+              span
+              | 예
+            input#is-not-recommended(type='radio' value='0' name='recommendation')
+            label(for='is-not-recommended')
+              span
+              | 아니오
+          p.deletion 단종
+          p.lab-required * 단종 처리시 메뉴가 목록에서 삭제됩니다.
+          .radios
+            input#is-discontinued(type='radio' value='1' name='discontinue')
+            label(for='is-discontinued')
+              span
+              | 예
+            input#is-not-discontinued(type='radio' checked='checked' value='0' name='discontinue')
+            label(for='is-not-discontinued')
+              span
+              | 아니오
+      .hidden2
+        form#input-form-combo
+          .basic-info
+            input#object-id-combo(type='text' placeholder='예: https://sample.com/image.png' autocomplete='off')
+            .text-form
+              p.lab 세트이미지(링크)
+              p.lab-required * 필수입력 항목
+              br
+              input#combo-image(type='text' placeholder='예: https://sample.com/image.png' autocomplete='off' required='')
+              label(for='combo-image')
+            .text-form
+              p.lab 세트칼로리(kcal)
+              p.lab-required * 필수입력 항목
+              br
+              input#calories-combo(type='text' placeholder='숫자만 입력 (예: 1000)' maxlength='20' required='' autocomplete='off')
+              label(for='calories-combo')
+            .text-form
+              p.lab 세트가격(원)
+              p.lab-required * 필수입력 항목
+              br
+              input#price-combo(type='text' placeholder='숫자만 입력 (예: 1000)' maxlength='20' required='' autocomplete='off')
+              label(for='price-combo')
+      .alert-container
+        .alert
+          div
+            | 단종 선택시
+            br
+            | 메뉴에서 삭제됩니다!
+            br
+            | 계속 진행하시겠습니까?
+            a.alert-decline(href='#register-popup') 취소
+            a.alert-proceed(href='#register-popup') 확인
+      .fill-alert-container
+        .alert
+          div
+            | 입력되지 않은
+            br
+            | 정보가 있습니다!
+            a.fill-alert-decline(href='#register-popup') 뒤로

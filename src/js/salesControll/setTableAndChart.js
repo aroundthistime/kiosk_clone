@@ -3,14 +3,15 @@ import moment from 'moment';
 
 if (window.location.pathname === '/salesControll') {
 
-  const WARNING_MESSAGE = '범위를 다시 설정해주세요.';
-  const BLANK_MESSAGE = '해당 기간의 판매 실적이 없습니다.';
-  const DATE_FORMAT = 'YYYY-MM-DD';
-  const TABLE_TITLE = ['일자', '품명', '비고', '수량', '단가'];
-  const CHART_MENU_INFO = '판매수량(개) ';
-  const CHART_SUM_INFO = '단위(만원) '
-  const COLSAPN = 5;
-  const MONEY_UNIT = 10000;
+  const WARNING_MESSAGE = '범위를 다시 설정해주세요.';  // 기간 설정 오류 시 출력 메시지
+  const BLANK_MESSAGE = '해당 기간의 판매 실적이 없습니다.';  // 판매 실적 없을 시 출력 메시지
+  const DATE_FORMAT = 'YYYY-MM-DD'; // 날짜 출력 형식 지정
+  const TABLE_TITLE = ['일자', '품명', '비고', '수량', '단가']; // 테이블 상단 출력 항목 정의
+  const CHART_MENU_INFO = '판매수량(개) ';  // 차트 메뉴별 항목 기본 단위 지정 메시지
+  const CHART_SUM_INFO = '단위(만원) '  // 차트 금액별 항목 기본 단위 지정 메시지
+  const COLSAPN = 5;  // 테이블 열 개수
+  const MONEY_UNIT = 10000; // 총 금액을 해당 값 단위를 기준으로 잘라 표시
+  const BORDEDR_WIDTH = 2; // 그래프의 외각 테두리 두께 값
 
   document.addEventListener('DOMContentLoaded', () => {
     let toggleStatus = false;
@@ -124,7 +125,7 @@ if (window.location.pathname === '/salesControll') {
 
       // 차트용 데이터 Formatting 과정 For { 메뉴이름 : 금액 }
       orderLists.forEach((menu) => {
-        const price = menu.price / MONEY_UNIT;
+        const price = menu.price / MONEY_UNIT;  // 금액을 10,000원 단위로 표시
         let temp; // 매출액을 소수점 두자리까지 끊어 보여주기 위한 값을 임시 저장
 
         if (monthDiff) {
@@ -218,6 +219,7 @@ if (window.location.pathname === '/salesControll') {
         });
       });
 
+    // 수신된 주문 내역이 없을 경우 빈 테이블 생성
     if (!orderLists.length) {
       let tr = document.createElement('tr');
       let td = document.createElement('td');
@@ -243,6 +245,7 @@ if (window.location.pathname === '/salesControll') {
 
   // 차트 출력 함수
   const makeChart = (monthDiff = 0, category = 'menu', chartData) => {
+    // rgb 값 임의의 랜덤 값을 생성하는 함수
     const dynamicColors = () => {
       const r = Math.floor(Math.random() * 255);
       const g = Math.floor(Math.random() * 255);
@@ -252,8 +255,25 @@ if (window.location.pathname === '/salesControll') {
 
     const chartEl = document.getElementById('myChart').getContext('2d');
     const colors = Object.keys(chartData).map(() => dynamicColors());
+    let categoryType = '';
+    let borderColor = '';
+
+    if (category === 'menu') {
+      categoryType = 'horizontalBar'
+    } else {
+      if (monthDiff) {
+        categoryType = 'bar'
+      }
+      else {
+        categoryType = 'line'
+      }
+    }
+
+    if (categoryType === 'line') {
+      borderColor = 'rgba(36, 102, 250, 0.65)';
+    }
     const myChart = new Chart(chartEl, {
-      type: category === 'menu' ? 'horizontalBar' : monthDiff ? 'bar' : 'line',
+      type: categoryType,
       data: {
         labels: Object.keys(chartData),
         datasets: [
@@ -262,15 +282,8 @@ if (window.location.pathname === '/salesControll') {
             data: Object.values(chartData),
             fill: monthDiff ? true : false,
             backgroundColor: colors,
-            borderColor:
-              category === 'menu'
-                ? 'horizontalBar'
-                : monthDiff
-                  ? 'bar'
-                  : 'line' === 'line'
-                    ? 'rgba(36, 102, 250, 0.65)'
-                    : '',
-            borderWidth: 2,
+            borderColor,
+            borderWidth: BORDEDR_WIDTH,
           },
         ],
       },

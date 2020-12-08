@@ -3,19 +3,20 @@ import moment from 'moment';
 
 if (window.location.pathname === '/salesControll') {
 
-  const RECORD_CONTENT_CLASSNAME = '.content-area__record-content';
-  const RECORD_TITLE_CLASSNAME = '.title-area__record-title#record-date';
-  const NO_REACORD_MESSAGE = '기록된 사항이 없습니다.';
-
+  const RECORD_CONTENT_CLASSNAME = '.content-area__record-content';       // 특이사항 내용 클래스명
+  const RECORD_TITLE_CLASSNAME = '.title-area__record-title#record-date'; // 특이사항 제목 클래스명
+  const NO_REACORD_MESSAGE = '기록된 사항이 없습니다.'; // 특이사항 없을 시 출력 메시지
+  const DATE_FORMAT = 'YYYY-MM-DD'; // 날짜 출력 형식 지정
   const editButton = document.querySelector('.far.fa-edit');
   const cancelButton = document.querySelector('.button-area__button--cancel');
   const textarea = document.querySelector('.editable-area');
   const alertMsg = document.querySelector(RECORD_CONTENT_CLASSNAME);
   const textareaRecord = document.getElementById('input-record');
 
-  let editStatus;
+  let editStatus; // 레코드의 현재 수정 상태를 저장
   let records;
 
+  // 특이사항 수정 입력 폼 변경 가능 상태로 생성 함수
   const setEditable = () => {
     editStatus = editButton.style.display;
 
@@ -30,12 +31,13 @@ if (window.location.pathname === '/salesControll') {
     }
   };
 
+  // 특이사항 변경 기록 반영 함수
   const editHandler = async () => {
     const today = document.querySelector(RECORD_TITLE_CLASSNAME).textContent;
     const records = await axios.get('api/get-all-records');
     const record = records.data.find(
       (record) =>
-        record.content && moment(record.date).format('YYYY-MM-DD') === today
+        record.content && moment(record.date).format(DATE_FORMAT) === today
     );
     record
       ? (textareaRecord.value = record.content)
@@ -71,7 +73,7 @@ if (window.location.pathname === '/salesControll') {
       daysOnCalendar.forEach((day) => {
         const date = day.getAttribute('data-date');
         records.forEach((record) => {
-          const theDay = moment(record.date).format('YYYY-MM-DD');
+          const theDay = moment(record.date).format(DATE_FORMAT);
           if (theDay === date && record.content) {
             day.classList.add('with-record');
           }
@@ -83,7 +85,7 @@ if (window.location.pathname === '/salesControll') {
         let flag = false;
         const date = withRecord.getAttribute('data-date');
         records.some((record) => {
-          const theDay = moment(record.date).format('YYYY-MM-DD');
+          const theDay = moment(record.date).format(DATE_FORMAT);
           if (theDay === date && record.content) {
             flag = true;
           }

@@ -1,7 +1,7 @@
 if (window.location.pathname === '/salesControll') {
 
-  const FILENAME = 'file.csv';
-  const DOWNLOAD_TYPE = 'text/csv; charset=utf8';
+  const FILENAME = 'file.csv';  // 다운로드 파일이름 저장
+  const DOWNLOAD_TYPE = 'text/csv; charset=utf8'; // 다운로드 타입 지정
 
   const csvBtn = document.querySelector('.button-area__button-export--csv');
 
@@ -23,11 +23,13 @@ if (window.location.pathname === '/salesControll') {
           }
           csvString = csvString + '"' + colData + '",';
         }
+        // 테이블 줄 단위로 각각 데이터 구분 처리
         csvString = csvString.substring(0, csvString.length - 1);
         csvString = csvString + '\r\n';
       }
       csvString = csvString.substring(0, csvString.length - 1);
 
+      // Binary Large Object로 CSV 파일 생성 후 다운오드
       const blob = new Blob([csvString], { type: DOWNLOAD_TYPE });
       const csvUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');

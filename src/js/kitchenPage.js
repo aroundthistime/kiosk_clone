@@ -3,8 +3,9 @@ import axios from 'axios';
 if (window.location.pathname === '/kitchen') {
 
     const notificationContainer = document.querySelector('.middleArea .container');
-    const NO_ORDERLIST_WARNIG_MSG = '주문 내역이 없습니다';
     const alarmSound = document.getElementById('alarmInKitchen');
+    const NO_ORDERLIST_WARNIG_MSG = '주문 내역이 없습니다'; // 주문 내역 없을 시 출력 메시지
+    const ORDER_UPDATE_TIME = 88850;  // 페이지 갱신 시간
 
     setInterval(async () => {
 
@@ -125,11 +126,12 @@ if (window.location.pathname === '/kitchen') {
                 if (!newOrderAlarmStatus) {
                     alarmSound.play();
                     checkOrderAlarm(newOrderId);
-                }                
+                }
             })
         }
-    }, 850);
+    }, ORDER_UPDATE_TIME);
 
+    // 주문 진행 함수
     const processOrder = async (id, task) => {
         await axios.post('/api/process-order', {
             id,
@@ -137,6 +139,7 @@ if (window.location.pathname === '/kitchen') {
         });
     }
 
+    // 알림음 발생 함수
     const checkOrderAlarm = async (id) => {
         await axios.post('/api/check-order-alarm-status', { id });
     }
@@ -145,6 +148,7 @@ if (window.location.pathname === '/kitchen') {
     const orderPopupBox = document.querySelector('.order-popup');
     const orderPopupBtn = document.querySelector('.order-popup__box--button');
 
+    // 팝업창 생성 함수
     const togglePopup = async (id) => {
         await axios.post('/api/check-order', { id });  // 팝업창표시와 동시에 선택된 주문내역상태를 NEW -> CHECK로 변경
 

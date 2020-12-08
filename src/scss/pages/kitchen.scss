@@ -138,34 +138,50 @@
       }
       .order-notifications__menu {
         width: 80%;
-        background-color: #F6A800;
+        background-color: #f6a800;
         padding: 10px;
         overflow: hidden;
 
         .order-notifications__menu--info {
           margin-bottom: 1rem;
+          display: flex;
 
           .order-notifications__menu--name {
             font-size: 2rem;
+            min-width: 55%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: nowrap;
 
-            @media screen and (max-width: 800px) {
+            @media screen and (max-width: 949px) {
               font-size: 1.3rem;
+              min-width: 45%;
             }
           }
           .order-notifications__menu--sides {
             font-family: 'Malgun Gothic' !important;
             font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* 라인수 */
+            -webkit-box-orient: vertical;
+            word-wrap: break-word;
+            white-space: nowrap;
+            line-height: 2;
+            min-width: 45%;
 
-            @media screen and (max-width: 800px) {
+            @media screen and (max-width: 949px) {
               font-size: 0.8rem;
               line-height: 15px;
             }
           }
         }
       }
-      .button-area  {
+      .button-area {
         width: 10%;
-        background-color: #F6A800;
+        background-color: #f6a800;
         border-top-right-radius: 15px;
         border-bottom-right-radius: 15px;
         display: flex;
@@ -186,7 +202,7 @@
           background-color: #000;
         }
         .button-area__button--complete {
-          background-color: #E60013;
+          background-color: #e60013;
         }
       }
 
@@ -197,40 +213,39 @@
 
       &.order-notifications__status--check {
         .order-notifications__status {
-          background-color: #62A22B;
+          background-color: #62a22b;
           font-size: 1rem;
           padding: 13px;
-        }   
+        }
         .order-notifications__details {
-          background-color: #E5E5E5;
+          background-color: #e5e5e5;
           border-right: 1px solid #999999;
         }
         .order-notifications__menu {
-          background-color: #E5E5E5;
+          background-color: #e5e5e5;
         }
         .button-area {
-          background-color: #E5E5E5;
+          background-color: #e5e5e5;
         }
       }
 
       &.order-notifications__status--new {
         .order-notifications__status {
-          background-color: #E60013;
+          background-color: #e60013;
           font-size: 2rem;
         }
         .order-notifications__details {
-          background-color: #F6A800;
+          background-color: #f6a800;
           border-right: 1px solid #dedede;
         }
         .order-notifications__menu {
-          background-color: #F6A800;
+          background-color: #f6a800;
         }
         .button-area {
-          background-color: #F6A800;
+          background-color: #f6a800;
         }
       }
     }
-    
 
     .order-popup {
       position: fixed;
@@ -327,5 +342,4 @@
       z-index: 1;
     }
   }
-
 }

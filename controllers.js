@@ -155,8 +155,8 @@ export const getCustomerPage = async (req, res) => {
   });
   const defaultDrink = await Menu.find({ nameKr: DEFAULT_DRINK }).limit(1);
   const defaultSide = await Menu.find({ nameKr: DEFAULT_SIDE }).limit(1);
-  const defaultDrinkId = defaultDrink[0]._id;
-  const defaultSideId = defaultSide[0]._id;
+  const defaultDrinkId = defaultDrink[0] ? defaultDrink[0]._id : '';
+  const defaultSideId = defaultSide[0] ? defaultSide[0]._id : '';
   res.render('index', {
     pageTitle: COMPANY_NAME,
     isCustomerPage: true, // 해당 페이지가 고객주문 페이지인지 메뉴관리 페이지인지 구별
@@ -266,6 +266,7 @@ export const getSalesControllPage = async (req, res) => {
     res.status(200).render('salesControll', {
       records,
       orders,
+      pageTitle: COMPANY_NAME,
     });
   } catch (error) {
     return res.status(401).json({
@@ -342,13 +343,16 @@ export const getKitchenPage = async (req, res) => {
       isCompleted: false,
     }).sort({ orderNumber: -1 }).populate({       // objectID로 읽어오는것 방지
       path: 'choices.menu',
-      populate: { path: 'drink' } 
+      populate: { path: 'drink' }
     }).populate({
       path: 'choices.menu',
       populate: { path: 'sideMenu' }
     });
 
-    res.status(200).render('kitchen', { orders });
+    res.status(200).render('kitchen', {
+      orders,
+      pageTitle: COMPANY_NAME,
+    });
   } catch (error) {
     console.log(error.message);
     return res.status(400);
@@ -412,15 +416,121 @@ export const processOrder = async (req, res) => {
 
   try {
     // 주문완료시
-    if (task === 'complete') { 
+    if (task === 'complete') {
       const order = await Order.findOne({ _id: id });
       await order.update({ $set: { isCompleted: true } });
     } //주문취소시
-    else { 
+    else {
       await Order.deleteOne({ _id: id });
     }
+    return res.status(200).json();
   } catch (error) {
     console.log(error.message);
     return res.status(400);
+  }
+};
+
+export const getMenus = async (req, res) => {
+  const menus = await Menu.find();
+  try {
+    return res.status(200).json({
+      result: 'success',
+      msg: 'getMenus 연결',
+      menus_list: menus,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400);
+  }
+};
+
+
+export const postEditMenu = async (req, res) => {
+  const {
+    body: {
+      objectId, isCombo, image, menuType, nameKr, nameEng, calories,
+      price, extraPrice, defaultCombo, isDefaultCombo, side, drink,
+      ingredientsAllergicKr, ingredientsAllergicEng, ingredientsNonAllergicKr,
+      ingredientsNonAllergicEng, isDiscounted, isSoldOut, isRecommended, isDiscontinued,
+    },
+  } = req;
+  try {
+    const coke = await Menu.findOne({ nameKr: DEFAULT_DRINK });
+    const frenchFries = await Menu.findOne({ nameKr: DEFAULT_SIDE });
+    let sideMenu = side;
+    let drinkMenu = drink;
+
+    if (isCombo && coke !== null) {
+      sideMenu = coke._id;
+    }
+
+    if (isCombo && frenchFries !== null) {
+      drinkMenu = frenchFries._id;
+    }
+
+    if (objectId === '') {
+      let newMenu = await Menu.create({
+        isCombo,
+        image,
+        menuType,
+        nameKr,
+        nameEng,
+        calories,
+        price,
+        extraPrice,
+        // defaultCombo: defaultCombo,
+        isDefaultCombo,
+        side: coke,
+        drink: frenchFries,
+        ingredientsAllergicEng,
+        ingredientsAllergicKr,
+        ingredientsNonAllergicEng,
+        ingredientsNonAllergicKr,
+        isDiscounted,
+        isSoldOut,
+        isRecommended,
+        isDiscontinued
+      });
+      await newMenu.save();
+    } else {
+      // 1. 단품인 경우의 분기 (브라우저로부터 받아온 objectId로 DB에서 찾는다)
+
+      await Menu.updateOne({ nameKr: nameKr }, {
+        $set: {
+          isCombo,
+          image,
+          menuType,
+          nameKr,
+          nameEng,
+          calories,
+          price,
+          extraPrice,
+          // defaultCombo: defaultCombo,
+          isDefaultCombo,
+          side: sideMenu,
+          drink: drinkMenu,
+          ingredientsAllergicKr,
+          ingredientsAllergicEng,
+          ingredientsNonAllergicKr,
+          ingredientsNonAllergicEng,
+          isDiscounted,
+          isSoldOut,
+          isRecommended,
+          isDiscontinued,
+        }
+      })
+
+      // 2. 세트인 경우의 분기 (nameKr를 받아와서 DB에서 찾는다)
+
+    }
+    return res.status(200).json({
+      result: 'success',
+      msg: '요청을 post했다.',
+    });
+  } catch (error) {
+    res.status(400);
+    console.log(error);
+  } finally {
+    res.end();
   }
 };

@@ -13,6 +13,9 @@ const CHECK_ORDER_STATUS = '/api/check-order';
 const CHECK_ORDER_ALARM_STATUS = '/api/check-order-alarm-status';
 const PROCESS_ORDER = '/api/process-order';
 
+const GET_MENUS = '/api/menus';
+const CREATE_MENUS = '/api/menus'
+
 const routes = {
   customerPage: CUSTOMER_PAGE,
   salesControllPage: SALESCONTROLL_PAGE,
@@ -26,6 +29,8 @@ const routes = {
   checkOrderStatus: CHECK_ORDER_STATUS,
   checkOrderAlarmStatus: CHECK_ORDER_ALARM_STATUS,
   processOrder: PROCESS_ORDER,
+  getMenus: GET_MENUS,
+  createMenus: CREATE_MENUS,
 };
 
 export default routes;

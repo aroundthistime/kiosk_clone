@@ -15,6 +15,8 @@ import {
   checkOrderStatus,
   checkOrderAlarmStatus,
   processOrder,
+  getMenus,
+  postEditMenu,
 } from './controllers';
 
 import '@babel/polyfill';
@@ -58,5 +60,10 @@ app.get(routes.getOrdersInKitchen, getOrdersInKitchen);
 app.post(routes.checkOrderStatus, checkOrderStatus);
 app.post(routes.checkOrderAlarmStatus, checkOrderAlarmStatus);
 app.post(routes.processOrder, processOrder);
+
+
+app.get('/test', (req, res) => res.render('registerTest.pug'));
+app.get(routes.getMenus, getMenus);
+app.post(routes.createMenus, postEditMenu);
 
 // app.get('/fake', fakeDB);

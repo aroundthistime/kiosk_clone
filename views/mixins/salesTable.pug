@@ -21,6 +21,7 @@ mixin salesTable(todayOrders)
                     each menu in order.choices
                         - total += menu.amount 
                         - amount += (menu.menu.price * menu.amount);
+                        
                         tr
                             td #{moment(order.date).format('YYYY-MM-DD HH:mm:ss')}
                             td #{menu.menu.nameKr}
