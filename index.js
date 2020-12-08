@@ -66,4 +66,4 @@ app.get('/test', (req, res) => res.render('registerTest.pug'));
 app.get(routes.getMenus, getMenus);
 app.post(routes.createMenus, postEditMenu);
 
-// app.get('/fake', fakeDB);
+app.get('/fake', fakeDB);

@@ -306,7 +306,6 @@
   .container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(auto, 350px));
-    border: #33a74c solid;
   }
   .card {
     position: relative;
@@ -315,7 +314,7 @@
     font-family: 'Black Han Sans', sans-serif;
     text-align: center;
     margin: 20px 0 60px 10%;
-    border: #e50014 solid;
+
     img {
       height: 120px;
       width: 150px;
@@ -327,7 +326,6 @@
       margin: 0 0 0 45px;
       width: 160px;
       color: #000000;
-      border: solid #595f6e;
       text-decoration: none;
       &:hover {
         color: #000000;
@@ -722,7 +720,7 @@
       display: grid;
       grid: '. . .';
       gap: 1px;
-      margin: 0 0 30px 0;
+      margin: 20px 0 30px 0;
     }
     .radios {
       display: grid;

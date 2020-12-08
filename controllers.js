@@ -448,14 +448,17 @@ export const postEditMenu = async (req, res) => {
   const {
     body: {
       objectId, isCombo, image, menuType, nameKr, nameEng, calories,
-      price, extraPrice, defaultCombo, isDefaultCombo, side, drink,
+      price, extraPrice, side, drink,
       ingredientsAllergicKr, ingredientsAllergicEng, ingredientsNonAllergicKr,
       ingredientsNonAllergicEng, isDiscounted, isSoldOut, isRecommended, isDiscontinued,
+      singleInfo, comboInfo, setType
     },
   } = req;
+
   try {
     const coke = await Menu.findOne({ nameKr: DEFAULT_DRINK });
     const frenchFries = await Menu.findOne({ nameKr: DEFAULT_SIDE });
+    let isSetType = setType === 'true' ? true : false;
     let sideMenu = side;
     let drinkMenu = drink;
 
@@ -468,35 +471,8 @@ export const postEditMenu = async (req, res) => {
     }
 
     if (objectId === '') {
-      let newMenu = await Menu.create({
-        isCombo,
-        image,
-        menuType,
-        nameKr,
-        nameEng,
-        calories,
-        price,
-        extraPrice,
-        // defaultCombo: defaultCombo,
-        isDefaultCombo,
-        side: coke,
-        drink: frenchFries,
-        ingredientsAllergicEng,
-        ingredientsAllergicKr,
-        ingredientsNonAllergicEng,
-        ingredientsNonAllergicKr,
-        isDiscounted,
-        isSoldOut,
-        isRecommended,
-        isDiscontinued
-      });
-      await newMenu.save();
-    } else {
-      // 1. 단품인 경우의 분기 (브라우저로부터 받아온 objectId로 DB에서 찾는다)
-
-      await Menu.updateOne({ _id: objectId }, {
-        $set: {
-          isCombo,
+      if (!isSetType) {
+        let newMenu = await Menu.create({
           image,
           menuType,
           nameKr,
@@ -504,21 +480,142 @@ export const postEditMenu = async (req, res) => {
           calories,
           price,
           extraPrice,
-          // defaultCombo: defaultCombo,
-          isDefaultCombo,
-          side: sideMenu,
-          drink: drinkMenu,
-          ingredientsAllergicKr,
-          ingredientsAllergicEng,
-          ingredientsNonAllergicKr,
-          ingredientsNonAllergicEng,
+          isCombo,
+          ingredientsAllergicEng: ingredientsAllergicEng ? JSON.parse(ingredientsAllergicEng) : [],
+          ingredientsAllergicKr: ingredientsAllergicKr ? JSON.parse(ingredientsAllergicKr) : [],
+          ingredientsNonAllergicEng: ingredientsNonAllergicEng ? JSON.parse(ingredientsNonAllergicEng) : [],
+          ingredientsNonAllergicKr: ingredientsNonAllergicKr ? JSON.parse(ingredientsNonAllergicKr) : [],
           isDiscounted,
           isSoldOut,
           isRecommended,
-          isDiscontinued,
-        }
-      })
+          isDiscontinued
+        });
+
+        await newMenu.save();
+
+      } else {
+        let comboMenu = JSON.parse(comboInfo);
+        let singleMenu = JSON.parse(singleInfo)
+
+        const single = await Menu.create({
+          menuType: singleMenu.menuType,
+          nameKr: singleMenu.nameKr,
+          nameEng: singleMenu.nameEng,
+          image: singleMenu.image,
+          price: singleMenu.price,
+          calories: singleMenu.calories,
+          isCombo: false,
+          ingredientsAllergicEng: singleMenu.ingredientsAllergicEng,
+          ingredientsAllergicKr: singleMenu.ingredientsAllergicKr,
+          ingredientsNonAllergicEng: singleMenu.ingredientsNonAllergicEng ? singleMenu.ingredientsNonAllergicEng : [],
+          ingredientsNonAllergicKr: singleMenu.ingredientsNonAllergicKr ? singleMenu.ingredientsNonAllergicKr : [],
+          isDiscounted: singleMenu.isDiscounted,
+          isSoldOut: singleMenu.isSoldOut,
+          isRecommended: singleMenu.isRecommended,
+          isDiscontinued: singleMenu.isDiscontinued,
+        });
+
+        const combo = await Menu.create({
+          menuType: comboMenu.menuType,
+          nameKr: comboMenu.nameKr,
+          nameEng: comboMenu.nameEng,
+          image: comboMenu.image,
+          price: comboMenu.price,
+          calories: comboMenu.calories,
+          isCombo: true,
+          isDefaultCombo: true,
+          side: frenchFries,
+          drink: coke,
+          extraPrice: comboMenu.extraPrice,
+          ingredientsAllergicEng: comboMenu.ingredientsAllergicEng,
+          ingredientsAllergicKr: comboMenu.ingredientsAllergicKr,
+          ingredientsNonAllergicEng: comboMenu.ingredientsNonAllergicEng ? comboMenu.ingredientsNonAllergicEng : [],
+          ingredientsNonAllergicKr: comboMenu.ingredientsNonAllergicKr ? comboMenu.ingredientsNonAllergicKr : [],
+          isDiscounted: comboMenu.isDiscounted,
+          isSoldOut: comboMenu.isSoldOut,
+          isRecommended: comboMenu.isRecommended,
+          isDiscontinued: comboMenu.isDiscontinued,
+        });
+
+        single.defaultCombo = combo.id;
+        single.save();
+
+      }
+
+    } else {
+      if (!isSetType) {
+        await Menu.updateOne({ _id: objectId }, {
+          $set: {
+            image,
+            menuType,
+            nameKr,
+            nameEng,
+            calories,
+            price,
+            extraPrice,
+            ingredientsAllergicEng: ingredientsAllergicEng ? JSON.parse(ingredientsAllergicEng) : [],
+            ingredientsAllergicKr: ingredientsAllergicKr ? JSON.parse(ingredientsAllergicKr) : [],
+            ingredientsNonAllergicEng: ingredientsNonAllergicEng ? JSON.parse(ingredientsNonAllergicEng) : [],
+            ingredientsNonAllergicKr: ingredientsNonAllergicKr ? JSON.parse(ingredientsNonAllergicKr) : [],
+            isDiscounted,
+            isSoldOut,
+            isRecommended,
+            isDiscontinued
+          }
+        });
+
+
+      } else {
+        let comboMenu = JSON.parse(comboInfo);
+        let singleMenu = JSON.parse(singleInfo);
+
+        await Menu.updateOne({ _id: singleMenu.objectId }, {
+          $set: {
+            menuType: singleMenu.menuType,
+            nameKr: singleMenu.nameKr,
+            nameEng: singleMenu.nameEng,
+            image: singleMenu.image,
+            price: singleMenu.price,
+            calories: singleMenu.calories,
+            isCombo: false,
+            ingredientsAllergicEng: singleMenu.ingredientsAllergicEng,
+            ingredientsAllergicKr: singleMenu.ingredientsAllergicKr,
+            ingredientsNonAllergicEng: singleMenu.ingredientsNonAllergicEng ? singleMenu.ingredientsNonAllergicEng : [],
+            ingredientsNonAllergicKr: singleMenu.ingredientsNonAllergicKr ? singleMenu.ingredientsNonAllergicKr : [],
+            isDiscounted: singleMenu.isDiscounted,
+            isSoldOut: singleMenu.isSoldOut,
+            isRecommended: singleMenu.isRecommended,
+            isDiscontinued: singleMenu.isDiscontinued,
+          }
+        });
+
+        await Menu.updateOne({ _id: comboMenu.objectId }, {
+          $set: {
+            menuType: comboMenu.menuType,
+            nameKr: comboMenu.nameKr,
+            nameEng: comboMenu.nameEng,
+            image: comboMenu.image,
+            price: comboMenu.price,
+            calories: comboMenu.calories,
+            isCombo: true,
+            isDefaultCombo: true,
+            side: frenchFries,
+            drink: coke,
+            extraPrice: comboMenu.extraPrice,
+            ingredientsAllergicEng: comboMenu.ingredientsAllergicEng,
+            ingredientsAllergicKr: comboMenu.ingredientsAllergicKr,
+            ingredientsNonAllergicEng: comboMenu.ingredientsNonAllergicEng ? comboMenu.ingredientsNonAllergicEng : [],
+            ingredientsNonAllergicKr: comboMenu.ingredientsNonAllergicKr ? comboMenu.ingredientsNonAllergicKr : [],
+            isDiscounted: comboMenu.isDiscounted,
+            isSoldOut: comboMenu.isSoldOut,
+            isRecommended: comboMenu.isRecommended,
+            isDiscontinued: comboMenu.isDiscontinued,
+          }
+        })
+      }
     }
+
+
     return res.status(200).json({
       result: 'success',
       msg: '요청을 post했다.',

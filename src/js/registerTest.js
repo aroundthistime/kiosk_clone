@@ -356,7 +356,7 @@ if (window.location.pathname === '/test') {
     let newMenu = {};
 
     newMenu["objectId"] = objectId;
-    newMenu["isCombo"] = 0; // Node.js라면 false가 되어야
+    newMenu["isCombo"] = false; // Node.js라면 false가 되어야
     newMenu["image"] = image;
     newMenu["menuType"] = category;
     newMenu["nameKr"] = nameKr;
@@ -364,7 +364,7 @@ if (window.location.pathname === '/test') {
     newMenu["calories"] = calories;
     newMenu["price"] = price;
     newMenu["extraPrice"] = extraPrice;
-    newMenu["isDefaultCombo"] = 0;
+    newMenu["isDefaultCombo"] = false;
     newMenu["defaultCombo"] = "";
     newMenu["side"] = "";
     newMenu["drink"] = "";
@@ -469,7 +469,7 @@ if (window.location.pathname === '/test') {
     let newMenu = {};
 
     newMenu["objectId"] = objectId;
-    newMenu["isCombo"] = 1;
+    newMenu["isCombo"] = true;
     newMenu["image"] = image;
     newMenu["menuType"] = category;
     newMenu["nameKr"] = nameKr + " (세트)";
@@ -478,7 +478,7 @@ if (window.location.pathname === '/test') {
     newMenu["price"] = price;
     newMenu["extraPrice"] = extraPrice;
     newMenu["defaultCombo"] = "";
-    newMenu["isDefaultCombo"] = 1;
+    newMenu["isDefaultCombo"] = true;
     newMenu["side"] = ""; //프렌치프라이 objectId값 (백엔드로)
     newMenu["drink"] = ""; //코카콜라 objectId값 (백엔드로)
     newMenu["ingredientsAllergicEng"] = ingredientsAllergicEng;
@@ -510,8 +510,8 @@ if (window.location.pathname === '/test') {
     let noDiscount = singleInfo["isDiscounted"] === "" || singleInfo["isDiscounted"] === null || isNaN(singleInfo["isDiscounted"]);
 
     // 재료구성 (음료가 아닌데 비어있을 경우)
-    let noNonAllergenEng = singleInfo["ingredientsAllergicEng"].length === 0;
-    let noNonAllergenKr = singleInfo["ingredientsAllergicKr"].length === 0;
+    let noNonAllergenEng = !(singleInfo["ingredientsAllergicEng"].length || singleInfo["ingredientsNonAllergicEng"].length);
+    let noNonAllergenKr = !(singleInfo["ingredientsAllergicKr"].length || singleInfo["ingredientsNonAllergicKr"].length);
 
     let checkDrink = singleInfo["menuType"] === "음료"
 
@@ -578,60 +578,43 @@ if (window.location.pathname === '/test') {
         return;
       }
 
+      let combo = JSON.stringify(comboInfo);
+      let single = JSON.stringify(singleInfo);
+
       // 세트 폼 서버에 POST
       $.ajax({
         type: "POST",
         url: "/api/menus",
         data: {
-          objectId: comboInfo["objectId"],
-          isCombo: comboInfo["isCombo"],
-          image: comboInfo["image"],
-          menuType: menuType,
-          nameKr: comboInfo["nameKr"],
-          nameEng: comboInfo["nameEng"],
-          calories: comboInfo["calories"],
-          price: comboInfo["price"],
-          extraPrice: extraPrice,
-          defaultCombo: defaultCombo,
-          isDefaultCombo: comboInfo["isDefaultCombo"],
-          side: comboInfo["side"],
-          drink: comboInfo["drink"],
-          isDiscounted: isDiscounted,
-          ingredientsAllergicEng: comboInfo["ingredientsAllergicEng"],
-          ingredientsAllergicKr: comboInfo["ingredientsAllergicKr"],
-          ingredientsNonAllergicEng: comboInfo["ingredientsNonAllergicEng"],
-          ingredientsNonAllergicKr: comboInfo["ingredientsNonAllergicKr"],
-          isSoldOut: isSoldOut,
-          isRecommended: isRecommended,
-          isDiscontinued: isDiscontinued
+          setType: true,
+          objectId: objectId,
+          comboInfo: combo,
+          singleInfo: single,
         },
         success: function (response) {
           if (response["result"] === "success") {
             console.log(response["msg"] + " 세트");
+            window.location.href = window.location.href;
           } else {
             alert("메뉴 받아오기 실패");
           }
         }
       })
+    } else {
+      // 단품 폼 서버에 POST 
 
-    }
-
-    // 단품 폼 서버에 POST (오작동 방지를 위해 1초간격 setTimeout())
-
-    setTimeout(function () {
       $.ajax({
         type: "POST",
         url: "/api/menus",
         data: {
-          objectId: objectId, isCombo: isCombo, image: image, menuType: menuType,
+          setType: false, objectId: objectId, isCombo: isCombo, image: image, menuType: menuType,
           nameKr: nameKr, nameEng: nameEng, calories: calories,
-          price: price, extraPrice: extraPrice, defaultCombo: defaultCombo,
-          isDefaultCombo: isDefaultCombo, side: side, drink: drink,
+          price: price, extraPrice: extraPrice,
           isDiscounted: isDiscounted,
-          ingredientsAllergicEng: ingredientsAllergicEng,
-          ingredientsAllergicKr: ingredientsAllergicKr,
-          ingredientsNonAllergicEng: ingredientsNonAllergicEng,
-          ingredientsNonAllergicKr: ingredientsNonAllergicKr,
+          ingredientsAllergicEng: JSON.stringify(ingredientsAllergicEng),
+          ingredientsAllergicKr: JSON.stringify(ingredientsAllergicKr),
+          ingredientsNonAllergicEng: JSON.stringify(ingredientsNonAllergicEng),
+          ingredientsNonAllergicKr: JSON.stringify(ingredientsNonAllergicKr),
           isSoldOut: isSoldOut, isRecommended: isRecommended, isDiscontinued: isDiscontinued
         },
         success: function (response) {
@@ -644,7 +627,7 @@ if (window.location.pathname === '/test') {
           }
         }
       })
-    }, 500);
+    }
 
     closePopup();
   }
