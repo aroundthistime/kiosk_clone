@@ -1,0 +1,18 @@
+body {
+  background-color: black;
+}
+
+.complete,
+.preparing {
+  color: yellow;
+  float: left;
+  font-size: xx-large;
+  margin: 10px;
+  padding: 20px;
+}
+
+.completeComment,
+.preparingComment {
+  color: white;
+  font-size: small;
+}
