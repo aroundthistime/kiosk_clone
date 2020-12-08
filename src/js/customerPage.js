@@ -131,7 +131,8 @@ const fillMenuDetailsPopup = (isCombo) => {
   menuNameEng.innerText = selectedMenu.nameEng;
   menuImg.src = selectedMenu.image;
   if (isDiscounted(selectedMenu)) {
-    menuPrice.innerText = `${selectedMenu.isDiscounted} ₩`;
+    selectedMenu.price -= selectedMenu.isDiscounted;
+    menuPrice.innerText = `${selectedMenu.price} ₩`;
   } else {
     menuPrice.innerText = `${selectedMenu.price} ₩`;
   }

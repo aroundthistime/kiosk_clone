@@ -1,5 +1,6 @@
 mixin menuBlock(menu = {})
-    if menu.isSoldout
+    - console.log(menu)
+    if menu.isSoldOut
         .menuBlock.menuBlock--sold-out.no-drag
             .menu-id.hidden #{menu.id}
             img.menuBlock__img(src=menu.image)
@@ -11,8 +12,8 @@ mixin menuBlock(menu = {})
                 .menuBlock__price
                     .menuBlock__price--before #{menu.price}
                     <i class="fas fa-long-arrow-alt-right"></i>
-                    .menuBlock__price--after #{menu.isDiscounted}
-            if menu.isSoldout
+                    .menuBlock__price--after #{menu.price - menu.isDiscounted}
+            if menu.isSoldOut
                 .menuBlock__badge--sold-out.menuBlock__badge
                     .language-convertable.language-convertable--kr 품절
                     .language-convertable.language-convertable--eng.hidden SOLD OUT
@@ -30,8 +31,8 @@ mixin menuBlock(menu = {})
                 .menuBlock__price
                     .menuBlock__price--before #{menu.price}
                     <i class="fas fa-long-arrow-alt-right"></i>
-                    .menuBlock__price--after #{menu.isDiscounted}
-            if menu.isSoldout
+                    .menuBlock__price--after #{menu.price - menu.isDiscounted}
+            if menu.isSoldOut
                 .menuBlock__badge--sold-out.menuBlock__badge
                     .language-convertable.language-convertable--kr 품절
                     .language-convertable.language-convertable--eng.hidden SOLD OUT
