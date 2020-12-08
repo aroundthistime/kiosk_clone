@@ -2,7 +2,6 @@ import axios from 'axios';
 import moment from 'moment';
 
 if (window.location.pathname === '/salesControll') {
-
   const RECORD_CONTENT_CLASSNAME = '.content-area__record-content';
   const RECORD_TITLE_CLASSNAME = '.title-area__record-title#record-date';
   const NO_REACORD_MESSAGE = '기록된 사항이 없습니다.';
@@ -34,8 +33,7 @@ if (window.location.pathname === '/salesControll') {
     const today = document.querySelector(RECORD_TITLE_CLASSNAME).textContent;
     const records = await axios.get('api/get-all-records');
     const record = records.data.find(
-      (record) =>
-        record.content && moment(record.date).format('YYYY-MM-DD') === today
+      (record) => record.content && moment(record.date).format('YYYY-MM-DD') === today,
     );
     record
       ? (textareaRecord.value = record.content)
@@ -65,7 +63,7 @@ if (window.location.pathname === '/salesControll') {
       localStorage.setItem('records', JSON.stringify(records));
 
       const recordEl = document.querySelector(RECORD_CONTENT_CLASSNAME);
-      recordEl.innerText = content ? content : NO_REACORD_MESSAGE;
+      recordEl.innerText = content || NO_REACORD_MESSAGE;
 
       const daysOnCalendar = document.querySelectorAll('.fc-daygrid-day.fc-day');
       daysOnCalendar.forEach((day) => {

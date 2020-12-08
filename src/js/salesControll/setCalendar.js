@@ -1,6 +1,6 @@
 import moment from 'moment';
-if (window.location.pathname === '/salesControll') {
 
+if (window.location.pathname === '/salesControll') {
   const ASPECTRATIO = 1;
   const calendarEl = document.getElementById('calendar');
 
@@ -17,13 +17,12 @@ if (window.location.pathname === '/salesControll') {
         selectable: true,
         dateClick: (info) => {
           const dateEl = document.getElementById('record-date');
-          const recordEl = document.querySelector('.record-content');
+          const recordEl = document.querySelector('.content-area__record-content');
           const datesWithRecord = localStorage.getItem('records');
           const arrayDates = JSON.parse(datesWithRecord);
           const record = arrayDates.find(
-            (record) =>
-              record.content &&
-              moment(record.date).format('YYYY-MM-DD') === info.dateStr
+            (record) => record.content
+              && moment(record.date).format('YYYY-MM-DD') === info.dateStr,
           );
           dateEl.innerText = info.dateStr;
           record
@@ -32,7 +31,7 @@ if (window.location.pathname === '/salesControll') {
 
           const editButton = document.querySelector('.far.fa-edit');
           const textarea = document.querySelector('.editable-area');
-          const alertMsg = document.querySelector('.record-content');
+          const alertMsg = document.querySelector('.content-area__record-content');
 
           textarea.style.display = 'none';
           alertMsg.style.display = 'block';
