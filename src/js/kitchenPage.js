@@ -5,7 +5,7 @@ if (window.location.pathname === '/kitchen') {
     const notificationContainer = document.querySelector('.middleArea .container');
     const alarmSound = document.getElementById('alarmInKitchen');
     const NO_ORDERLIST_WARNIG_MSG = '주문 내역이 없습니다'; // 주문 내역 없을 시 출력 메시지
-    const ORDER_UPDATE_TIME = 88850;  // 페이지 갱신 시간
+    const ORDER_UPDATE_TIME = 850;  // 페이지 갱신 시간
 
     setInterval(async () => {
 

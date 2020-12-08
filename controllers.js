@@ -259,6 +259,8 @@ export const postSendOrder = async (req, res) => {
   }
 };
 
+// 매출분석 페이지 //
+
 export const getSalesControllPage = async (req, res) => {
   try {
     const records = await Record.find();
@@ -430,6 +432,9 @@ export const processOrder = async (req, res) => {
   }
 };
 
+
+
+// 메뉴등록 페이지 //
 export const getMenus = async (req, res) => {
   const menus = await Menu.find();
   try {
@@ -443,7 +448,6 @@ export const getMenus = async (req, res) => {
     return res.status(400);
   }
 };
-
 
 export const postEditMenu = async (req, res) => {
   const {
