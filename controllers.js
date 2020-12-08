@@ -415,9 +415,11 @@ export const processOrder = async (req, res) => {
     if (task === 'complete') { 
       const order = await Order.findOne({ _id: id });
       await order.update({ $set: { isCompleted: true } });
+      return res.status(200).json();
     } //주문취소시
     else { 
       await Order.deleteOne({ _id: id });
+      return res.status(200).json();
     }
   } catch (error) {
     console.log(error.message);
