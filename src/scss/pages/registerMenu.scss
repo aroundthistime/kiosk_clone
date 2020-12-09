@@ -21,45 +21,83 @@
     font-family: 'Black Han Sans', sans-serif;
     height: 200px;
     background-color: #e1c89f;
-  }
 
-  a.btn {
-    font-family: 'Black Han Sans', sans-serif;
-    position: absolute;
-    text-decoration: none;
-    color: #000000;
-    font-size: 2rem;
-    background-color: #f3e9d8;
-    padding: 10px 10px 10px 10px;
-    margin-top: 60px;
-    left: 1%;
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 8px;
-    border-color: #ffffff;
-    display: inline-block;
-    &:hover {
-      background-color: #fff6e5;
+    .container {
+      display: block;
+    }
+
+    .topArea-logo {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .topArea-title {
+      position: absolute;
+      top: 50%;
+      left: calc(1rem + 150px);
+      transform: translateY(-50%);
+      @include setBlackHans(#fff, 5rem);
+    }
+
+    @media screen and (max-width: 900px) {
+      .topArea-logo {
+        width: 100px;
+        height: 100px;
+      }
+      .topArea-title {
+        font-size: 4rem;
+        margin-left: -2rem;
+      }
+    }
+
+    .topArea-button-area {
+      float: right;
+      position: relative;
+      top: 35%;
+
+      .topArea-button-area__button {
+        text-decoration: none;
+        display: inline-block;
+        vertical-align: middle;
+        border-color: #ffffff;
+        border-width: 2px;
+        border-style: solid;
+        @include setButton($bgColor: #f3e9d9, $width: 130px);
+        @include setBlackHans($color: #000000, $size: 1.5rem);
+        padding: 8px 15px 8px 15px;
+        outline: none;
+
+        &:hover {
+          opacity: 0.65;
+          cursor: pointer;
+        }
+      }
+      .topArea-button-area__button {
+        margin-left: 2.5rem;
+      }
+
+      @media screen and (max-width: 930px) {
+        .topArea-button-area__button {
+          width: 80px;
+          font-size: 1rem;
+          position: relative;
+          top: 35%;
+          padding: 5px 10px 5px 10px;
+        }
+      }
+    }
+
+    @media screen and (max-width: 730px) {
+      .topArea-button-area {
+        top: 35%;
+        right: 15%;
+      }
     }
   }
-  .logo {
-    position: absolute;
-    width: 150px;
-    height: 100px;
-    top: 50%;
-    right: calc(5rem + 200px);
-    transform: translateY(-50%);
-  }
-  span.title {
-    font-family: 'Black Han Sans', sans-serif;
-    font-size: 5rem;
-    margin-right: 1rem;
-    position: absolute;
-    top: 50%;
-    right: calc(1rem);
-    transform: translateY(-50%);
-    color: #fff;
-  }
+
   #category-tabs {
     input[id='premium-category'] {
       display: none;
@@ -266,13 +304,7 @@
       }
     }
   }
-  .header {
-    position: relative;
-    width: 85%;
-    height: 100%;
-    margin: auto;
-    display: grid;
-  }
+
   .direction {
     background-color: #999999;
     color: #ffffff;
@@ -305,7 +337,12 @@
   }
   .container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(auto, 350px));
+    grid-template-columns: repeat(auto-fit, minmax(auto, 25%));
+  }
+  @media screen and (max-width: 1280px) {
+    .container {
+      grid-template-columns: repeat(auto-fit, minmax(auto, 33.333333%));
+    }
   }
   .card {
     position: relative;
@@ -727,6 +764,9 @@
       grid: '. . .';
       gap: 1px;
       margin: 10px 0 30px 0;
+    }
+    #hiddenRadios {
+      display: none;
     }
     input[type='text'] {
       width: 50%;

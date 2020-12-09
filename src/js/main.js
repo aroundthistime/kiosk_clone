@@ -6,4 +6,4 @@ import './salesControll/setCalendar';
 import './salesControll/exportCSVFile';
 import './salesControll/setRecord';
 import './kitchenPage';
-import './registerTest';
+import './registerPage';

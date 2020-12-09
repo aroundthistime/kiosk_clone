@@ -2,7 +2,6 @@ import express from 'express';
 import path from 'path';
 import moment from 'moment';
 import {
-  fakeDB,
   getAllRecords,
   getOrdersForTable,
   getRecord,
@@ -17,6 +16,7 @@ import {
   processOrder,
   getMenus,
   postEditMenu,
+  getRegisterPage,
 } from './controllers';
 
 import '@babel/polyfill';
@@ -61,9 +61,7 @@ app.post(routes.checkOrderStatus, checkOrderStatus);
 app.post(routes.checkOrderAlarmStatus, checkOrderAlarmStatus);
 app.post(routes.processOrder, processOrder);
 
-
-app.get('/test', (req, res) => res.render('registerTest.pug'));
+// regiserPage router
+app.get(routes.registerPage, getRegisterPage);
 app.get(routes.getMenus, getMenus);
 app.post(routes.createMenus, postEditMenu);
-
-app.get('/fake', fakeDB);

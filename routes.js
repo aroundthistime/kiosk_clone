@@ -1,6 +1,7 @@
 const CUSTOMER_PAGE = '/';
 const SALESCONTROLL_PAGE = '/salesControll';
 const KITCHEN_PAGE = '/kitchen';
+const REGISTER_PAGE = '/registerMenu';
 
 // API
 const MENU_DETAILS = '/api/menu-details/:id';
@@ -20,6 +21,7 @@ const routes = {
   customerPage: CUSTOMER_PAGE,
   salesControllPage: SALESCONTROLL_PAGE,
   kitchenPage: KITCHEN_PAGE,
+  registerPage: REGISTER_PAGE,
   menuDetails: MENU_DETAILS,
   sendOrder: SEND_ORDER,
   getRecord: GET_RECORDS,

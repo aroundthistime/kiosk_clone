@@ -1,17 +1,19 @@
 extends layouts/main.pug
 
 block title
-    title BURGERKING
     script(src = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
 
 block content
     #menu-register
       .top-area
         // 헤더에 해당
-        .header
-          a.btn(href='')  《 주문알림
-          img.logo(src='https://cdn.freebiesupply.com/images/thumbs/2x/burger-king-logo.png' alt='버거킹 로고이미지')
-          span.title 메뉴관리
+        .container
+          img.topArea-logo(src='build/img/logo.png' alt="버거킹 로고이미지")
+          span.topArea-title 메뉴관리
+                
+          .topArea-button-area
+            a(href='kitchen').topArea-button-area__button 주문알림 >>
+
       // 카테고리와 안내문에 해당
       .direction
         // 사용법안내 회색창
@@ -74,9 +76,9 @@ block content
               br
               input#product-image(type='text' placeholder='예: https://sample.com/image.png' required='' autocomplete='off')
               label(for='product-image')
-            p.lab 카테고리
-            p.lab-required * 필수입력 항목
-            .radios
+            //카테고리
+            //비공개이며 자동으로 입력
+            .radios#hiddenRadios
               input#premium(type='radio' name='category' value='프리미엄' required='')
               label(for='premium')
                 span
@@ -148,8 +150,8 @@ block content
               label(for='shellfish') 조개류
               input#shrimp(type='checkbox' name='ingredients' value='shrimp')
               label(for='shrimp') 새우
-              input#cheese(type='checkbox' name='ingredients' value='cheese')
-              label(for='cheese') 치즈
+              input#milk(type='checkbox' name='ingredients' value='milk')
+              label(for='milk') 우유
               input#egg(type='checkbox' name='ingredients' value='egg')
               label(for='egg') 난류
               input#flour(type='checkbox' name='ingredients' value='flour')

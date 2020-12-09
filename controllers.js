@@ -39,78 +39,7 @@ const categories = [
   },
 ];
 
-export const fakeDB = async (req, res) => {
-  const single = await Menu.create({
-    menuType: '와퍼',
-    nameKr: '와퍼',
-    nameEng: 'Whopper',
-    image:
-      'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/a5146dcb-d6a6-4280-92be-25e8f4496fac.png',
-    price: 5300,
-    calories: 300,
-    isCombo: false,
-    ingredientsNonAllergicKr: ['김', '치', '찌', '개'],
-    ingredientsNonAllergicEng: ['beef', 'pork', 'chicken', 'duck'],
-    ingredientsAllergicKr: ['소', '갈', '비', '찜'],
-    ingredientsAllergicEng: ['fish', 'eggs', 'shrimp', 'peanut'],
-  });
-  const drink = await Menu.create({
-    menuType: '음료',
-    nameKr: '코카콜라 (M)',
-    nameEng: 'CocaCola (M)',
-    image:
-      'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/fe2cdf8d-0487-4e5c-860a-beb85d223a3f.png',
-    price: 1000,
-    calories: 120,
-    isCombo: false,
-    extraPrice: 0,
-    isRecommended: false,
-  });
-  const side = await Menu.create({
-    menuType: '사이드',
-    nameKr: '감자튀김 (M)',
-    nameEng: 'French Fries (M)',
-    image:
-      'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/84bd24cb-9b87-45bd-b371-b824c35018ad.png',
-    price: 1500,
-    calories: 150,
-    isCombo: false,
-    extraPrice: 0,
-    isRecommended: false,
-  });
-  const combo = await Menu.create({
-    menuType: '와퍼',
-    nameKr: '와퍼 [세트]',
-    nameEng: 'Whopper [Combo]',
-    image:
-      'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/8d3c7992-5803-4445-b0f5-dca6cc877cfd.png',
-    price: 7300,
-    calories: 600,
-    isCombo: true,
-    isDefaultCombo: true,
-    drink,
-    sideMenu: side,
-    ingredientsNonAllergicKr: ['김', '치', '찌', '개'],
-    ingredientsNonAllergicEng: ['beef', 'pork', 'chicken', 'duck'],
-    ingredientsAllergicKr: ['소', '갈', '비', '찜'],
-    ingredientsAllergicEng: ['fish', 'eggs', 'shrimp', 'peanut'],
-  });
-  single.defaultCombo = combo.id;
-  single.save();
-  await Menu.create({
-    menuType: '사이드',
-    nameKr: '어니언링',
-    nameEng: 'Onion Ring',
-    image:
-      'https://d1cua0vf0mkpiy.cloudfront.net/images/menu/normal/47a6fc52-9e23-4770-8354-cabb545f5124.png',
-    price: 2000,
-    calories: 180,
-    isCombo: false,
-    extraPrice: 500,
-    isRecommended: false,
-  });
-  res.redirect('/');
-};
+// 고객페이지 router 설정 //
 
 const getCategoryMenus = (category) => new Promise(async (resolve) => {
   const menus = await Menu.find({
@@ -255,7 +184,7 @@ export const postSendOrder = async (req, res) => {
   }
 };
 
-// 매출분석 페이지 //
+// 매출분석 페이지 router 설정 //
 
 export const getSalesControllPage = async (req, res) => {
   try {
@@ -331,8 +260,7 @@ export const getOrdersForTable = async (req, res) => {
   }
 };
 
-// kitchen 페이지 //
-
+// 주방 관리 페이지 router 설정 //
 export const getKitchenPage = async (req, res) => {
   try {
     // 페이지를 읽기전에 먼저 기존 주문내역 수신
@@ -428,8 +356,16 @@ export const processOrder = async (req, res) => {
 };
 
 
+// 메뉴등록 페이지  router 설정 //
+export const getRegisterPage = async (req, res) => {
+  try {
+    res.status(200).render('register', { pageTitle: COMPANY_NAME, });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400);
+  }
+};
 
-// 메뉴등록 페이지 //
 export const getMenus = async (req, res) => {
   const menus = await Menu.find();
   try {
