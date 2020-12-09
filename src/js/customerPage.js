@@ -130,7 +130,7 @@ const fillMenuDetailsPopup = (isCombo) => {
   menuNameKr.innerText = selectedMenu.nameKr;
   menuNameEng.innerText = selectedMenu.nameEng;
   menuImg.src = selectedMenu.image;
-  if (isDiscounted(selectedMenu)) {
+  if (isDiscounted(selectedMenu)) { // 할인된 메뉴의 가격 = 원 가격 - 할인금액
     selectedMenu.price -= selectedMenu.isDiscounted;
     menuPrice.innerText = `${selectedMenu.price} ₩`;
   } else {
@@ -660,6 +660,7 @@ const initCustomerPage = () => {
   prepareForHereToGoPopup();
   prepareCustomerFinalBtns(); // 최종 주문, 최종 취소 버튼
   document.getElementById('orderResultBtn').addEventListener('click', refreshCustomerPage); // 주문 다 끝나고 확인버튼 누르면 refresh
+  detectMouseMove(); //페이지 초기화된 상태에서도 3분동안 아무런 조작이 없으면 갱신(할인 등의 정보 항상 최신화 유지)
   window.addEventListener('mousemove', detectMouseMove);
 };
 
