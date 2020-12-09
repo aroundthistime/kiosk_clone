@@ -12,6 +12,9 @@ if (window.location.pathname === '/test') {
     $(".dim").show();
     $("#register-popup").css("display", "block");
     $(".register-or-edit").text("메뉴등록");
+
+    const currentCategory = $('input:radio[name=categories]:checked').val();
+    $(`input:radio[name=category][value=${currentCategory}]`).prop('checked', true);
   }
 
   // 메뉴수정 준비 함수 (메뉴카드의 a 태그 영역(메뉴사진+메뉴이름)을 누르면 실행된다)

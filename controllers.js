@@ -209,7 +209,7 @@ const saveOrderContent = async (orderContent) => new Promise(async (resolve) => 
         isDefaultCombo: false,
         drink: orderContent.drinkId,
         sideMenu: orderContent.sideId,
-        isDiscounted: defaultCombo.isDiscounted + extraPrice,
+        isDiscounted: defaultCombo.isDiscounted,
         isRecommended: false,
       });
     }
@@ -524,7 +524,7 @@ export const postEditMenu = async (req, res) => {
           calories: comboMenu.calories,
           isCombo: true,
           isDefaultCombo: true,
-          side: frenchFries,
+          sideMenu: frenchFries,
           drink: coke,
           extraPrice: comboMenu.extraPrice,
           ingredientsAllergicEng: comboMenu.ingredientsAllergicEng,
@@ -599,7 +599,7 @@ export const postEditMenu = async (req, res) => {
             calories: comboMenu.calories,
             isCombo: true,
             isDefaultCombo: true,
-            side: frenchFries,
+            sideMenu: frenchFries,
             drink: coke,
             extraPrice: comboMenu.extraPrice,
             ingredientsAllergicEng: comboMenu.ingredientsAllergicEng,

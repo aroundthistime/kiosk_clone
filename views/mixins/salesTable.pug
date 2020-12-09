@@ -20,14 +20,14 @@ mixin salesTable(todayOrders)
                 each order in todayOrders
                     each menu in order.choices
                         - total += menu.amount 
-                        - amount += (menu.menu.price * menu.amount);
+                        - amount += ((menu.menu.price-menu.menu.isDiscounted) * menu.amount);
                         
                         tr
                             td #{moment(order.date).format('YYYY-MM-DD HH:mm:ss')}
                             td #{menu.menu.nameKr}
                             td #{menu.menu.isCombo ? "세트" : "단품"}
                             td #{numberWithCommas(menu.amount)}
-                            td #{numberWithCommas(menu.menu.price * menu.amount)}
+                            td #{numberWithCommas((menu.menu.price-menu.menu.isDiscounted) * menu.amount)}
 
             tr.tbody__last-list
                 td 합계

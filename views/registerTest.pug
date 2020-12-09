@@ -18,17 +18,17 @@ block content
         p(style="font-family: 'Gothic A1', sans-serif;") [안내] 생성된 메뉴를 클릭하면 상세정보 수정이 가능합니다.
       #category-tabs
         // 라디오버튼으로 카테고리 탭을 구현함
-        input#premium-category(type='radio' name='categories' checked='checked')
+        input#premium-category(type='radio' name='categories' value='프리미엄' checked='checked')
         label(for='premium-category') 프리미엄
-        input#whoppers-category(type='radio' name='categories')
+        input#whoppers-category(type='radio' name='categories' value='와퍼')
         label(for='whoppers-category') 와퍼
-        input#chicken-burgers-category(type='radio' name='categories')
+        input#chicken-burgers-category(type='radio' name='categories' value='치킨버거')
         label(for='chicken-burgers-category') 치킨버거
-        input#sides-category(type='radio' name='categories')
+        input#sides-category(type='radio' name='categories' value='사이드')
         label(for='sides-category') 사이드
-        input#drinks-category(type='radio' name='categories')
+        input#drinks-category(type='radio' name='categories' value='음료')
         label(for='drinks-category') 음료
-        input#desserts-category(type='radio' name='categories')
+        input#desserts-category(type='radio' name='categories' value='디저트')
         label(for='desserts-category') 디저트
         .premium
           // 메뉴등록 버튼
@@ -127,7 +127,6 @@ block content
               label(for='price')
             .text-form
               p.lab 세트추가금액(원)
-              p.lab-required * 필수입력 항목
               br
               input#extra-price(type='text' value='0' maxlength='20' required='' autocomplete='off')
               label(for='extra-price')
@@ -191,7 +190,6 @@ block content
           .divider
           .text-form
             p.lab 할인가격
-            p.lab-required * 필수입력 항목
             br
             input#is-discounted(type='text' value='0' maxlength='20' required='' autocomplete='off')
             label(for='is-discounted')

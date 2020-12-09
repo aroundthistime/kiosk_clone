@@ -1,5 +1,4 @@
 mixin menuBlock(menu = {})
-    - console.log(menu)
     if menu.isSoldOut
         .menuBlock.menuBlock--sold-out.no-drag
             .menu-id.hidden #{menu.id}

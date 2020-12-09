@@ -113,7 +113,7 @@ if (window.location.pathname === '/salesControll') {
         menus.forEach((menu) => (totalCount += menu.amount))
       );
       totalMenus.forEach((menus) =>
-        menus.forEach((menu) => (totalAmount += menu.menu.price * menu.amount))
+        menus.forEach((menu) => (totalAmount += (menu.menu.price - menu.menu.isDiscounted) * menu.amount))
       );
       totalMenus.forEach((menus) => {
         menus.forEach((menu) =>
@@ -146,6 +146,7 @@ if (window.location.pathname === '/salesControll') {
           menuWithCost[dates] = temp;
         }
       });
+
 
       // 차트용 데이터 날짜순 정렬
       const menuWithCostSorted = {};
@@ -212,7 +213,7 @@ if (window.location.pathname === '/salesControll') {
             else if (i == 2) td.innerText = menu.menu.isCombo ? '세트' : '단품';
             else if (i == 3) td.innerText = menu.amount;
             else if (i == 4)
-              td.innerText = numberWithCommas(menu.menu.price * menu.amount);
+              td.innerText = numberWithCommas((menu.menu.price - menu.menu.isDiscounted) * menu.amount);
             tr.appendChild(td);
           }
           table.appendChild(tr);
