@@ -130,7 +130,7 @@ const fillMenuDetailsPopup = (isCombo) => {
   menuNameKr.innerText = selectedMenu.nameKr;
   menuNameEng.innerText = selectedMenu.nameEng;
   menuImg.src = selectedMenu.image;
-  if (isDiscounted(selectedMenu)) {
+  if (isDiscounted(selectedMenu)) { // 할인된 메뉴의 가격 = 원 가격 - 할인금액
     selectedMenu.price -= selectedMenu.isDiscounted;
     menuPrice.innerText = `${selectedMenu.price} ₩`;
   } else {
