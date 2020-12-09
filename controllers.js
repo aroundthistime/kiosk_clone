@@ -2,6 +2,7 @@ import Menu from './models/Menu';
 import Order from './models/Order';
 import Record from './models/Record';
 
+
 const DRINKS = '음료';
 const SIDES = '사이드';
 const BEST = '추천메뉴';
@@ -391,9 +392,12 @@ export const postEditMenu = async (req, res) => {
     },
   } = req;
 
+
+
   try {
     const coke = await Menu.findOne({ nameKr: DEFAULT_DRINK });
     const frenchFries = await Menu.findOne({ nameKr: DEFAULT_SIDE });
+
     let isSetType = setType === 'true' ? true : false;
     let sideMenu = side;
     let drinkMenu = drink;
@@ -405,6 +409,7 @@ export const postEditMenu = async (req, res) => {
     if (isCombo && frenchFries !== null) {
       drinkMenu = frenchFries._id;
     }
+
 
     if (objectId === '') {
       if (!isSetType) {

@@ -74,8 +74,12 @@ block content
               p.lab 상품이미지(링크)
               p.lab-required * 필수입력 항목
               br
-              input#product-image(type='text' placeholder='예: https://sample.com/image.png' required='' autocomplete='off')
-              label(for='product-image')
+              input#image-upload(type='file' accept='image/*' required='')
+              .image-upload-area
+                i.fas.fa-plus
+                p 클릭하여 사진 등록
+              input#product-image(type='hidden' placeholder='예: https://sample.com/image.png' required='' autocomplete='off')
+
             //카테고리
             //비공개이며 자동으로 입력
             .radios#hiddenRadios
@@ -234,8 +238,14 @@ block content
               p.lab 세트이미지(링크)
               p.lab-required * 필수입력 항목
               br
-              input#combo-image(type='text' placeholder='예: https://sample.com/image.png' autocomplete='off' required='')
-              label(for='combo-image')
+
+              input#image-upload-for-set(type='file' accept='image/*' required='')
+              .image-upload-area-for-set-menu
+                i.fas.fa-plus
+                p 클릭하여 사진 등록
+
+              input#combo-image(type='hidden' placeholder='예: https://sample.com/image.png' autocomplete='off' required='')
+
             .text-form
               p.lab 세트칼로리(kcal)
               p.lab-required * 필수입력 항목

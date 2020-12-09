@@ -6,6 +6,66 @@ if (window.location.pathname === '/registerMenu') {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+  function uploadImage(event) {
+    let reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+
+    reader.onload = function () {
+      let tempImage = new Image();
+      tempImage.src = reader.result;
+      tempImage.onload = function () {
+        let canvas = document.createElement('canvas');
+        let canvasContext = canvas.getContext('2d');
+
+        canvas.width = 200;
+        canvas.height = 200;
+        canvasContext.drawImage(this, 0, 0, 200, 200);
+
+        let dataURI = canvas.toDataURL('image/*');
+        let imgTag = "<img id='preview-img' src='" + dataURI + "'/>";
+        if ($('#preview-img')) {
+          $('#preview-img').remove();
+        }
+
+        $('.image-upload-area > i').css('display', 'none');
+        $('.image-upload-area > p').css('display', 'none');
+
+        $('.image-upload-area').append(imgTag);
+        $('#product-image').val(dataURI);
+      }
+    }
+  }
+
+  function uploadImageForSet(event) {
+    let reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+
+    reader.onload = function () {
+      let tempImage = new Image();
+      tempImage.src = reader.result;
+      tempImage.onload = function () {
+        let canvas = document.createElement('canvas');
+        let canvasContext = canvas.getContext('2d');
+
+        canvas.width = 200;
+        canvas.height = 200;
+        canvasContext.drawImage(this, 0, 0, 200, 200);
+
+        let dataURI = canvas.toDataURL('image/*');
+        let imgTag = "<img id='preview-img-for-set' src='" + dataURI + "'/>";
+        if ($('#preview-img-for-set')) {
+          $('#preview-img-for-set').remove();
+        }
+
+        $('.image-upload-area-for-set-menu > i').css('display', 'none');
+        $('.image-upload-area-for-set-menu > p').css('display', 'none');
+
+        $('.image-upload-area-for-set-menu').append(imgTag);
+        $('#combo-image').val(dataURI);
+      }
+    }
+  }
+
   // 메뉴등록 준비 함수 (+ 버튼을 누르면 실행)
   function openRegisterPopup() {
     // 팝업창을 준비 (폼은 비어있음)
@@ -15,6 +75,17 @@ if (window.location.pathname === '/registerMenu') {
 
     $('.input-form1').scrollTop(0);
     $('.input-form2').scrollTop(0);
+
+    if ($('#preview-img')) {
+      $('#preview-img').remove();
+      $('.image-upload-area > i').css('display', 'block');
+      $('.image-upload-area > p').css('display', 'block');
+    }
+    if ($('#preview-img-for-set')) {
+      $('#preview-img-for-set').remove();
+      $('.image-upload-area-for-set-menu > i').css('display', 'block');
+      $('.image-upload-area-for-set-menu > p').css('display', 'block');
+    }
 
     const currentCategory = $('input:radio[name=categories]:checked').val();
     $(`input:radio[name=category][value=${currentCategory}]`).prop('checked', true);
@@ -26,6 +97,14 @@ if (window.location.pathname === '/registerMenu') {
     } else {
       $('#form-tabs > label').show();
       $('.input-form1').css('height', 'calc(100% - 5rem)');
+    }
+
+    const imageUploadBtn = document.getElementById('image-upload');
+    imageUploadBtn.addEventListener('change', (e) => uploadImage(e))
+
+    const imageUploadSetBtn = document.getElementById('image-upload-for-set');
+    if (imageUploadSetBtn) {
+      imageUploadSetBtn.addEventListener('change', (e) => uploadImageForSet(e));
     }
   }
 
@@ -47,6 +126,14 @@ if (window.location.pathname === '/registerMenu') {
     } else {
       $('#form-tabs > label').show();
       $('.input-form1').css('height', 'calc(100% - 5rem)');
+    }
+
+    const imageUploadBtn = document.getElementById('image-upload');
+    imageUploadBtn.addEventListener('change', (e) => uploadImage(e))
+
+    const imageUploadSetBtn = document.getElementById('image-upload-for-set');
+    if (imageUploadSetBtn) {
+      imageUploadSetBtn.addEventListener('change', (e) => uploadImageForSet(e));
     }
 
     // 클릭한 a태그의 id(objectId)를 참조해서, DB에서 데이터를 GET한 뒤 폼에 차례로 입력
@@ -72,6 +159,17 @@ if (window.location.pathname === '/registerMenu') {
               } else {
                 menuNum += 1;
               }
+            }
+
+            if (singleToEdit['image']) {
+              if ($('#preview-img')) {
+                $('#preview-img').remove();
+              }
+              let imgTag = "<img id='preview-img' src='" + singleToEdit['image'] + "'/>";
+              $('.image-upload-area').append(imgTag);
+
+              $('.image-upload-area > i').css('display', 'none');
+              $('.image-upload-area > p').css('display', 'none');
             }
 
             $('#object-id-single').val(objectId);
@@ -125,6 +223,17 @@ if (window.location.pathname === '/registerMenu') {
                 } else {
                   menuNum += 1;
                 }
+              }
+
+              if (comboToEdit['image']) {
+                if ($('#preview-img-for-set')) {
+                  $('#preview-img-for-set').remove();
+                }
+                let imgTag = "<img id='preview-img-for-set' src='" + comboToEdit['image'] + "'/>";
+                $('.image-upload-area-for-set-menu').append(imgTag);
+
+                $('.image-upload-area-for-set-menu > i').css('display', 'none');
+                $('.image-upload-area-for-set-menu > p').css('display', 'none');
               }
 
               $('#object-id-combo').val(comboToEdit['_id']);
@@ -697,7 +806,5 @@ if (window.location.pathname === '/registerMenu') {
     // 팝업창 취소/확인 버튼 관련 함수
     $('.decline').on('click', function () { closePopup() });
     $('.submit').on('click', function () { submit() });
-
   })
-
 }
