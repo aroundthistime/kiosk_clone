@@ -115,7 +115,7 @@ block content
               p.lab 메뉴이름(영어)
               p.lab-required * 필수입력 항목
               br
-              input#name-eng(type='text' placeholder='최대 50자 입력 (예: Whopper)' maxlength='50' required='' onkeyup="this.value=this.value.replace(/[^a-zA-Z0-9_ !~@#$%^&*()[]<>?+=\/\"\']/g,'')" autocomplete='off')
+              input#name-eng(type='text' placeholder='최대 50자 입력 (예: Whopper)' maxlength='50' required='' onkeyup="this.value=this.value.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|一-龯|ぁ-ん|ァ-ン]/g,'')" autocomplete='off')
               label(for='name-eng')
             .text-form
               p.lab 칼로리(kcal)
