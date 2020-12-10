@@ -6,7 +6,7 @@ block title
 block content
     #menu-register
       .top-area
-        // 헤더에 해당
+        //- 헤더에 해당
         .container
           img.topArea-logo(src='build/img/logo.png' alt="버거킹 로고이미지")
           span.topArea-title 메뉴관리
@@ -14,12 +14,13 @@ block content
           .topArea-button-area
             a(href='kitchen').topArea-button-area__button 주문알림 >>
 
-      // 카테고리와 안내문에 해당
+      //- 카테고리와 안내문에 해당
       .direction
-        // 사용법안내 회색창
+        //- 사용법안내 회색창
         p(style="font-family: 'Gothic A1', sans-serif;") [안내] 생성된 메뉴를 클릭하면 상세정보 수정이 가능합니다.
+      
       #category-tabs
-        // 라디오버튼으로 카테고리 탭을 구현함
+        //- 라디오버튼으로 카테고리 탭을 구현함
         input#premium-category(type='radio' name='categories' value='프리미엄' checked='checked')
         label(for='premium-category') 프리미엄
         input#whoppers-category(type='radio' name='categories' value='와퍼')
@@ -32,24 +33,21 @@ block content
         label(for='drinks-category') 음료
         input#desserts-category(type='radio' name='categories' value='디저트')
         label(for='desserts-category') 디저트
-        .premium
-          // 메뉴등록 버튼
+
+        //- 각 카테고리 탭 페이지
+        .premium 
           .container
         .whoppers
-          // 메뉴등록 버튼
           .container
         .chicken-burgers
-          // 메뉴등록 버튼
           .container
         .sides
-          // 메뉴등록 버튼
           .container
         .drinks
-          // 메뉴등록 버튼
           .container
         .desserts
-          // 메뉴등록 버튼
           .container
+
       .popup-area
         #register-popup.popup
           span.register-or-edit 메뉴등록
@@ -59,13 +57,13 @@ block content
               label(for='single') 단품
               input#combo(type='radio' name='singleOrCombo')
               label(for='combo') 세트
-              // 여기에 입력폼 표시
+              //- 여기에 입력폼 표시
               .input-form1
               .input-form2
           a.decline(href='#a' onclick='return false;') 취소
           a.submit(href='#' onclick='return false;') 확인
         .dim
-      //팝업창 영역 (신규등록/수정 겸용)
+      //-팝업창 영역 (신규등록/수정 겸용)
       .hidden1
         form#input-form-single
           .basic-info
@@ -80,8 +78,8 @@ block content
                 p 클릭하여 사진 등록
               input#product-image(type='hidden' placeholder='예: https://sample.com/image.png' required='' autocomplete='off')
 
-            //카테고리
-            //비공개이며 자동으로 입력
+            //-카테고리
+            //-비공개이며 자동으로 입력
             .radios#hiddenRadios
               input#premium(type='radio' name='category' value='프리미엄' required='')
               label(for='premium')
