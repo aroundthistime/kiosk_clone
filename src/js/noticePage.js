@@ -6,7 +6,7 @@ if (window.location.pathname === '/notice') {
   const alertAudio = document.getElementById('alertAudio');// 주문완료될 때 재생되는 알림음
 
   const ALERT_UPDATE_PERIOD = 1000; // 1초마다 알림판 갱신
-  const COMPLETE_ORDER_DELETE_TIME = 5000; // 주문완료된 번호는 2분지나면 자동으로 알림판서 삭제
+  const COMPLETE_ORDER_DELETE_TIME = 120000; // 주문완료된 번호는 2분지나면 자동으로 알림판서 삭제
 
   const deleteFromAlertBoard = (orderId) => {
     const order = document.getElementById(orderId);
