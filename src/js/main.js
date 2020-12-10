@@ -7,3 +7,4 @@ import './salesControll/exportCSVFile';
 import './salesControll/setRecord';
 import './kitchenPage';
 import './registerPage';
+import './noticePage';

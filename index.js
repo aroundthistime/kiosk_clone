@@ -17,6 +17,9 @@ import {
   getMenus,
   postEditMenu,
   getRegisterPage,
+  getNotice,
+  getNewOrders,
+  getNewOrderById,
 } from './controllers';
 
 import '@babel/polyfill';
@@ -31,14 +34,14 @@ const app = express();
 
 const PORT = 5000;
 
-const handleListening = () =>
-  console.log(`✅ Listening on https://localhost/${PORT}`);
+const handleListening = () => console.log(`✅ Listening on https://localhost/${PORT}`);
 
 app.listen(PORT, handleListening);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use('/build', express.static(path.join(__dirname, 'build')));
 app.use('/src', express.static(path.join(__dirname, 'src')));
+app.use('/sounds', express.static(path.join(__dirname, 'sounds')));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.locals.moment = moment;
@@ -65,3 +68,8 @@ app.post(routes.processOrder, processOrder);
 app.get(routes.registerPage, getRegisterPage);
 app.get(routes.getMenus, getMenus);
 app.post(routes.createMenus, postEditMenu);
+
+// MenuDisplay router
+app.get(routes.noticePage, getNotice);
+app.get(routes.getOrdersFromKitchen, getNewOrders);
+app.get(routes.getOrderFromKitchenById, getNewOrderById);

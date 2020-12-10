@@ -1,46 +1,21 @@
-doctype html
+extends layouts/main
 
-head
-  title 알림판;
-  meta(charset='utf-8')
-  link(rel='stylesheet', type='text/css', href='../scss/notice.css')
+block content
+  #alertBoard
+    .container
+      .alert-board.alert-board__complete
+        h1 준비 완료 | Complete
+        p.completeComment 음식이 준비되었습니다!
+        .alert-board__orders#completeOrders
 
-.complete
-  | 준비 완료 | Complete
-  p.completeComment 음식이 준비되었습니다! 수령해주세요!
-  hr
-  p#completeHrOne
-    br
-  hr
-  p#completeHrTwo 
-    br
-  hr
-  p#completeHrThree
-    br
-  hr
-  p#completeHrFour
-    br
-  hr
-  p#completeHrFive
-    br
-
-.preparing
-  | 준비 중 | Preparing
-  p.preparingComment 음식이 준비 중입니다! 조금만 기다려 주세요!
-  hr
-  p#preparingHrOne
-    br
-  hr
-  p#preparingHrTwo
-    br
-  hr
-  p#preparingHrThree
-    br
-  hr
-  p#preparingHrFour
-    br
-  hr
-  p#preparingHrFive
-    br
+      .alert-board.alert-board__preparing
+        h1 준비 중 | Preparing
+        p.preparingComment 음식이 준비 중입니다!
+        .alert-board__orders#preparingOrders
     
-script(type='text/javascript', src='../js/notice.js')
+    // 알림음소리 (화면에는 보이지않음)
+    iframe(src="" allow="autoplay" style="display:none;")
+    audio#alertAudio(src="/sounds/alarmNotice.mp3")  
+
+      
+

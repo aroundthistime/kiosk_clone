@@ -1,7 +1,9 @@
+// PAGE URL
 const CUSTOMER_PAGE = '/';
 const SALESCONTROLL_PAGE = '/salesControll';
 const KITCHEN_PAGE = '/kitchen';
 const REGISTER_PAGE = '/registerMenu';
+const NOTICE_PAGE = '/notice';
 
 // API
 const MENU_DETAILS = '/api/menu-details/:id';
@@ -13,6 +15,8 @@ const GET_ORDERS_IN_KITCHEN = '/api/get-orders-in-kitchen';
 const CHECK_ORDER_STATUS = '/api/check-order';
 const CHECK_ORDER_ALARM_STATUS = '/api/check-order-alarm-status';
 const PROCESS_ORDER = '/api/process-order';
+const GET_ORDERS_FROM_KITCHEN = '/api/get-orders-from-kitchen';
+const GET_ORDERS_BY_ID = '/api/get-orders-from-kitchen/:id';
 
 const GET_MENUS = '/api/menus';
 const CREATE_MENUS = '/api/menus'
@@ -22,6 +26,7 @@ const routes = {
   salesControllPage: SALESCONTROLL_PAGE,
   kitchenPage: KITCHEN_PAGE,
   registerPage: REGISTER_PAGE,
+  noticePage: NOTICE_PAGE,
   menuDetails: MENU_DETAILS,
   sendOrder: SEND_ORDER,
   getRecord: GET_RECORDS,
@@ -33,6 +38,8 @@ const routes = {
   processOrder: PROCESS_ORDER,
   getMenus: GET_MENUS,
   createMenus: CREATE_MENUS,
+  getOrdersFromKitchen: GET_ORDERS_FROM_KITCHEN,
+  getOrderFromKitchenById: GET_ORDERS_BY_ID,
 };
 
 export default routes;

@@ -1,7 +1,7 @@
 import Menu from './models/Menu';
 import Order from './models/Order';
 import Record from './models/Record';
-
+import moment from 'moment';
 
 const DRINKS = '음료';
 const SIDES = '사이드';
@@ -186,11 +186,12 @@ export const postSendOrder = async (req, res) => {
 };
 
 // 매출분석 페이지 router 설정 //
-
+// 매출분석 페이지 router
 export const getSalesControllPage = async (req, res) => {
   try {
     const records = await Record.find();
     const orders = await Order.find().populate('choices.menu');
+    // 모든 레코드 및 주문 기록을 페이지에 JSON으로 전달
     res.status(200).render('salesControll', {
       records,
       orders,
@@ -206,10 +207,12 @@ export const getSalesControllPage = async (req, res) => {
   }
 };
 
+// 특정 날짜에 해당하는 기록 조회 API
 export const getRecord = async (req, res) => {
   const {
     body: { date, content },
   } = req;
+  // 해당 날짜의 새로운 데이터 생성
   const newRecord = new Record({
     date,
     content,
@@ -231,8 +234,10 @@ export const getRecord = async (req, res) => {
   }
 };
 
+// 모든 특이사항 관련 기록 조회 API
 export const getAllRecords = async (req, res) => {
   try {
+    // 모든 레코드 JSON으로 전달
     const records = await Record.find();
     return res.status(200).json(records);
   } catch (error) {
@@ -241,6 +246,7 @@ export const getAllRecords = async (req, res) => {
   }
 };
 
+// 테이블 관련 주문 조회 API
 export const getOrdersForTable = async (req, res) => {
   const {
     body: { start, end },
@@ -262,6 +268,7 @@ export const getOrdersForTable = async (req, res) => {
 };
 
 // 주방 관리 페이지 router 설정 //
+// 주방 관리 페이지 router
 export const getKitchenPage = async (req, res) => {
   try {
     // 페이지를 읽기전에 먼저 기존 주문내역 수신
@@ -285,9 +292,10 @@ export const getKitchenPage = async (req, res) => {
   }
 };
 
-// 주문내역 수신
+// 주문내역 수신 API
 export const getOrdersInKitchen = async (req, res) => {
   try {
+    // 주문내역에 사이드메뉴와 음료메뉴 정보 결합
     const orders = await Order.find({
       isCompleted: false,
     }).sort({ orderNumber: -1 }).populate({
@@ -305,6 +313,7 @@ export const getOrdersInKitchen = async (req, res) => {
   }
 };
 
+// 주문 상태 확인 API
 export const checkOrderStatus = async (req, res) => {
   const {
     body: { id },
@@ -320,6 +329,7 @@ export const checkOrderStatus = async (req, res) => {
   }
 };
 
+// 주문 알람 API
 export const checkOrderAlarmStatus = async (req, res) => {
   const {
     body: { id },
@@ -335,6 +345,7 @@ export const checkOrderAlarmStatus = async (req, res) => {
   }
 };
 
+// 주문 진행 API
 export const processOrder = async (req, res) => {
   const {
     body: { id, task },
@@ -344,12 +355,17 @@ export const processOrder = async (req, res) => {
     // 주문완료시
     if (task === 'complete') {
       const order = await Order.findOne({ _id: id });
-      await order.update({ $set: { isCompleted: true } });
+      await order.update({
+        $set: {
+          isCompleted: true,
+        }
+      });
       return res.status(200).json();
-    } // 주문취소시
-
-    await Order.deleteOne({ _id: id });
-    return res.status(200).json();
+    } else {
+      // 주문취소시
+      await Order.deleteOne({ _id: id });
+      return res.status(200).json();
+    }
   } catch (error) {
     console.log(error.message);
     return res.status(400);
@@ -357,16 +373,21 @@ export const processOrder = async (req, res) => {
 };
 
 
-// 메뉴등록 페이지  router 설정 //
+// 메뉴등록 페이지 router 설정 //
+// 메뉴등록 페이지 router
 export const getRegisterPage = async (req, res) => {
   try {
-    res.status(200).render('register', { pageTitle: COMPANY_NAME, });
+    // register 페이지 렌더링 설정
+    res.status(200).render('register', {
+      pageTitle: COMPANY_NAME,
+    });
   } catch (error) {
     console.log(error.message);
     return res.status(400);
   }
 };
 
+// 등록된 메뉴 출력 API
 export const getMenus = async (req, res) => {
   const menus = await Menu.find();
   try {
@@ -381,6 +402,7 @@ export const getMenus = async (req, res) => {
   }
 };
 
+// 메뉴 등록 API
 export const postEditMenu = async (req, res) => {
   const {
     body: {
@@ -391,8 +413,6 @@ export const postEditMenu = async (req, res) => {
       singleInfo, comboInfo, setType
     },
   } = req;
-
-
 
   try {
     const coke = await Menu.findOne({ nameKr: DEFAULT_DRINK });
@@ -568,3 +588,53 @@ export const postEditMenu = async (req, res) => {
     res.end();
   }
 };
+
+// 일람핀 router 설정 //
+// 알림판 router
+export const getNotice = (req, res) => {
+  res.render('notice', {
+    pageTitle: `알림판 | ${COMPANY_NAME}`
+  });
+}
+
+// 모든 알림판 주문 내역 조회 API
+export const getNewOrders = async (req, res) => {
+  const { params: {
+    date }
+  } = req;
+  const today = moment(date).format('YYYY-MM-DD');
+
+  try {
+    const orders = await Order.find({
+      date: {
+        $gte: new Date(`${today} 00:00:00`),
+        $lte: new Date(`${today} 23:59:59`),
+      },
+    });
+    return res.status(200).json(orders);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400);
+  }
+}
+// 특정 주문 내역 조회 API
+export const getNewOrderById = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  try {
+    const order = await Order.findById(id);
+    if (!order) { // 주문 취소된 경우
+      res.status(204);
+    } else if (order.isCompleted) {
+      res.json(true);
+    } else {
+      res.json(false);
+    }
+  } catch (error) {
+    res.status(400);
+    console.log(error);
+  } finally {
+    res.end();
+  }
+}
