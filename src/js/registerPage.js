@@ -745,7 +745,6 @@ if (window.location.pathname === '/registerMenu') {
         },
         success(response) {
           if (response.result === 'success') {
-            console.log(`${response.msg} 세트`);
             window.location.href = window.location.href;
           } else {
             alert('메뉴 받아오기 실패');
@@ -765,7 +764,6 @@ if (window.location.pathname === '/registerMenu') {
         },
         success(response) {
           if (response.result === 'success') {
-            console.log(`${response.msg} 단품`);
             window.location.href = window.location.href;
           } else {
             closePopup();
