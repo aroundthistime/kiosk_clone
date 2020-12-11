@@ -167,6 +167,7 @@ const fillMenuDetailsPopup = (isCombo) => {
     sideOption.classList.add(INVISIBLE);
   }
   showPopup(menuDetailsPopup);
+  menuDetailsPopup.querySelector('.menuDetails__top').scrollIntoView(); // menuDetails팝업의 맨 위로 스크롤
 };
 
 const isBurger = (menu) => {
@@ -678,7 +679,7 @@ const initCustomerPage = () => {
   prepareForHereToGoPopup();
   prepareCustomerFinalBtns(); // 최종 주문, 최종 취소 버튼
   document.getElementById('orderResultBtn').addEventListener('click', refreshCustomerPage); // 주문 다 끝나고 확인버튼 누르면 refresh
-  detectMouseMove(); //페이지 초기화된 상태에서도 3분동안 아무런 조작이 없으면 갱신(할인 등의 정보 항상 최신화 유지)
+  detectMouseMove(); // 페이지 초기화된 상태에서도 3분동안 아무런 조작이 없으면 갱신(할인 등의 정보 항상 최신화 유지)
   window.addEventListener('mousemove', detectMouseMove);
 };
 
