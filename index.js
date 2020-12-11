@@ -34,8 +34,9 @@ const app = express();
 
 const PORT = 5000;
 
-const handleListening = () =>
+const handleListening = () => {
   console.log(`✅ Listening on https://localhost/${PORT}`);
+}
 
 // server 관련 설정 //
 app.listen(PORT, handleListening);
