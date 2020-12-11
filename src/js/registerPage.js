@@ -32,8 +32,8 @@ if (window.location.pathname === '/registerMenu') {
 
         $('.image-upload-area').append(imgTag);
         $('#product-image').val(dataURI);
-      }
-    }
+      };
+    };
   }
 
   function uploadImageForSet(event) {
@@ -62,8 +62,8 @@ if (window.location.pathname === '/registerMenu') {
 
         $('.image-upload-area-for-set-menu').append(imgTag);
         $('#combo-image').val(dataURI);
-      }
-    }
+      };
+    };
   }
 
   // 메뉴등록 준비 함수 (+ 버튼을 누르면 실행)
@@ -100,7 +100,6 @@ if (window.location.pathname === '/registerMenu') {
       $('.input-form1').css('height', 'calc(100% - 5rem)');
     }
 
-
     // 추가금액 입력란 노출여부
     if (currentCategory === '디저트' || currentCategory === '프리미엄' || currentCategory === '와퍼' || currentCategory === '치킨버거') {
       $('#extra').hide();
@@ -116,7 +115,7 @@ if (window.location.pathname === '/registerMenu') {
     }
 
     const imageUploadBtn = document.getElementById('image-upload');
-    imageUploadBtn.addEventListener('change', (e) => uploadImage(e))
+    imageUploadBtn.addEventListener('change', (e) => uploadImage(e));
 
     const imageUploadSetBtn = document.getElementById('image-upload-for-set');
     if (imageUploadSetBtn) {
@@ -137,7 +136,6 @@ if (window.location.pathname === '/registerMenu') {
     $('.input-form2').scrollTop(0);
 
     const currentCategory = $('input:radio[name=categories]:checked').val();
-
 
     if (currentCategory === '사이드' || currentCategory === '음료' || currentCategory === '디저트') {
       $('#form-tabs > label').hide();
@@ -160,7 +158,7 @@ if (window.location.pathname === '/registerMenu') {
     }
 
     const imageUploadBtn = document.getElementById('image-upload');
-    imageUploadBtn.addEventListener('change', (e) => uploadImage(e))
+    imageUploadBtn.addEventListener('change', (e) => uploadImage(e));
 
     const imageUploadSetBtn = document.getElementById('image-upload-for-set');
     if (imageUploadSetBtn) {
@@ -202,7 +200,6 @@ if (window.location.pathname === '/registerMenu') {
               $('.image-upload-area > i').css('display', 'none');
               $('.image-upload-area > p').css('display', 'none');
             }
-
 
             $('#object-id-single').val(objectId);
             $('#product-image').val(singleToEdit.image);
@@ -248,7 +245,7 @@ if (window.location.pathname === '/registerMenu') {
               menuNum = 0;
               let comboToEdit = menus[0];
               while (menuNum < menus.length) {
-                if (menus[menuNum].nameKr === (`${nameKr} (세트)`)) {
+                if (menus[menuNum].nameKr === `${nameKr} (세트)`) {
                   comboToEdit = menus[menuNum];
                   break;
                 } else {
@@ -368,7 +365,7 @@ if (window.location.pathname === '/registerMenu') {
           const { isDiscontinued } = menu;
 
           // 카드만 만들 것이므로, 단품 && 단종되지 않은 메뉴 정보들만 읽어온다
-          if ((isCombo === false) && (isDiscontinued === false)) {
+          if (isCombo === false && isDiscontinued === false) {
             const objectId = menu._id;
             const { menuType } = menu; // 한국어
             const { image } = menu;
@@ -421,7 +418,9 @@ if (window.location.pathname === '/registerMenu') {
               $(`#${objectId} > div > div`).toggleClass('sold-sign');
               $(`#${objectId} > div > a`).toggleClass('grayscale');
             }
-            $('.menu-card').on('click', () => { openEditPopup(); });
+            $('.menu-card').on('click', () => {
+              openEditPopup();
+            });
           }
         }
       },
@@ -708,6 +707,8 @@ if (window.location.pathname === '/registerMenu') {
     const { isRecommended } = singleInfo;
     const { isDiscontinued } = singleInfo;
 
+    const single = JSON.stringify(singleInfo);
+
     // 입력되지 않은 항목이 있을 경우 제출하지 않는다
     // 모든 필수입력항목이 입력되었다면, 딕셔너리에 담긴 데이터를 ajax를 통해 시간차를 두고 순차적으로 서버에 POST한다
     // 원래 화면으로 돌아가고 사이트를 refresh한다 (windows.location.reload(); 를 이용)
@@ -731,7 +732,6 @@ if (window.location.pathname === '/registerMenu') {
       }
 
       const combo = JSON.stringify(comboInfo);
-      const single = JSON.stringify(singleInfo);
 
       // 세트 폼 서버에 POST
       $.ajax({
@@ -761,22 +761,7 @@ if (window.location.pathname === '/registerMenu') {
         data: {
           setType: false,
           objectId,
-          isCombo,
-          image,
-          menuType,
-          nameKr,
-          nameEng,
-          calories,
-          price,
-          extraPrice,
-          isDiscounted,
-          ingredientsAllergicEng: JSON.stringify(ingredientsAllergicEng),
-          ingredientsAllergicKr: JSON.stringify(ingredientsAllergicKr),
-          ingredientsNonAllergicEng: JSON.stringify(ingredientsNonAllergicEng),
-          ingredientsNonAllergicKr: JSON.stringify(ingredientsNonAllergicKr),
-          isSoldOut,
-          isRecommended,
-          isDiscontinued,
+          singleInfo: single,
         },
         success(response) {
           if (response.result === 'success') {
@@ -825,15 +810,27 @@ if (window.location.pathname === '/registerMenu') {
     });
 
     // 메뉴 생성/수정 팝업(모달)창 호출 함수
-    $('.plus-button').on('click', () => { openRegisterPopup(); });
+    $('.plus-button').on('click', () => {
+      openRegisterPopup();
+    });
 
     // 팝업창 내 경고 모달창 버튼 관련 함수
-    $('.fill-alert-decline').on('click', () => { fillAlertClose(); });
-    $('.alert-decline').on('click', () => { alertDecline(); });
-    $('.alert-proceed').on('click', () => { alertProceed(); });
+    $('.fill-alert-decline').on('click', () => {
+      fillAlertClose();
+    });
+    $('.alert-decline').on('click', () => {
+      alertDecline();
+    });
+    $('.alert-proceed').on('click', () => {
+      alertProceed();
+    });
 
     // 팝업창 취소/확인 버튼 관련 함수
-    $('.decline').on('click', () => { closePopup(); });
-    $('.submit').on('click', () => { submit(); });
+    $('.decline').on('click', () => {
+      closePopup();
+    });
+    $('.submit').on('click', () => {
+      submit();
+    });
   });
 }

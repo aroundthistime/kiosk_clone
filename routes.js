@@ -18,7 +18,7 @@ const PROCESS_ORDER = '/api/process-order';
 const GET_ORDERS_FROM_KITCHEN = '/api/get-orders-from-kitchen';
 const GET_ORDERS_BY_ID = '/api/get-orders-from-kitchen/:id';
 const GET_MENUS = '/api/menus';
-const CREATE_MENUS = '/api/menus'
+const CREATE_MENUS = '/api/menus';
 
 const routes = {
   customerPage: CUSTOMER_PAGE,

@@ -1,4 +1,4 @@
-#alertBoard {
+#noticeBoard {
   width: 100vw;
   height: 100vh;
   background-color: black;
@@ -7,7 +7,8 @@
   .container {
     display: flex;
   }
-  .alert-board {
+  .notice-board__complete,
+  .notice-board__preparing {
     margin-top: 5rem;
     width: 50%;
 
@@ -22,53 +23,42 @@
       font-size: 1.5rem;
     }
 
-    .alert-board__orders {
+    .notice-board__orders {
       margin-top: 2rem;
       width: 100%;
-      height: 80%;
+      height: 65%;
       position: relative;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
-      grid-template-rows: repeat(4, minmax(70px, auto));
+      grid-template-rows: repeat(4, minmax(25%, auto));
 
-      .border-line {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(1fr, 1fr));
-        grid-template-rows: repeat(4, minmax(70px, auto));
-
-        p {
-          width: 95%;
-          margin: 0 auto;
-          border-bottom: 2px solid #fff;
-        }
-      }
-
-      .alert-board__order {
+      .notice-board__order {
         margin: 0;
         color: #fff;
         text-align: center;
         font-size: 4rem;
         display: flex;
         justify-content: center;
-        align-items: flex-end;
-        margin-bottom: 1.5rem;
+        align-items: center;
       }
       @media screen and (max-width: 1150px) {
-        .alert-board__order {
+        .notice-board__order {
           font-size: 3rem;
         }
       }
       @media screen and (max-width: 750px) {
-        .alert-board__order {
-          font-size: 2rem;
+        .notice-board__order {
+          font-size: 2.5rem;
         }
       }
-      @media screen and (max-width: 550px) {
-        .alert-board__order {
-          font-size: 1.5rem;
+      @media screen and (max-height: 600px) {
+        .notice-board__order {
+          font-size: 2.5rem;
+        }
+      }
+      @media screen and (max-height: 400px) and (max-width: 550px) {
+        .notice-board__order {
+          font-size: 1.8rem;
         }
       }
     }
@@ -92,11 +82,11 @@
       }
     }
 
-    &.alert-board__complete {
+    &.notice-board__complete {
       h1 {
         color: yellow;
       }
-      .alert-board__order {
+      .notice-board__order {
         animation-name: blinkText;
         animation-duration: 1s;
         animation-iteration-count: 15;
@@ -104,10 +94,16 @@
         animation-fill-mode: none;
       }
     }
-    &.alert-board__preparing {
+    &.notice-board__preparing {
       h1 {
         color: #fff;
       }
+    }
+  }
+  @media screen and (max-height: 600px) {
+    .notice-board__complete,
+    .notice-board__preparing {
+      margin-top: 2.5rem;
     }
   }
 }

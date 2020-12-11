@@ -2,14 +2,13 @@ import axios from 'axios';
 import moment from 'moment';
 
 if (window.location.pathname === '/salesControll') {
-
-  const WARNING_MESSAGE = '범위를 다시 설정해주세요.';  // 기간 설정 오류 시 출력 메시지
-  const BLANK_MESSAGE = '해당 기간의 판매 실적이 없습니다.';  // 판매 실적 없을 시 출력 메시지
+  const WARNING_MESSAGE = '범위를 다시 설정해주세요.'; // 기간 설정 오류 시 출력 메시지
+  const BLANK_MESSAGE = '해당 기간의 판매 실적이 없습니다.'; // 판매 실적 없을 시 출력 메시지
   const DATE_FORMAT = 'YYYY-MM-DD'; // 날짜 출력 형식 지정
   const TABLE_TITLE = ['일자', '품명', '비고', '수량', '단가']; // 테이블 상단 출력 항목 정의
-  const CHART_MENU_INFO = '판매수량(개) ';  // 차트 메뉴별 항목 기본 단위 지정 메시지
-  const CHART_SUM_INFO = '단위(만원) '  // 차트 금액별 항목 기본 단위 지정 메시지
-  const COLSAPN = 5;  // 테이블 열 개수
+  const CHART_MENU_INFO = '판매수량(개) '; // 차트 메뉴별 항목 기본 단위 지정 메시지
+  const CHART_SUM_INFO = '단위(만원) '; // 차트 금액별 항목 기본 단위 지정 메시지
+  const COLSAPN = 5; // 테이블 열 개수
   const MONEY_UNIT = 10000; // 총 금액을 해당 값 단위를 기준으로 잘라 표시
   const BORDEDR_WIDTH = 2; // 그래프의 외각 테두리 두께 값
 
@@ -20,7 +19,9 @@ if (window.location.pathname === '/salesControll') {
     const today = moment().format(DATE_FORMAT);
     const tableArea = document.querySelector('.table');
     const chartArea = document.querySelector('.chart');
-    const convertBtns = document.querySelectorAll('.button-area__button-convertable--page');
+    const convertBtns = document.querySelectorAll(
+      '.button-area__button-convertable--page'
+    );
     const searchBtns = document.querySelectorAll('.font-icon.fas.fa-search');
 
     // 테이블 - 차트 페이지 전환 이벤트 정의
@@ -113,7 +114,11 @@ if (window.location.pathname === '/salesControll') {
         menus.forEach((menu) => (totalCount += menu.amount))
       );
       totalMenus.forEach((menus) =>
-        menus.forEach((menu) => (totalAmount += (menu.menu.price - menu.menu.isDiscounted) * menu.amount))
+        menus.forEach(
+          (menu) =>
+            (totalAmount +=
+              (menu.menu.price - menu.menu.isDiscounted) * menu.amount)
+        )
       );
       totalMenus.forEach((menus) => {
         menus.forEach((menu) =>
@@ -125,7 +130,7 @@ if (window.location.pathname === '/salesControll') {
 
       // 차트용 데이터 Formatting 과정 For { 메뉴이름 : 금액 }
       orderLists.forEach((menu) => {
-        const price = menu.price / MONEY_UNIT;  // 금액을 10,000원 단위로 표시
+        const price = menu.price / MONEY_UNIT; // 금액을 10,000원 단위로 표시
         let temp; // 매출액을 소수점 두자리까지 끊어 보여주기 위한 값을 임시 저장
 
         if (monthDiff) {
@@ -146,7 +151,6 @@ if (window.location.pathname === '/salesControll') {
           menuWithCost[dates] = temp;
         }
       });
-
 
       // 차트용 데이터 날짜순 정렬
       const menuWithCostSorted = {};
@@ -212,8 +216,11 @@ if (window.location.pathname === '/salesControll') {
             else if (i == 1) td.innerText = menu.menu.nameKr;
             else if (i == 2) td.innerText = menu.menu.isCombo ? '세트' : '단품';
             else if (i == 3) td.innerText = menu.amount;
-            else if (i == 4)
-              td.innerText = numberWithCommas((menu.menu.price - menu.menu.isDiscounted) * menu.amount);
+            else if (i == 4) {
+              td.innerText = numberWithCommas(
+                (menu.menu.price - menu.menu.isDiscounted) * menu.amount
+              );
+            }
             tr.appendChild(td);
           }
           table.appendChild(tr);
@@ -260,13 +267,12 @@ if (window.location.pathname === '/salesControll') {
     let borderColor = '';
 
     if (category === 'menu') {
-      categoryType = 'horizontalBar'
+      categoryType = 'horizontalBar';
     } else {
       if (monthDiff) {
-        categoryType = 'bar'
-      }
-      else {
-        categoryType = 'line'
+        categoryType = 'bar';
+      } else {
+        categoryType = 'line';
       }
     }
 

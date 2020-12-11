@@ -2,8 +2,7 @@ import axios from 'axios';
 import moment from 'moment';
 
 if (window.location.pathname === '/salesControll') {
-
-  const RECORD_CONTENT_CLASSNAME = '.content-area__record-content';       // 특이사항 내용 클래스명
+  const RECORD_CONTENT_CLASSNAME = '.content-area__record-content'; // 특이사항 내용 클래스명
   const RECORD_TITLE_CLASSNAME = '.title-area__record-title#record-date'; // 특이사항 제목 클래스명
   const NO_REACORD_MESSAGE = '기록된 사항이 없습니다.'; // 특이사항 없을 시 출력 메시지
   const DATE_FORMAT = 'YYYY-MM-DD'; // 날짜 출력 형식 지정
@@ -35,13 +34,8 @@ if (window.location.pathname === '/salesControll') {
   const editHandler = async () => {
     const today = document.querySelector(RECORD_TITLE_CLASSNAME).textContent;
     const records = await axios.get('api/get-all-records');
-    const record = records.data.find(
-      (record) =>
-        record.content && moment(record.date).format(DATE_FORMAT) === today
-    );
-    record
-      ? (textareaRecord.value = record.content)
-      : (textareaRecord.value = '');
+    const record = records.data.find((record) => record.content && moment(record.date).format(DATE_FORMAT) === today);
+    record ? (textareaRecord.value = record.content) : (textareaRecord.value = '');
   };
 
   // 특이사항 기록 제출 form 이벤트 정의
@@ -50,8 +44,7 @@ if (window.location.pathname === '/salesControll') {
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
-      const today = document.querySelector(RECORD_TITLE_CLASSNAME)
-        .textContent;
+      const today = document.querySelector(RECORD_TITLE_CLASSNAME).textContent;
 
       const content = document.getElementById('input-record').value;
       textarea.style.display = 'none';

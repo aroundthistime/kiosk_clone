@@ -1,6 +1,5 @@
 if (window.location.pathname === '/salesControll') {
-
-  const FILENAME = 'file.csv';  // 다운로드 파일이름 저장
+  const FILENAME = 'file.csv'; // 다운로드 파일이름 저장
   const DOWNLOAD_TYPE = 'text/csv; charset=utf8'; // 다운로드 타입 지정
 
   const csvBtn = document.querySelector('.button-area__button-export--csv');

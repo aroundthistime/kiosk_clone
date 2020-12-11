@@ -1,0 +1,27 @@
+.hidden2
+    form#input-form-combo
+        .basic-info
+            input#object-id-combo(type='text' autocomplete='off')
+            .text-form
+                p.lab 세트이미지
+                p.lab-required * 필수입력 항목
+                br
+                input#image-upload-for-set(type='file' accept='image/*' required='')
+                .image-upload-area-for-set-menu
+                    i.fas.fa-plus
+                    p 클릭하여 사진 등록
+
+                input#combo-image(type='hidden' placeholder='예: https://sample.com/image.png' autocomplete='off' required='')
+
+        .text-form
+            p.lab 세트칼로리(kcal)
+            p.lab-required * 필수입력 항목
+            br
+            input#calories-combo(type='text' placeholder='숫자만 입력 (예: 1000)' maxlength='20' required='' onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" autocomplete='off')
+            label(for='calories-combo')
+        .text-form
+            p.lab 세트가격(원)
+            p.lab-required * 필수입력 항목
+            br
+            input#price-combo(type='text' placeholder='숫자만 입력 (예: 1000)' maxlength='20' required='' onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" autocomplete='off')
+            label(for='price-combo')

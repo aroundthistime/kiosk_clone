@@ -1,0 +1,28 @@
+#category-tabs
+    //- 라디오버튼으로 카테고리 탭을 구현함
+    input#premium-category(type='radio' name='categories' value='프리미엄' checked='checked')
+    label(for='premium-category') 프리미엄
+    input#whoppers-category(type='radio' name='categories' value='와퍼')
+    label(for='whoppers-category') 와퍼
+    input#chicken-burgers-category(type='radio' name='categories' value='치킨버거')
+    label(for='chicken-burgers-category') 치킨버거
+    input#sides-category(type='radio' name='categories' value='사이드')
+    label(for='sides-category') 사이드
+    input#drinks-category(type='radio' name='categories' value='음료')
+    label(for='drinks-category') 음료
+    input#desserts-category(type='radio' name='categories' value='디저트')
+    label(for='desserts-category') 디저트
+
+    //- 각 카테고리 탭 페이지
+    .premium 
+        .container
+    .whoppers
+        .container
+    .chicken-burgers
+        .container
+    .sides
+        .container
+    .drinks
+        .container
+    .desserts
+        .container

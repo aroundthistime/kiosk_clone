@@ -41,21 +41,22 @@ const categories = [
 ];
 
 // 고객페이지 router 설정 //
-
-const getCategoryMenus = (category) => new Promise(async (resolve) => {
-  const menus = await Menu.find({
-    menuType: category.nameKr, // 해당 카테고리에 속하며
-    isDiscontinued: false, // 판매중이고
-    isCombo: false, // 단품인 메뉴들
+const getCategoryMenus = (category) =>
+  new Promise(async (resolve) => {
+    const menus = await Menu.find({
+      menuType: category.nameKr, // 해당 카테고리에 속하며
+      isDiscontinued: false, // 판매중이고
+      isCombo: false, // 단품인 메뉴들
+    });
+    categoriesWithMenu.push({
+      nameEng: category.nameEng,
+      nameKr: category.nameKr,
+      menus,
+    });
+    resolve();
   });
-  categoriesWithMenu.push({
-    nameEng: category.nameEng,
-    nameKr: category.nameKr,
-    menus,
-  });
-  resolve();
-});
 
+// index 페이지 렌더링 함수
 export const getCustomerPage = async (req, res) => {
   categoriesWithMenu = [];
   const bestMenus = await Menu.find({
@@ -88,7 +89,6 @@ export const getCustomerPage = async (req, res) => {
   const defaultSideId = defaultSide[0] ? defaultSide[0]._id : '';
   res.render('index', {
     pageTitle: COMPANY_NAME,
-    isCustomerPage: true, // 해당 페이지가 고객주문 페이지인지 메뉴관리 페이지인지 구별
     categories: categoriesWithMenu,
     drinks,
     sides,
@@ -97,6 +97,7 @@ export const getCustomerPage = async (req, res) => {
   });
 };
 
+// 특정 메뉴 조회 API
 export const getMenuDetails = async (req, res) => {
   const {
     params: { id },
@@ -112,49 +113,52 @@ export const getMenuDetails = async (req, res) => {
   }
 };
 
-const saveOrderContent = async (orderContent) => new Promise(async (resolve) => {
-  let menuId;
-  if (orderContent.sideId) {
-    // 세트메뉴이면
-    const defaultCombo = await Menu.findById(orderContent.menuId);
-    let menu = await Menu.find({
-      // DB에서 해당 세트조합 개체 찾기
-      nameKr: defaultCombo.nameKr,
-      isCombo: true,
-      drink: orderContent.drinkId,
-      sideMenu: orderContent.sideId,
-    });
-    menu = menu[0];
-    if (!menu) {
-      // 해당 세트조합이 DB에 없는경우(새로 생성)
-      const selectedSide = await Menu.findById(orderContent.sideId);
-      const selectedDrink = await Menu.findById(orderContent.drinkId);
-      const extraPrice = selectedSide.extraPrice + selectedDrink.extraPrice;
-      menu = await Menu.create({
-        menuType: defaultCombo.menuType,
+// 메뉴 저장 API
+const saveOrderContent = async (orderContent) =>
+  new Promise(async (resolve) => {
+    let menuId;
+    if (orderContent.sideId) {
+      // 세트메뉴이면
+      const defaultCombo = await Menu.findById(orderContent.menuId);
+      let menu = await Menu.find({
+        // DB에서 해당 세트조합 개체 찾기
         nameKr: defaultCombo.nameKr,
-        nameEng: defaultCombo.nameEng,
-        price: defaultCombo.price + extraPrice,
         isCombo: true,
-        isDefaultCombo: false,
         drink: orderContent.drinkId,
         sideMenu: orderContent.sideId,
-        isDiscounted: defaultCombo.isDiscounted,
-        isRecommended: false,
       });
+      menu = menu[0];
+      if (!menu) {
+        // 해당 세트조합이 DB에 없는경우(새로 생성)
+        const selectedSide = await Menu.findById(orderContent.sideId);
+        const selectedDrink = await Menu.findById(orderContent.drinkId);
+        const extraPrice = selectedSide.extraPrice + selectedDrink.extraPrice;
+        menu = await Menu.create({
+          menuType: defaultCombo.menuType,
+          nameKr: defaultCombo.nameKr,
+          nameEng: defaultCombo.nameEng,
+          price: defaultCombo.price + extraPrice,
+          isCombo: true,
+          isDefaultCombo: false,
+          drink: orderContent.drinkId,
+          sideMenu: orderContent.sideId,
+          isDiscounted: defaultCombo.isDiscounted,
+          isRecommended: false,
+        });
+      }
+      menuId = menu._id;
+    } else {
+      // 단품이면
+      menuId = orderContent.menuId;
     }
-    menuId = menu._id;
-  } else {
-    // 단품이면
-    menuId = orderContent.menuId;
-  }
-  newOrder.choices.push({
-    menu: menuId,
-    amount: orderContent.amount,
+    newOrder.choices.push({
+      menu: menuId,
+      amount: orderContent.amount,
+    });
+    resolve();
   });
-  resolve();
-});
 
+// 주문 전송 API
 export const postSendOrder = async (req, res) => {
   const {
     body: { orderContents, totalPrice, isTakeout },
@@ -173,7 +177,9 @@ export const postSendOrder = async (req, res) => {
       isTakeout,
       price: totalPrice,
     });
-    const promises = orderContents.map((orderContent) => saveOrderContent(orderContent));
+    const promises = orderContents.map((orderContent) =>
+      saveOrderContent(orderContent)
+    );
     await Promise.all(promises);
     newOrder.save();
     res.json(orderNum);
@@ -274,13 +280,17 @@ export const getKitchenPage = async (req, res) => {
     // 페이지를 읽기전에 먼저 기존 주문내역 수신
     const orders = await Order.find({
       isCompleted: false,
-    }).sort({ orderNumber: -1 }).populate({ // objectID로 읽어오는것 방지
-      path: 'choices.menu',
-      populate: { path: 'drink' }
-    }).populate({
-      path: 'choices.menu',
-      populate: { path: 'sideMenu' },
-    });
+    })
+      .sort({ orderNumber: -1 })
+      .populate({
+        // objectID로 읽어오는것 방지
+        path: 'choices.menu',
+        populate: { path: 'drink' },
+      })
+      .populate({
+        path: 'choices.menu',
+        populate: { path: 'sideMenu' },
+      });
 
     res.status(200).render('kitchen', {
       orders,
@@ -298,13 +308,16 @@ export const getOrdersInKitchen = async (req, res) => {
     // 주문내역에 사이드메뉴와 음료메뉴 정보 결합
     const orders = await Order.find({
       isCompleted: false,
-    }).sort({ orderNumber: -1 }).populate({
-      path: 'choices.menu',
-      populate: { path: 'drink' },
-    }).populate({
-      path: 'choices.menu',
-      populate: { path: 'sideMenu' },
-    });
+    })
+      .sort({ orderNumber: -1 })
+      .populate({
+        path: 'choices.menu',
+        populate: { path: 'drink' },
+      })
+      .populate({
+        path: 'choices.menu',
+        populate: { path: 'sideMenu' },
+      });
 
     return res.status(200).json(orders);
   } catch (error) {
@@ -358,7 +371,7 @@ export const processOrder = async (req, res) => {
       await order.update({
         $set: {
           isCompleted: true,
-        }
+        },
       });
       return res.status(200).json();
     } else {
@@ -371,7 +384,6 @@ export const processOrder = async (req, res) => {
     return res.status(400);
   }
 };
-
 
 // 메뉴등록 페이지 router 설정 //
 // 메뉴등록 페이지 router
@@ -406,177 +418,111 @@ export const getMenus = async (req, res) => {
 export const postEditMenu = async (req, res) => {
   const {
     body: {
-      objectId, isCombo, image, menuType, nameKr, nameEng, calories,
-      price, extraPrice, side, drink,
-      ingredientsAllergicKr, ingredientsAllergicEng, ingredientsNonAllergicKr,
-      ingredientsNonAllergicEng, isDiscounted, isSoldOut, isRecommended, isDiscontinued,
-      singleInfo, comboInfo, setType
+      objectId,
+      singleInfo,
+      comboInfo,
+      setType,
     },
   } = req;
 
   try {
+    // 기본 사이드메뉴와 음료를 지정
     const coke = await Menu.findOne({ nameKr: DEFAULT_DRINK });
     const frenchFries = await Menu.findOne({ nameKr: DEFAULT_SIDE });
-
+    // 단품메뉴와 콤보메뉴 정보 JSON 파싱
+    const comboMenu = comboInfo ? JSON.parse(comboInfo) : null;
+    const singleMenu = JSON.parse(singleInfo);
     let isSetType = setType === 'true' ? true : false;
-    let sideMenu = side;
-    let drinkMenu = drink;
 
-    if (isCombo && coke !== null) {
-      sideMenu = coke._id;
+    // 단품 메뉴 생성 시 필요 항목 정리
+    const newSingleMenu = {
+      menuType: singleMenu.menuType,
+      nameKr: singleMenu.nameKr,
+      nameEng: singleMenu.nameEng,
+      image: singleMenu.image,
+      price: singleMenu.price,
+      calories: singleMenu.calories,
+      extraPrice: singleMenu.extraPrice ? singleMenu.extraPrice : 0,
+      isCombo: false,
+      ingredientsAllergicEng: singleMenu.ingredientsAllergicEng
+        ? singleMenu.ingredientsAllergicEng : [],
+      ingredientsAllergicKr: singleMenu.ingredientsAllergicKr
+        ? singleMenu.ingredientsAllergicKr
+        : [],
+      ingredientsNonAllergicEng: singleMenu.ingredientsNonAllergicEng
+        ? singleMenu.ingredientsNonAllergicEng
+        : [],
+      ingredientsNonAllergicKr: singleMenu.ingredientsNonAllergicKr
+        ? singleMenu.ingredientsNonAllergicKr
+        : [],
+      isDiscounted: singleMenu.isDiscounted,
+      isSoldOut: singleMenu.isSoldOut,
+      isRecommended: singleMenu.isRecommended,
+      isDiscontinued: singleMenu.isDiscontinued,
     }
 
-    if (isCombo && frenchFries !== null) {
-      drinkMenu = frenchFries._id;
+    // 세트 메뉴 생성 시 필요 항목 정리
+    const newComboMenu = {
+      menuType: comboMenu.menuType,
+      nameKr: comboMenu.nameKr,
+      nameEng: comboMenu.nameEng,
+      image: comboMenu.image,
+      price: comboMenu.price,
+      calories: comboMenu.calories,
+      isCombo: true,
+      isDefaultCombo: true,
+      sideMenu: frenchFries,
+      drink: coke,
+      extraPrice: comboMenu.extraPrice,
+      ingredientsAllergicEng: comboMenu.ingredientsAllergicEng,
+      ingredientsAllergicKr: comboMenu.ingredientsAllergicKr,
+      ingredientsNonAllergicEng: comboMenu.ingredientsNonAllergicEng
+        ? comboMenu.ingredientsNonAllergicEng
+        : [],
+      ingredientsNonAllergicKr: comboMenu.ingredientsNonAllergicKr
+        ? comboMenu.ingredientsNonAllergicKr
+        : [],
+      isDiscounted: comboMenu.isDiscounted,
+      isSoldOut: comboMenu.isSoldOut,
+      isRecommended: comboMenu.isRecommended,
+      isDiscontinued: comboMenu.isDiscontinued,
     }
 
-
+    // 새로운 메뉴를 등록하는 경우
     if (objectId === '') {
-      if (!isSetType) {
-        let newMenu = await Menu.create({
-          image,
-          menuType,
-          nameKr,
-          nameEng,
-          calories,
-          price,
-          extraPrice,
-          isCombo,
-          ingredientsAllergicEng: ingredientsAllergicEng ? JSON.parse(ingredientsAllergicEng) : [],
-          ingredientsAllergicKr: ingredientsAllergicKr ? JSON.parse(ingredientsAllergicKr) : [],
-          ingredientsNonAllergicEng: ingredientsNonAllergicEng ? JSON.parse(ingredientsNonAllergicEng) : [],
-          ingredientsNonAllergicKr: ingredientsNonAllergicKr ? JSON.parse(ingredientsNonAllergicKr) : [],
-          isDiscounted,
-          isSoldOut,
-          isRecommended,
-          isDiscontinued
-        });
-
+      if (!isSetType) { // 세트메뉴가 포함되지 않는 메뉴라면
+        const newMenu = await Menu.create(newSingleMenu);
         await newMenu.save();
-
-      } else {
-        let comboMenu = JSON.parse(comboInfo);
-        let singleMenu = JSON.parse(singleInfo)
-
-        const single = await Menu.create({
-          menuType: singleMenu.menuType,
-          nameKr: singleMenu.nameKr,
-          nameEng: singleMenu.nameEng,
-          image: singleMenu.image,
-          price: singleMenu.price,
-          calories: singleMenu.calories,
-          isCombo: false,
-          ingredientsAllergicEng: singleMenu.ingredientsAllergicEng,
-          ingredientsAllergicKr: singleMenu.ingredientsAllergicKr,
-          ingredientsNonAllergicEng: singleMenu.ingredientsNonAllergicEng ? singleMenu.ingredientsNonAllergicEng : [],
-          ingredientsNonAllergicKr: singleMenu.ingredientsNonAllergicKr ? singleMenu.ingredientsNonAllergicKr : [],
-          isDiscounted: singleMenu.isDiscounted,
-          isSoldOut: singleMenu.isSoldOut,
-          isRecommended: singleMenu.isRecommended,
-          isDiscontinued: singleMenu.isDiscontinued,
-        });
-
-        const combo = await Menu.create({
-          menuType: comboMenu.menuType,
-          nameKr: comboMenu.nameKr,
-          nameEng: comboMenu.nameEng,
-          image: comboMenu.image,
-          price: comboMenu.price,
-          calories: comboMenu.calories,
-          isCombo: true,
-          isDefaultCombo: true,
-          sideMenu: frenchFries,
-          drink: coke,
-          extraPrice: comboMenu.extraPrice,
-          ingredientsAllergicEng: comboMenu.ingredientsAllergicEng,
-          ingredientsAllergicKr: comboMenu.ingredientsAllergicKr,
-          ingredientsNonAllergicEng: comboMenu.ingredientsNonAllergicEng ? comboMenu.ingredientsNonAllergicEng : [],
-          ingredientsNonAllergicKr: comboMenu.ingredientsNonAllergicKr ? comboMenu.ingredientsNonAllergicKr : [],
-          isDiscounted: comboMenu.isDiscounted,
-          isSoldOut: comboMenu.isSoldOut,
-          isRecommended: comboMenu.isRecommended,
-          isDiscontinued: comboMenu.isDiscontinued,
-        });
-
+      } else {  // 세트메뉴가 있는 버거류의 경우
+        const single = await Menu.create(newSingleMenu);
+        const combo = await Menu.create(newComboMenu);
         single.defaultCombo = combo.id;
         single.save();
-
       }
-
-    } else {
-      if (!isSetType) {
-        await Menu.updateOne({ _id: objectId }, {
-          $set: {
-            image,
-            menuType,
-            nameKr,
-            nameEng,
-            calories,
-            price,
-            extraPrice,
-            ingredientsAllergicEng: ingredientsAllergicEng ? JSON.parse(ingredientsAllergicEng) : [],
-            ingredientsAllergicKr: ingredientsAllergicKr ? JSON.parse(ingredientsAllergicKr) : [],
-            ingredientsNonAllergicEng: ingredientsNonAllergicEng ? JSON.parse(ingredientsNonAllergicEng) : [],
-            ingredientsNonAllergicKr: ingredientsNonAllergicKr ? JSON.parse(ingredientsNonAllergicKr) : [],
-            isDiscounted,
-            isSoldOut,
-            isRecommended,
-            isDiscontinued
+    } else {  // 기존 메뉴를 수정하는 경우
+      if (!isSetType) { // 세트메뉴 없는 단품 메뉴 수정 시
+        await Menu.updateOne(
+          { _id: objectId },
+          {
+            $set: newSingleMenu,
           }
-        });
-
-
-      } else {
-        let comboMenu = JSON.parse(comboInfo);
-        let singleMenu = JSON.parse(singleInfo);
-
-        await Menu.updateOne({ _id: singleMenu.objectId }, {
-          $set: {
-            menuType: singleMenu.menuType,
-            nameKr: singleMenu.nameKr,
-            nameEng: singleMenu.nameEng,
-            image: singleMenu.image,
-            price: singleMenu.price,
-            calories: singleMenu.calories,
-            isCombo: false,
-            ingredientsAllergicEng: singleMenu.ingredientsAllergicEng,
-            ingredientsAllergicKr: singleMenu.ingredientsAllergicKr,
-            ingredientsNonAllergicEng: singleMenu.ingredientsNonAllergicEng ? singleMenu.ingredientsNonAllergicEng : [],
-            ingredientsNonAllergicKr: singleMenu.ingredientsNonAllergicKr ? singleMenu.ingredientsNonAllergicKr : [],
-            isDiscounted: singleMenu.isDiscounted,
-            isSoldOut: singleMenu.isSoldOut,
-            isRecommended: singleMenu.isRecommended,
-            isDiscontinued: singleMenu.isDiscontinued,
+        );
+      } else {  // 세트 메뉴를 포함하는 버거류 메뉴 수정 시
+        await Menu.updateOne(
+          { _id: singleMenu.objectId },
+          {
+            $set: newSingleMenu,
           }
-        });
+        );
 
-        await Menu.updateOne({ _id: comboMenu.objectId }, {
-          $set: {
-            menuType: comboMenu.menuType,
-            nameKr: comboMenu.nameKr,
-            nameEng: comboMenu.nameEng,
-            image: comboMenu.image,
-            price: comboMenu.price,
-            calories: comboMenu.calories,
-            isCombo: true,
-            isDefaultCombo: true,
-            sideMenu: frenchFries,
-            drink: coke,
-            extraPrice: comboMenu.extraPrice,
-            ingredientsAllergicEng: comboMenu.ingredientsAllergicEng,
-            ingredientsAllergicKr: comboMenu.ingredientsAllergicKr,
-            ingredientsNonAllergicEng: comboMenu.ingredientsNonAllergicEng ? comboMenu.ingredientsNonAllergicEng : [],
-            ingredientsNonAllergicKr: comboMenu.ingredientsNonAllergicKr ? comboMenu.ingredientsNonAllergicKr : [],
-            isDiscounted: comboMenu.isDiscounted,
-            isSoldOut: comboMenu.isSoldOut,
-            isRecommended: comboMenu.isRecommended,
-            isDiscontinued: comboMenu.isDiscontinued,
+        await Menu.updateOne(
+          { _id: comboMenu.objectId },
+          {
+            $set: newComboMenu,
           }
-        })
+        );
       }
     }
-
-
     return res.status(200).json({
       result: 'success',
       msg: '요청을 post했다.',
@@ -593,14 +539,14 @@ export const postEditMenu = async (req, res) => {
 // 알림판 router
 export const getNotice = (req, res) => {
   res.render('notice', {
-    pageTitle: `알림판 | ${COMPANY_NAME}`
+    pageTitle: `알림판 | ${COMPANY_NAME}`,
   });
-}
+};
 
 // 모든 알림판 주문 내역 조회 API
 export const getNewOrders = async (req, res) => {
-  const { params: {
-    date }
+  const {
+    params: { date },
   } = req;
   const today = moment(date).format('YYYY-MM-DD');
 
@@ -616,7 +562,7 @@ export const getNewOrders = async (req, res) => {
     console.log(error.message);
     return res.status(400);
   }
-}
+};
 // 특정 주문 내역 조회 API
 export const getNewOrderById = async (req, res) => {
   const {
@@ -624,7 +570,8 @@ export const getNewOrderById = async (req, res) => {
   } = req;
   try {
     const order = await Order.findById(id);
-    if (!order) { // 주문 취소된 경우
+    if (!order) {
+      // 주문 취소된 경우
       res.status(204);
     } else if (order.isCompleted) {
       res.json(true);
@@ -637,4 +584,4 @@ export const getNewOrderById = async (req, res) => {
   } finally {
     res.end();
   }
-}
+};

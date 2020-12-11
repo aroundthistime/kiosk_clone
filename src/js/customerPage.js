@@ -77,7 +77,8 @@ const selectCategory = (event) => {
     }
   });
   menuLists.forEach((menuList) => {
-    if (menuList.classList.contains(`menu-list__${categoryName}`)) { // 선택한 카테고리의 메뉴목록(만) 보여줌
+    if (menuList.classList.contains(`menu-list__${categoryName}`)) {
+      // 선택한 카테고리의 메뉴목록(만) 보여줌
       menuList.classList.remove(INVISIBLE);
     } else {
       menuList.classList.add(INVISIBLE);
@@ -88,7 +89,8 @@ const selectCategory = (event) => {
 const prepareCategories = () => {
   categories.forEach((category) => {
     category.addEventListener('click', selectCategory);
-    if (category.classList.contains('BEST')) { // set default category
+    if (category.classList.contains('BEST')) {
+      // set default category
       category.click(); // select category 실행
     }
   });
@@ -130,14 +132,16 @@ const fillMenuDetailsPopup = (isCombo) => {
   menuNameKr.innerText = selectedMenu.nameKr;
   menuNameEng.innerText = selectedMenu.nameEng;
   menuImg.src = selectedMenu.image;
-  if (isDiscounted(selectedMenu)) { // 할인된 메뉴의 가격 = 원 가격 - 할인금액
+  if (isDiscounted(selectedMenu)) {
+    // 할인된 메뉴의 가격 = 원 가격 - 할인금액
     selectedMenu.price -= selectedMenu.isDiscounted;
     menuPrice.innerText = `${selectedMenu.price} ₩`;
   } else {
     menuPrice.innerText = `${selectedMenu.price} ₩`;
   }
   menuCalories.innerText = `${selectedMenu.calories} Kcal`;
-  if (selectedMenu.menuType === DRINK) { // 음료면 재료 정보 없음
+  if (selectedMenu.menuType === DRINK) {
+    // 음료면 재료 정보 없음
     ingredientsBox.classList.add(INVISIBLE);
   } else {
     ingredientsBox.classList.remove(INVISIBLE);
@@ -146,7 +150,8 @@ const fillMenuDetailsPopup = (isCombo) => {
     fillIngredientsList(ingredientsNonAllergicEng, selectedMenu.ingredientsNonAllergicEng);
     fillIngredientsList(ingredientsAllergicEng, selectedMenu.ingredientsAllergicEng);
   }
-  if (isCombo) { // 세트면 사이드, 음료 옵션 보여줌
+  if (isCombo) {
+    // 세트면 사이드, 음료 옵션 보여줌
     singleComboOption.classList.remove('single');
     singleComboOption.classList.add('combo');
     document.querySelectorAll('.optionBlock--default').forEach((defaultOptionBlock) => {
@@ -154,7 +159,8 @@ const fillMenuDetailsPopup = (isCombo) => {
     });
     drinkOption.classList.remove(INVISIBLE);
     sideOption.classList.remove(INVISIBLE);
-  } else { // 그렇지 않다면 사이드, 음료 옵션 보여주지 않음
+  } else {
+    // 그렇지 않다면 사이드, 음료 옵션 보여주지 않음
     singleComboOption.classList.add('single');
     singleComboOption.classList.remove('combo');
     drinkOption.classList.add(INVISIBLE);
@@ -236,7 +242,7 @@ const selectOptionBlock = (event) => {
   while (!selectedOptionBlock.classList.contains('optionBlock')) {
     selectedOptionBlock = selectedOptionBlock.parentNode;
   }
-  const optionsList = selectedOptionBlock.parentNode;// either <side options list> or <drinks options list>
+  const optionsList = selectedOptionBlock.parentNode; // either <side options list> or <drinks options list>
   optionsList.querySelectorAll('.optionBlock').forEach((optionBlock) => {
     if (optionBlock === selectedOptionBlock) {
       optionBlock.classList.add('optionBlock--selected');
@@ -246,7 +252,8 @@ const selectOptionBlock = (event) => {
   });
 };
 
-const getShoppingCartTotalPrice = () => { // return the pure int version of total price of shopping cart
+const getShoppingCartTotalPrice = () => {
+  // return the pure int version of total price of shopping cart
   const shoppingCartTotalPrice = document.getElementById('shoppingCartTotalPrice');
   return parseInt(shoppingCartTotalPrice.innerText.substring(0, shoppingCartTotalPrice.innerText.length - 2)); // length-2는 " ₩"을 제거해주기 위함
 };
@@ -292,7 +299,8 @@ const increaseOrderAmount = (event) => {
   reduceBtn.classList.remove('disabled');
 };
 
-const handleFinalOrderBtnClick = (event) => { // must decide between 포장 & 매장 first if you click 최종주문 버튼
+const handleFinalOrderBtnClick = (event) => {
+  // must decide between 포장 & 매장 first if you click 최종주문 버튼
   showPopup(forHereToGoPopup);
 };
 
@@ -308,7 +316,8 @@ const removeOrderBar = (event) => {
   shoppingCartTotalPrice.innerText = `${getShoppingCartTotalPrice() - clickedOrderBarPrice} ₩`;
   shoppingCartTotalAmount.innerText = parseInt(shoppingCartTotalAmount.innerText) - clickedOrderBarAmount;
   clickedOrderBar.parentNode.removeChild(clickedOrderBar); // remove clicked orderbar from html
-  if (shoppingCartTotalAmount.innerText === '0') { // if shopping cart is empty
+  if (shoppingCartTotalAmount.innerText === '0') {
+    // if shopping cart is empty
     shoppingCartEmptyMessage.classList.remove(INVISIBLE);
     customerFinalOrderBtn.classList.add('btn--disabled');
     customerFinalOrderBtn.removeEventListener('click', handleFinalOrderBtnClick);
@@ -339,7 +348,8 @@ const createOrderBarMenu = (orderBar, menu, drink, side) => {
   let sideNameKr;
   let sideNameEng;
   let sideId;
-  if (drink) { // 세트구성이면 사이드, 음료에 대한 정보도 표시
+  if (drink) {
+    // 세트구성이면 사이드, 음료에 대한 정보도 표시
     drinkNameKr = document.createElement('SPAN');
     drinkNameKr.classList.add('drink-name');
     drinkNameKr.classList.add('language-convertable');
@@ -369,7 +379,8 @@ const createOrderBarMenu = (orderBar, menu, drink, side) => {
     sideId.classList.add(INVISIBLE);
     sideId.innerText = side.id;
   }
-  if (usingKorean) { // only view the info of the current language settings
+  if (usingKorean) {
+    // only view the info of the current language settings
     menuNameEng.classList.add(INVISIBLE);
     if (drink) {
       drinkNameEng.classList.add(INVISIBLE);
@@ -441,7 +452,8 @@ const createOrderBarPrices = (orderBar, price) => {
   orderBar.appendChild(orderBarOriginalPrice);
 };
 
-const createOrderBarRemoveBtn = (orderBar) => { // 해당 메뉴 장바구니에서 지우는 버튼
+const createOrderBarRemoveBtn = (orderBar) => {
+  // 해당 메뉴 장바구니에서 지우는 버튼
   const orderBarRemoveBtn = document.createElement('DIV');
   orderBarRemoveBtn.classList.add('order__column');
   orderBarRemoveBtn.classList.add('order__remove');
@@ -473,10 +485,12 @@ const addToCart = (menu, price, drink = null, side = null) => {
 };
 
 const alreadyInCart = (menuId, drinkId = null, sideId = null) => {
-  if (drinkId) { // 세트
+  if (drinkId) {
+    // 세트
     return Array.from(document.querySelectorAll('.shopping-cart__order')).some((orderBar) => {
       let orderBarDrinkId = orderBar.querySelector('.drink-id');
-      if (!orderBarDrinkId) { // 세트메뉴를 찾고있는데 단품이면
+      if (!orderBarDrinkId) {
+        // 세트메뉴를 찾고있는데 단품이면
         return false;
       }
       const orderBarMenuId = orderBar.querySelector('.menu-id').innerText;
@@ -490,7 +504,8 @@ const alreadyInCart = (menuId, drinkId = null, sideId = null) => {
     });
   } // 단품
   return Array.from(document.querySelectorAll('.shopping-cart__order')).some((orderBar) => {
-    if (orderBar.querySelector('.drink-id')) { // 단품찾고있는데 세트메뉴이면
+    if (orderBar.querySelector('.drink-id')) {
+      // 단품찾고있는데 세트메뉴이면
       return false;
     }
     const orderBarMenuId = orderBar.querySelector('.menu-id').innerText;
@@ -593,7 +608,8 @@ const sendOrder = async (orderContents, totalPrice, isTakeout) => {
   });
   const orderSuccessPopup = document.getElementById('orderSuccess');
   const orderFailPopup = document.getElementById('orderFail');
-  if (response.status === 200) { // 주문성공
+  if (response.status === 200) {
+    // 주문성공
     const orderNum = document.getElementById('orderNum');
     orderNum.innerText = response.data; // 수신한 주문번호 대입
     orderSuccessPopup.classList.remove(INVISIBLE);
@@ -607,7 +623,8 @@ const sendOrder = async (orderContents, totalPrice, isTakeout) => {
   setTimeout(refreshCustomerPage, TEN_SECONDS_TO_MILLISECONDS); // 주문번호 보여준 후에 10초후까지 확인버튼 누르지 않으면 자동 페이지갱신
 };
 
-const gatherOrderInfo = (event) => { // 포장여부 설정시 포장여부, 주문내용, 총 가격 모두 추출
+const gatherOrderInfo = (event) => {
+  // 포장여부 설정시 포장여부, 주문내용, 총 가격 모두 추출
   let eatingLocation = event.target;
   while (!eatingLocation.classList.contains('binary-option')) {
     eatingLocation = eatingLocation.parentNode;
@@ -643,8 +660,9 @@ const prepareCustomerFinalBtns = () => {
 };
 
 const detectMouseMove = (event) => {
-  const savedMouseMove = lastMouseMove = Math.random();
-  setTimeout(() => { // refresh the page if no one uses the machine for 3 minutes
+  const savedMouseMove = (lastMouseMove = Math.random());
+  setTimeout(() => {
+    // refresh the page if no one uses the machine for 3 minutes
     if (lastMouseMove === savedMouseMove) {
       refreshCustomerPage();
     }
@@ -664,6 +682,7 @@ const initCustomerPage = () => {
   window.addEventListener('mousemove', detectMouseMove);
 };
 
-if (languageSettingsToggle) { // 언어설정이 있으면 고객주문페이지
+if (languageSettingsToggle) {
+  // 언어설정이 있으면 고객주문페이지
   initCustomerPage();
 }
