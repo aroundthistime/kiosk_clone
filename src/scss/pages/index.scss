@@ -83,7 +83,7 @@ main.customerPageMain {
     display: grid;
     padding: 4vw;
     box-sizing: border-box;
-    height: 800px; //나중에 확인
+    height: 800px;
     overflow-x: hidden;
     overflow-y: scroll;
     &::-webkit-scrollbar {
@@ -114,7 +114,6 @@ main.customerPageMain {
         display: flex;
         flex-direction: column;
         align-items: center;
-        //   background-color: coral;
         box-sizing: border-box;
         cursor: pointer;
         .menuBlock__img {
@@ -369,6 +368,11 @@ footer.customerPageFooter {
     &::-webkit-scrollbar-button {
       width: 0;
       height: 0;
+    }
+    .menuDetails__top{
+      position: absolute;
+      top : 0;
+      left : 0;
     }
     .menuDetails__menu-name {
       align-self: flex-start;

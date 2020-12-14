@@ -1,7 +1,7 @@
+import moment from 'moment';
 import Menu from './models/Menu';
 import Order from './models/Order';
 import Record from './models/Record';
-import moment from 'moment';
 
 const DRINKS = '음료';
 const SIDES = '사이드';
@@ -40,23 +40,22 @@ const categories = [
   },
 ];
 
-// 고객페이지 router 설정 //
-const getCategoryMenus = (category) =>
-  new Promise(async (resolve) => {
-    const menus = await Menu.find({
-      menuType: category.nameKr, // 해당 카테고리에 속하며
-      isDiscontinued: false, // 판매중이고
-      isCombo: false, // 단품인 메뉴들
-    });
-    categoriesWithMenu.push({
-      nameEng: category.nameEng,
-      nameKr: category.nameKr,
-      menus,
-    });
-    resolve();
+// 각 카테고리별로 그에 해당하는 메뉴목록 가지는 object 생성 함수 //
+const getCategoryMenus = (category) => new Promise(async (resolve) => {
+  const menus = await Menu.find({
+    menuType: category.nameKr, // 해당 카테고리에 속하며
+    isDiscontinued: false, // 판매중이고
+    isCombo: false, // 단품인 메뉴들
   });
+  categoriesWithMenu.push({
+    nameEng: category.nameEng,
+    nameKr: category.nameKr,
+    menus,
+  });
+  resolve();
+});
 
-// index 페이지 렌더링 함수
+// index(고객주문) 페이지 렌더링 함수
 export const getCustomerPage = async (req, res) => {
   categoriesWithMenu = [];
   const bestMenus = await Menu.find({
@@ -97,7 +96,7 @@ export const getCustomerPage = async (req, res) => {
   });
 };
 
-// 특정 메뉴 조회 API
+// 특정 메뉴 조회 API (고객주문페이지에서 메뉴블록 클릭시 실행)
 export const getMenuDetails = async (req, res) => {
   const {
     params: { id },
@@ -113,50 +112,49 @@ export const getMenuDetails = async (req, res) => {
   }
 };
 
-// 메뉴 저장 API
-const saveOrderContent = async (orderContent) =>
-  new Promise(async (resolve) => {
-    let menuId;
-    if (orderContent.sideId) {
-      // 세트메뉴이면
-      const defaultCombo = await Menu.findById(orderContent.menuId);
-      let menu = await Menu.find({
-        // DB에서 해당 세트조합 개체 찾기
+// 주문에 포함된 각 메뉴를 Order 개체의 choices배열에 삽입
+const saveOrderContent = async (orderContent) => new Promise(async (resolve) => {
+  let menuId;
+  if (orderContent.sideId) {
+    // 세트메뉴이면
+    const defaultCombo = await Menu.findById(orderContent.menuId);
+    let menu = await Menu.find({
+      // DB에서 해당 세트조합 개체 찾기
+      nameKr: defaultCombo.nameKr,
+      isCombo: true,
+      drink: orderContent.drinkId,
+      sideMenu: orderContent.sideId,
+    });
+    menu = menu[0];
+    if (!menu) {
+      // 해당 세트조합이 DB에 없는경우(새로 생성)
+      const selectedSide = await Menu.findById(orderContent.sideId);
+      const selectedDrink = await Menu.findById(orderContent.drinkId);
+      const extraPrice = selectedSide.extraPrice + selectedDrink.extraPrice;
+      menu = await Menu.create({
+        menuType: defaultCombo.menuType,
         nameKr: defaultCombo.nameKr,
+        nameEng: defaultCombo.nameEng,
+        price: defaultCombo.price + extraPrice,
         isCombo: true,
+        isDefaultCombo: false,
         drink: orderContent.drinkId,
         sideMenu: orderContent.sideId,
+        isDiscounted: defaultCombo.isDiscounted,
+        isRecommended: false,
       });
-      menu = menu[0];
-      if (!menu) {
-        // 해당 세트조합이 DB에 없는경우(새로 생성)
-        const selectedSide = await Menu.findById(orderContent.sideId);
-        const selectedDrink = await Menu.findById(orderContent.drinkId);
-        const extraPrice = selectedSide.extraPrice + selectedDrink.extraPrice;
-        menu = await Menu.create({
-          menuType: defaultCombo.menuType,
-          nameKr: defaultCombo.nameKr,
-          nameEng: defaultCombo.nameEng,
-          price: defaultCombo.price + extraPrice,
-          isCombo: true,
-          isDefaultCombo: false,
-          drink: orderContent.drinkId,
-          sideMenu: orderContent.sideId,
-          isDiscounted: defaultCombo.isDiscounted,
-          isRecommended: false,
-        });
-      }
-      menuId = menu._id;
-    } else {
-      // 단품이면
-      menuId = orderContent.menuId;
     }
-    newOrder.choices.push({
-      menu: menuId,
-      amount: orderContent.amount,
-    });
-    resolve();
+    menuId = menu._id;
+  } else {
+    // 단품이면
+    menuId = orderContent.menuId;
+  }
+  newOrder.choices.push({
+    menu: menuId,
+    amount: orderContent.amount,
   });
+  resolve();
+});
 
 // 주문 전송 API
 export const postSendOrder = async (req, res) => {
@@ -177,9 +175,7 @@ export const postSendOrder = async (req, res) => {
       isTakeout,
       price: totalPrice,
     });
-    const promises = orderContents.map((orderContent) =>
-      saveOrderContent(orderContent)
-    );
+    const promises = orderContents.map((orderContent) => saveOrderContent(orderContent));
     await Promise.all(promises);
     newOrder.save();
     res.json(orderNum);
@@ -309,7 +305,7 @@ export const getOrdersInKitchen = async (req, res) => {
     const orders = await Order.find({
       isCompleted: false,
     })
-      .sort({ orderNumber: -1 })
+      .sort({ _id: -1 })
       .populate({
         path: 'choices.menu',
         populate: { path: 'drink' },
@@ -374,11 +370,10 @@ export const processOrder = async (req, res) => {
         },
       });
       return res.status(200).json();
-    } else {
-      // 주문취소시
-      await Order.deleteOne({ _id: id });
-      return res.status(200).json();
     }
+    // 주문취소시
+    await Order.deleteOne({ _id: id });
+    return res.status(200).json();
   } catch (error) {
     console.log(error.message);
     return res.status(400);
@@ -432,7 +427,7 @@ export const postEditMenu = async (req, res) => {
     // 단품메뉴와 콤보메뉴 정보 JSON 파싱
     const comboMenu = comboInfo ? JSON.parse(comboInfo) : null;
     const singleMenu = JSON.parse(singleInfo);
-    let isSetType = setType === 'true' ? true : false;
+    const isSetType = setType === 'true';
 
     // 단품 메뉴 생성 시 필요 항목 정리
     const newSingleMenu = {
@@ -459,7 +454,7 @@ export const postEditMenu = async (req, res) => {
       isSoldOut: singleMenu.isSoldOut,
       isRecommended: singleMenu.isRecommended,
       isDiscontinued: singleMenu.isDiscontinued,
-    }
+    };
 
     // 세트 메뉴 생성 시 필요 항목 정리
     const newComboMenu = comboMenu ? {
@@ -493,33 +488,33 @@ export const postEditMenu = async (req, res) => {
       if (!isSetType) { // 세트메뉴가 포함되지 않는 메뉴라면
         const newMenu = await Menu.create(newSingleMenu);
         await newMenu.save();
-      } else {  // 세트메뉴가 있는 버거류의 경우
+      } else { // 세트메뉴가 있는 버거류의 경우
         const single = await Menu.create(newSingleMenu);
         const combo = await Menu.create(newComboMenu);
         single.defaultCombo = combo.id;
         single.save();
       }
-    } else {  // 기존 메뉴를 수정하는 경우
+    } else { // 기존 메뉴를 수정하는 경우
       if (!isSetType) { // 세트메뉴 없는 단품 메뉴 수정 시
         await Menu.updateOne(
           { _id: objectId },
           {
             $set: newSingleMenu,
-          }
+          },
         );
-      } else {  // 세트 메뉴를 포함하는 버거류 메뉴 수정 시
+      } else { // 세트 메뉴를 포함하는 버거류 메뉴 수정 시
         await Menu.updateOne(
           { _id: singleMenu.objectId },
           {
             $set: newSingleMenu,
-          }
+          },
         );
 
         await Menu.updateOne(
           { _id: comboMenu.objectId },
           {
             $set: newComboMenu,
-          }
+          },
         );
       }
     }

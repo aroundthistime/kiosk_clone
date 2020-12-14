@@ -5,28 +5,28 @@ const categories = document.querySelectorAll('.category'); // 페이지 상단�
 const menuLists = document.querySelectorAll('.menu-list'); // 각 카테고리에 해당하는 메뉴목록
 const menuBlocks = document.querySelectorAll('.menuBlock');
 
-const languageSettingsToggle = document.getElementById('languageCheckbox');
-const customerFinalOrderBtn = document.getElementById('customerFinalOrderBtn');
-const customerFinalCancelBtn = document.getElementById('customerFinalCancelBtn');
-const shoppingCartEmptyMessage = document.getElementById('shoppingCartEmptyMessage');
+const languageSettingsToggle = document.getElementById('languageCheckbox'); // 클릭시 언어변환 (영어/한글)
+const customerFinalOrderBtn = document.getElementById('customerFinalOrderBtn'); // 최종적으로 주문을 진행하는 버튼
+const customerFinalCancelBtn = document.getElementById('customerFinalCancelBtn'); // 고객주문 페이지 초기화(새로고침) 버튼
+const shoppingCartEmptyMessage = document.getElementById('shoppingCartEmptyMessage'); // 장바구니에 비어있을 때 보여지는 메시지
 
 // popups
 const menuDetailsPopup = document.getElementById('menuDetails'); // 메뉴 자세한 정보 확인 및 장바구니에 담을 수 있음
 const comboSinglePopup = document.getElementById('comboSinglePopup'); // 단품 세트여부 선택팝업
 const forHereToGoPopup = document.getElementById('forHereTogoPopup'); // 매장식사 포장여부 선택팝업
-const orderResultPopup = document.getElementById('orderResult'); // 최종적으로 주문했을 때 주문결과 알려줌
+const orderResultPopup = document.getElementById('orderResult'); // 주문결과 알려줌
 const overlay = document.getElementById('overlay'); // 팝업이 뜰 때 팝업 외의 영역을 가려줌
-const loadingPopup = document.getElementById('loadingPopup');
+const loadingPopup = document.getElementById('loadingPopup'); // 작업처리중일 때 보여지는 로딩중 팝업
 
-let selectedMenu; // 선택된 메뉴 개체 (object)
+let selectedMenu; // 선택된 Menu 개체 (object)
 let lastMouseMove; // 가장 최근 마우스 움직였을 때(마우스 움직일 때마다 난수 넣어줌)
-let usingKorean = true;
+let usingKorean = true; // 현재 언어설정이 한국어인지 영어인지 여부 표현(Boolean)
 
-const SELECTED_CATEGORY_CLASSNAME = 'category--selected';
+const SELECTED_CATEGORY_CLASSNAME = 'category--selected'; // 현재 선택된 카테고리가 가지는 클래스명
 const INVISIBLE = 'hidden'; // classname that makes element invisible;
-const SOLD_OUT_CLASSNAME = 'menuBlock--sold-out';
-const THREE_MINUTES_TO_MILLISECONDS = 180000; // 페이지 미조작시 자동갱신시간
-const TEN_SECONDS_TO_MILLISECONDS = 10000;
+const SOLD_OUT_CLASSNAME = 'menuBlock--sold-out'; // 품절된 메뉴의 menuBlock이 가지는 클래스명
+const THREE_MINUTES_TO_MILLISECONDS = 180000; // 페이지 미조작시 자동갱신주기
+const TEN_SECONDS_TO_MILLISECONDS = 10000; // 주문완료 후 자동 새로고침까지 걸리는 시간
 const NON_BURGER_MENU_TYPES = ['사이드', '음료', '디저트']; // 햄버거가 아닌 류들의 메뉴타입
 const DRINK = '음료';
 
@@ -167,6 +167,7 @@ const fillMenuDetailsPopup = (isCombo) => {
     sideOption.classList.add(INVISIBLE);
   }
   showPopup(menuDetailsPopup);
+  menuDetailsPopup.querySelector('.menuDetails__top').scrollIntoView(); // menuDetails팝업의 맨 위로 스크롤
 };
 
 const isBurger = (menu) => {
@@ -678,7 +679,7 @@ const initCustomerPage = () => {
   prepareForHereToGoPopup();
   prepareCustomerFinalBtns(); // 최종 주문, 최종 취소 버튼
   document.getElementById('orderResultBtn').addEventListener('click', refreshCustomerPage); // 주문 다 끝나고 확인버튼 누르면 refresh
-  detectMouseMove(); //페이지 초기화된 상태에서도 3분동안 아무런 조작이 없으면 갱신(할인 등의 정보 항상 최신화 유지)
+  detectMouseMove(); // 페이지 초기화된 상태에서도 3분동안 아무런 조작이 없으면 갱신(할인 등의 정보 항상 최신화 유지)
   window.addEventListener('mousemove', detectMouseMove);
 };
 
