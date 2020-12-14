@@ -28,11 +28,11 @@ const OrderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  date: { // 주문날짜
+  date: {
     type: Date,
     default: Date.now,
   },
-  price: { // 주문 총 금액
+  price: { // 주문에 포함된 메뉴 총 금액
     type: Number,
     required: true,
   },

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const RecordSchema = new mongoose.Schema({
-  content: {
+  content: {  // (선택 날짜의) 매출 특이사항 기록
     type: String,
     required: true,
   },
