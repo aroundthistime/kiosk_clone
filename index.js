@@ -17,7 +17,7 @@ import {
   getMenus,
   postEditMenu,
   getRegisterPage,
-  getNotice,
+  getNoticeBoard,
   getNewOrders,
   getNewOrderById,
 } from './controllers';
@@ -36,7 +36,7 @@ const PORT = 5000;
 
 const handleListening = () => {
   console.log(`✅ Listening on https://localhost/${PORT}`);
-}
+};
 
 // server 관련 설정 //
 app.listen(PORT, handleListening);
@@ -72,7 +72,7 @@ app.get(routes.registerPage, getRegisterPage);
 app.get(routes.getMenus, getMenus);
 app.post(routes.createMenus, postEditMenu);
 
-// MenuDisplay router //
-app.get(routes.noticePage, getNotice);
+// noticeBoard router //
+app.get(routes.noticeBoard, getNoticeBoard);
 app.get(routes.getOrdersFromKitchen, getNewOrders);
 app.get(routes.getOrderFromKitchenById, getNewOrderById);

@@ -3,7 +3,7 @@ const CUSTOMER_PAGE = '/';
 const SALESCONTROLL_PAGE = '/salesControll';
 const KITCHEN_PAGE = '/kitchen';
 const REGISTER_PAGE = '/registerMenu';
-const NOTICE_PAGE = '/notice';
+const NOTICE_BOARD = '/notice';
 
 // API
 const MENU_DETAILS = '/api/menu-details/:id';
@@ -25,7 +25,7 @@ const routes = {
   salesControllPage: SALESCONTROLL_PAGE,
   kitchenPage: KITCHEN_PAGE,
   registerPage: REGISTER_PAGE,
-  noticePage: NOTICE_PAGE,
+  noticeBoard: NOTICE_BOARD,
   menuDetails: MENU_DETAILS,
   sendOrder: SEND_ORDER,
   getRecord: GET_RECORDS,

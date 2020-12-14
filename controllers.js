@@ -532,8 +532,8 @@ export const postEditMenu = async (req, res) => {
 
 // 일람핀 router 설정 //
 // 알림판 router
-export const getNotice = (req, res) => {
-  res.render('notice', {
+export const getNoticeBoard = (req, res) => {
+  res.render('noticeBoard', {
     pageTitle: `알림판 | ${COMPANY_NAME}`,
   });
 };

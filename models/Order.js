@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
 const OrderSchema = new mongoose.Schema({
-  orderNumber: {
+  orderNumber: { // 주문번호
     type: Number,
     required: true,
   },
-  choices: [
+  choices: [ // 주문내용(각 메뉴와 그 수량)
     {
       menu: {
         type: mongoose.Schema.Types.ObjectId,
@@ -16,27 +16,27 @@ const OrderSchema = new mongoose.Schema({
       },
     },
   ],
-  isTakeout: {
+  isTakeout: { // 포장여부
     type: Boolean,
     required: true,
   },
-  isChecked: {
+  isChecked: { // 주방페이지에서 해당 주문을 확인했는지 여부
     type: Boolean,
     default: false,
   },
-  isAlarmed: {
+  isAlarmed: { // 주방페이지에서 해당 주문이 알림음을 발생시켰는지 여부
     type: Boolean,
     default: false,
   },
-  date: {
+  date: { // 주문날짜
     type: Date,
     default: Date.now,
   },
-  price: {
+  price: { // 주문 총 금액
     type: Number,
     required: true,
   },
-  isCompleted: {
+  isCompleted: { // 주문완료 여부
     type: Boolean,
     default: false,
   },
