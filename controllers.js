@@ -462,7 +462,7 @@ export const postEditMenu = async (req, res) => {
     }
 
     // 세트 메뉴 생성 시 필요 항목 정리
-    const newComboMenu = {
+    const newComboMenu = comboMenu ? {
       menuType: comboMenu.menuType,
       nameKr: comboMenu.nameKr,
       nameEng: comboMenu.nameEng,
@@ -486,7 +486,7 @@ export const postEditMenu = async (req, res) => {
       isSoldOut: comboMenu.isSoldOut,
       isRecommended: comboMenu.isRecommended,
       isDiscontinued: comboMenu.isDiscontinued,
-    }
+    } : null;
 
     // 새로운 메뉴를 등록하는 경우
     if (objectId === '') {
